@@ -1,0 +1,17 @@
+Host *
+  ForwardAgent yes
+
+Host *.aws.stylight.net
+  User castroe
+  ControlMaster auto
+  ControlPersist 1h
+  ControlPath ~/.ssh/control-%r@%h:%p
+
+Host *.eu-west-1.compute.amazonaws.com
+  User castroe
+  ControlMaster auto
+  ControlPersist 1h
+  ControlPath ~/.ssh/control-%r@%h:%p
+
+Host 192.168.25.240
+  User htpc
