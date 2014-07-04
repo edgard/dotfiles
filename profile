@@ -3,7 +3,7 @@ export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 
 # aliases
-alias ls="ls -GFh"
+alias ls="ls -GFh --color"
 
 # misc options
 export GREP_OPTIONS="--exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
