@@ -7,7 +7,6 @@ alias ls="ls -GFh"
 
 # misc options
 export GREP_OPTIONS="--exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
-export LESS="-XMcifR"
 
 # go
 #export GOPATH="$HOME/.go"
