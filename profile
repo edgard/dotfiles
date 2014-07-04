@@ -1,16 +1,9 @@
-#!/bin/bash
-
 # lang
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 
 # aliases
-alias vim=mvim
-alias vi=mvim
 alias ls="ls -GFh"
-
-# editor
-export EDITOR="vim"
 
 # misc options
 export GREP_OPTIONS="--exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
@@ -22,4 +15,4 @@ export LESS="-XMcifR"
 #export PATH="$PATH:$GOROOT/bin:$GOPATH/bin"
 
 # autojump
-[[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
+. /usr/share/autojump/autojump.sh
