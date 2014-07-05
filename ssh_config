@@ -13,5 +13,6 @@ Host *.eu-west-1.compute.amazonaws.com
   ControlPersist 1h
   ControlPath ~/.ssh/control-%r@%h:%p
 
-Host 192.168.25.240
+Host htpc
+  HostName 192.168.25.240
   User htpc
