@@ -4,9 +4,12 @@ export LC_ALL="en_US.UTF-8"
 
 # aliases
 alias ls="ls -GFh --color"
+alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias open='xdg-open'
+alias hist='history | grep'
 
 # misc options
-export GREP_OPTIONS="--exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
+export GREP_OPTIONS="--color --exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
 
 # go
 #export GOPATH="$HOME/.go"
