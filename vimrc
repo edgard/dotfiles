@@ -2,19 +2,23 @@
 " => Bootstrap
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" reset all variables
-set all&
-
-" be improved
-set nocompatible
-
-" disable filetype to bootstrap
-filetype off
-
 " detect running os
 let s:is_windows=has('win32') || has('win64')
 let s:is_cygwin=has('win32unix')
 let s:is_macvim=has('gui_macvim')
+
+ if has('vim_starting')
+  set all&
+  set nocompatible
+  if s:is_windows && !s:is_cygwin
+    set runtimepath+=~/vimfiles/bundle/neobundle.vim/
+  else
+    set runtimepath+=~/.vim/bundle/neobundle.vim/
+  endif
+ endif
+
+" disable filetype to bootstrap
+filetype off
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -43,7 +47,7 @@ endfunction
 
 " cachedir
 if s:is_windows && !s:is_cygwin
-  let s:cache_dir='~/vimfiles/.cache'
+  let s:cache_dir='~/vimfiles/cache'
 else
   let s:cache_dir='~/.vim/.cache'
 endif
@@ -57,52 +61,55 @@ if exists('+undofile')
   let &undodir=s:get_cache_dir('undo')
 endif
 let g:ctrlp_cache_dir=s:get_cache_dir('ctrlp')
+let g:neocomplcache_temporary_dir=s:get_cache_dir('neocomplcache')
+let g:neosnippet#data_directory=s:get_cache_dir('neosnippet')
 call EnsureExists(s:cache_dir)
 call EnsureExists(&undodir)
 call EnsureExists(g:ctrlp_cache_dir)
+call EnsureExists(g:neocomplcache_temporary_dir)
+call EnsureExists(g:neosnippet#data_directory)
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Script Bundles
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" bootstrap vundle
+" bootstrap neobundle
 if s:is_windows && !s:is_cygwin
-  set rtp+=~/vimfiles/bundle/Vundle.vim
+  call neobundle#begin(expand('~/vimfiles/bundle/'))
 else
-  set rtp+=~/.vim/bundle/Vundle.vim
+  call neobundle#begin(expand('~/.vim/bundle/'))
 endif
-call vundle#begin()
+NeoBundleFetch 'Shougo/neobundle.vim'
 
 " bundles
-Plugin 'Shougo/neocomplete.vim'
-Bundle 'Shougo/neosnippet'
-Bundle 'Shougo/neosnippet-snippets'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'flazz/vim-colorschemes'
-Plugin 'bling/vim-airline'
-Plugin 'gmarik/Vundle.vim'
-Plugin 'godlygeek/tabular'
-Plugin 'kien/ctrlp.vim'
-Plugin 'fisadev/vim-ctrlp-cmdpalette'
-Plugin 'mbbill/undotree'
-Plugin 'mhinz/vim-startify'
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
-Plugin 'terryma/vim-expand-region'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'tpope/vim-abolish'
-Plugin 'tpope/vim-endwise'
-Plugin 'tpope/vim-eunuch'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-surround'
-Plugin 'sheerun/vim-polyglot'
-Plugin 'chase/vim-ansible-yaml'
+NeoBundle 'Shougo/neocomplcache.vim'
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
+NeoBundle 'airblade/vim-gitgutter'
+NeoBundle 'bling/vim-airline'
+NeoBundle 'fisadev/vim-ctrlp-cmdpalette'
+NeoBundle 'flazz/vim-colorschemes'
+NeoBundle 'godlygeek/tabular'
+NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'mbbill/undotree'
+NeoBundle 'mhinz/vim-startify'
+NeoBundle 'nathanaelkane/vim-indent-guides'
+NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'scrooloose/syntastic'
+NeoBundle 'terryma/vim-expand-region'
+NeoBundle 'terryma/vim-multiple-cursors'
+NeoBundle 'tpope/vim-abolish'
+NeoBundle 'tpope/vim-endwise'
+NeoBundle 'tpope/vim-eunuch'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'sheerun/vim-polyglot'
+NeoBundle 'chase/vim-ansible-yaml'
 
-" finish loading vundle
-call vundle#end()
+" finish loading neobundle
+call neobundle#end()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -113,6 +120,7 @@ call vundle#end()
 set nobackup
 set noswapfile
 
+scriptencoding utf-8
 set encoding=utf-8
 set nrformats-=octal
 
@@ -150,8 +158,7 @@ set scrolloff=1
 set sidescrolloff=5
 
 set list
-set listchars=trail:·,tab:▸\ ,extends:❯,precedes:❮,nbsp:␣
-set showbreak=↪
+set listchars=trail:·
 
 if s:is_windows && !s:is_cygwin
   set shell=c:\windows\system32\cmd.exe
@@ -219,16 +226,16 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Scripts Configuration
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" neocomplete
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
+" neocomplcache
+let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_enable_smart_case = 1
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
+if !exists('g:neocomplcache_omni_patterns')
+  let g:neocomplcache_omni_patterns = {}
 endif
 
 " python mode
@@ -397,3 +404,4 @@ autocmd BufWritePre * :call StripTrailingWhitespaces()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 filetype plugin indent on
 syntax enable
+NeoBundleCheck
