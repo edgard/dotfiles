@@ -212,8 +212,6 @@ if has('gui_running')
   end
   if s:is_windows && !s:is_cygwin
     autocmd GUIEnter * simalt ~x
-  else
-    set lines=999 columns=9999
   endif
   set guioptions+=t
   set guioptions-=r  " remove right scroll bar
