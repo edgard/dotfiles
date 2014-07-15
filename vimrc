@@ -105,7 +105,6 @@ if has('gui_running')
   NeoBundle 'tpope/vim-abolish'
   NeoBundle 'tpope/vim-endwise'
   NeoBundle 'tpope/vim-eunuch'
-  NeoBundle 'tpope/vim-fugitive'
   NeoBundle 'tpope/vim-surround'
   NeoBundle 'sheerun/vim-polyglot'
   NeoBundle 'chase/vim-ansible-yaml'
@@ -334,7 +333,7 @@ if has('gui_running')
   onoremap <C-F4> <C-C><C-W>c
 
   " sudo write shortcut
-  if !s:is_windows && !s:is_macvim
+  if !s:is_windows
     cmap w!! w !sudo tee % >/dev/null
   endif
 
@@ -364,16 +363,6 @@ if has('gui_running')
   vmap <leader>a, :Tabularize /,<CR>
   nmap <leader>a<Bar> :Tabularize /<Bar><CR>
   vmap <leader>a<Bar> :Tabularize /<Bar><CR>
-
-  " fugitive
-  nnoremap <leader>gs :Gstatus<CR>
-  nnoremap <leader>gd :Gdiff<CR>
-  nnoremap <leader>gc :Gcommit<CR>
-  nnoremap <leader>gb :Gblame<CR>
-  nnoremap <leader>gl :Glog<CR>
-  nnoremap <leader>gp :Git push<CR>
-  nnoremap <leader>gw :Gwrite<CR>
-  nnoremap <leader>gr :Gremove<CR>
 
   " ctrlp command palette
   nnoremap <silent> <C-O> :CtrlPCmdPalette<cr>
