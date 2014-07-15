@@ -29,6 +29,17 @@ function! StripTrailingWhitespaces()
   call cursor(l, c)
 endfunction
 
+" buffer delete function
+function! s:CommandW()
+  let l:bufcount = len(filter(range(1, bufnr('$')), 'buflisted(v:val) == 1'))
+  if l:bufcount == 1
+    qall
+  else
+    BD
+  endif
+endfunction
+command! -bar CommandW call s:CommandW()
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Cache Dir Management
@@ -85,6 +96,7 @@ NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-surround'
+NeoBundle 'vim-scripts/bufkill.vim'
 NeoBundle 'sheerun/vim-polyglot'
 NeoBundle 'chase/vim-ansible-yaml'
 
@@ -245,10 +257,14 @@ let NERDSpaceDelims=1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " buffer shortcuts
-nnoremap <silent> <D-w> :bprevious <BAR> bdelete #<CR>
-nnoremap <silent> <D-n> :enew<CR>
-nnoremap <silent> <D-M-LEFT> :bnext<CR>
-nnoremap <silent> <D-M-RIGHT> :bprevious<CR>
+nmap <silent> <D-w> :CommandW<CR>
+imap <silent> <D-w> <Esc>:CommandW<CR>
+nmap <silent> <D-n> :enew<CR>
+imap <silent> <D-n> <Esc>:enew<CR>
+nmap <silent> <D-M-LEFT> :bprevious<CR>
+imap <silent> <D-M-LEFT> <Esc>:bprevious<CR>
+nmap <silent> <D-M-RIGHT> :bnext<CR>
+imap <silent> <D-M-RIGHT> <Esc>:bnext<CR>
 
 " sudo write shortcut
 cmap w!! w !sudo tee % >/dev/null
