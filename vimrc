@@ -89,6 +89,7 @@ NeoBundle 'mhinz/vim-startify'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'rking/ag.vim'
 NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'terryma/vim-expand-region'
 NeoBundle 'terryma/vim-multiple-cursors'
@@ -251,6 +252,14 @@ autocmd FileType startify setlocal buftype=
 " nerdcommenter
 let NERDSpaceDelims=1
 
+" nerdtree
+let NERDTreeShowHidden=1
+let NERDTreeQuitOnOpen=1
+let NERDTreeChDirMode=0
+let NERDTreeShowBookmarks=0
+let NERDTreeIgnore=['\.git','\.hg']
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Shortcuts
@@ -274,6 +283,9 @@ nnoremap <silent> <F10> :nohlsearch<CR>
 
 " startify
 nnoremap <silent> <F1> :Startify<CR>
+
+" nerdtree
+nnoremap <silent> <F2> :NERDTreeToggle<CR>
 
 " undotree
 nnoremap <silent> <F5> :UndotreeToggle<CR>
