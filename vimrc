@@ -256,7 +256,7 @@ let NERDTreeShowHidden=1
 let NERDTreeQuitOnOpen=1
 let NERDTreeChDirMode=0
 let NERDTreeShowBookmarks=0
-let NERDTreeIgnore=['\.git','\.hg']
+let NERDTreeIgnore=['\.git','\.hg','\.svn']
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 
@@ -311,7 +311,7 @@ nnoremap <silent> <D-o> :CtrlPCmdPalette<cr>
 " => Triggers/Autocommands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" go back to previous position of cursor if any
+" go back to previous position of cursor if any, except if git commit
 autocmd BufReadPost *
   \ if line("'\"") > 0 && line("'\"") <= line("$") |
   \  exe 'normal! g`"zvzz' |
