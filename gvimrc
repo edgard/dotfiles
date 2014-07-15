@@ -12,7 +12,9 @@ if has("gui_macvim")
 
   set guioptions+=t
   set guioptions-=r  " remove right scroll bar
+  set guioptions-=R  "remove right scrool bar when split
   set guioptions-=l  " remove left scroll bar
+  set guioptions-=L  " remove left scrool bar when split
   set guioptions-=b  " remove bottom scroll bar
   set guioptions-=m  " hide menu bar
   set guioptions-=T  " hide tool bar
