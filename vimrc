@@ -33,9 +33,9 @@ endfunction
 function! s:CommandW()
   let l:bufcount = len(filter(range(1, bufnr('$')), 'buflisted(v:val) == 1'))
   if l:bufcount == 1
-    qall
+    quitall
   else
-    BD
+    bdelete
   endif
 endfunction
 command! -bar CommandW call s:CommandW()
@@ -97,7 +97,6 @@ NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-surround'
-NeoBundle 'vim-scripts/bufkill.vim'
 NeoBundle 'sheerun/vim-polyglot'
 NeoBundle 'chase/vim-ansible-yaml'
 
