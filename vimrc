@@ -209,9 +209,6 @@ if has('gui_running')
   else
     set guifont=PragmataPro\ 12
   end
-  if s:is_windows && !s:is_cygwin
-    autocmd GUIEnter * simalt ~x
-  endif
   set guioptions+=t
   set guioptions-=r  " remove right scroll bar
   set guioptions-=l  " remove left scroll bar
