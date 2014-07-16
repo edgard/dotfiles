@@ -229,10 +229,10 @@ let g:airline#extensions#tabline#fnamemod=':t'
 
 " ctrlp
 let g:ctrlp_map='<D-p>'
-let g:ctrlp_cmd='CtrlP'
+let g:ctrlp_cmd='CtrlPMixed'
 let g:ctrlp_custom_ignore='\.git$\|\.hg$\|\.svn$'
-let g:ctrlp_working_path_mode='ra'
-let g:ctrlp_switch_buffer='et'
+let g:ctrlp_working_path_mode = 0
+let g:ctrlp_switch_buffer='e'
 let g:ctrlp_use_caching=1
 let g:ctrlp_clear_cache_on_exit=0
 let g:ctrlp_max_files=20000
@@ -240,6 +240,7 @@ let g:ctrlp_mruf_max=250
 let g:ctrlp_max_height=10
 let g:ctrlp_follow_symlinks=1
 let g:ctrlp_show_hidden=1
+let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:50'
 
 " startify
 let g:startify_files_number=10
@@ -257,7 +258,6 @@ let NERDTreeChDirMode=0
 let NERDTreeHijackNetrw=1
 let NERDTreeMinimalUI=1
 let NERDTreeMouseMode=2
-let NERDTreeQuitOnOpen=1
 let NERDTreeQuitOnOpen=1
 let NERDTreeShowBookmarks=0
 let NERDTreeShowHidden=1
