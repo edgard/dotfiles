@@ -95,8 +95,6 @@ NeoBundle 'terryma/vim-expand-region'
 NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-endwise'
-NeoBundle 'tpope/vim-eunuch'
-NeoBundle 'tpope/vim-surround'
 NeoBundle 'sheerun/vim-polyglot'
 NeoBundle 'chase/vim-ansible-yaml'
 
@@ -251,6 +249,8 @@ autocmd FileType startify setlocal buftype=
 
 " nerdcommenter
 let NERDSpaceDelims=1
+let NERDMenuMode=0
+let NERDDefaultNesting=0
 
 " nerdtree
 let NERDTreeCascadeOpenSingleChildDir=1
