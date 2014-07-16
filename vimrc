@@ -31,7 +31,7 @@ endfunction
 
 " buffer delete function
 function! s:CommandW()
-  let l:bufcount = len(filter(range(1, bufnr('$')), 'buflisted(v:val) == 1'))
+  let l:bufcount=len(filter(range(1, bufnr('$')), 'buflisted(v:val) == 1'))
   if l:bufcount == 1
     quitall
   else
@@ -194,15 +194,15 @@ let g:mapleader=','
 " => Scripts Configuration
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " neocomplete
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#enable_at_startup=1
+let g:neocomplete#enable_smart_case=1
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
+  let g:neocomplete#sources#omni#input_patterns={}
 endif
 
 " python mode
@@ -231,7 +231,7 @@ let g:airline#extensions#tabline#fnamemod=':t'
 let g:ctrlp_map='<D-p>'
 let g:ctrlp_cmd='CtrlPMixed'
 let g:ctrlp_custom_ignore='\.git$\|\.hg$\|\.svn$'
-let g:ctrlp_working_path_mode = 0
+let g:ctrlp_working_path_mode=0
 let g:ctrlp_switch_buffer='e'
 let g:ctrlp_use_caching=1
 let g:ctrlp_clear_cache_on_exit=0
@@ -240,7 +240,7 @@ let g:ctrlp_mruf_max=250
 let g:ctrlp_max_height=10
 let g:ctrlp_follow_symlinks=1
 let g:ctrlp_show_hidden=1
-let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:50'
+let g:ctrlp_match_window='bottom,order:btt,min:1,max:10,results:50'
 
 " startify
 let g:startify_files_number=10
