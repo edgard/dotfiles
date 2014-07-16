@@ -252,10 +252,15 @@ autocmd FileType startify setlocal buftype=
 let NERDSpaceDelims=1
 
 " nerdtree
-let NERDTreeShowHidden=1
-let NERDTreeQuitOnOpen=1
+let NERDTreeCascadeOpenSingleChildDir=1
 let NERDTreeChDirMode=0
+let NERDTreeHijackNetrw=1
+let NERDTreeMinimalUI=1
+let NERDTreeMouseMode=2
+let NERDTreeQuitOnOpen=1
+let NERDTreeQuitOnOpen=1
 let NERDTreeShowBookmarks=0
+let NERDTreeShowHidden=1
 let NERDTreeIgnore=['\.git','\.hg','\.svn']
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
