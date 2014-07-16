@@ -57,12 +57,12 @@ if exists('+undofile')
   let &undodir=s:get_cache_dir('undo')
 endif
 let g:ctrlp_cache_dir=s:get_cache_dir('ctrlp')
-let g:neocomplcache_temporary_dir=s:get_cache_dir('neocomplcache')
+let g:neocomplete#temporary_dir=s:get_cache_dir('neocomplete')
 let g:neosnippet#data_directory=s:get_cache_dir('neosnippet')
 call EnsureExists(s:cache_dir)
 call EnsureExists(&undodir)
 call EnsureExists(g:ctrlp_cache_dir)
-call EnsureExists(g:neocomplcache_temporary_dir)
+call EnsureExists(g:neocomplete#temporary_dir)
 call EnsureExists(g:neosnippet#data_directory)
 
 
@@ -75,7 +75,7 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 " bundles
-NeoBundle 'Shougo/neocomplcache.vim'
+NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'airblade/vim-gitgutter'
@@ -193,16 +193,16 @@ let g:mapleader=','
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Scripts Configuration
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" neocomplcache
-let g:neocomplcache_enable_at_startup = 1
-let g:neocomplcache_enable_smart_case = 1
+" neocomplete
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-if !exists('g:neocomplcache_omni_patterns')
-  let g:neocomplcache_omni_patterns = {}
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
 endif
 
 " python mode
