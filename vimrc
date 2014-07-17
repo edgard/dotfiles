@@ -6,7 +6,8 @@ set all&
 set nocompatible
 set runtimepath+=~/.vim/bundle/neobundle.vim/
 
-" disable filetype to bootstrap
+" disable to bootstrap
+syntax off
 filetype off
 
 
@@ -57,13 +58,9 @@ if exists('+undofile')
   let &undodir=s:get_cache_dir('undo')
 endif
 let g:ctrlp_cache_dir=s:get_cache_dir('ctrlp')
-let g:neocomplete#temporary_dir=s:get_cache_dir('neocomplete')
-let g:neosnippet#data_directory=s:get_cache_dir('neosnippet')
 call EnsureExists(s:cache_dir)
 call EnsureExists(&undodir)
 call EnsureExists(g:ctrlp_cache_dir)
-call EnsureExists(g:neocomplete#temporary_dir)
-call EnsureExists(g:neosnippet#data_directory)
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -75,16 +72,16 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 " bundles
-NeoBundle 'Shougo/neocomplete.vim'
-NeoBundle 'Shougo/neosnippet'
-NeoBundle 'Shougo/neosnippet-snippets'
-NeoBundle 'airblade/vim-gitgutter'
+NeoBundle 'SirVer/ultisnips'
+NeoBundle 'Valloric/YouCompleteMe.git', { 'build' : { 'unix' : './install.sh --clang-completer --system-libclang' } }
 NeoBundle 'bling/vim-airline'
 NeoBundle 'fisadev/vim-ctrlp-cmdpalette'
 NeoBundle 'flazz/vim-colorschemes'
 NeoBundle 'godlygeek/tabular'
+NeoBundle 'honza/vim-snippets'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'mbbill/undotree'
+NeoBundle 'mhinz/vim-signify'
 NeoBundle 'mhinz/vim-startify'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'rking/ag.vim'
@@ -191,17 +188,6 @@ let g:mapleader=','
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Scripts Configuration
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" neocomplete
-let g:neocomplete#enable_at_startup=1
-let g:neocomplete#enable_smart_case=1
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns={}
-endif
 
 " python mode
 let g:jedi#popup_on_dot=0
@@ -263,6 +249,10 @@ let NERDTreeShowBookmarks=0
 let NERDTreeShowHidden=1
 let NERDTreeIgnore=['\.git','\.hg','\.svn']
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+" youcompleteme
+let g:ycm_key_list_select_completion=['<C-TAB>', '<Down>']
+let g:ycm_key_list_previous_completion=['<C-S-TAB>', '<Up>']
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -330,6 +320,7 @@ autocmd BufWritePre * :call StripTrailingWhitespaces()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Finish Loading
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+syntax on
+filetype on
 filetype plugin indent on
-syntax enable
 NeoBundleCheck

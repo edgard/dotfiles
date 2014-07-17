@@ -18,4 +18,7 @@ if has("gui_macvim")
   set guioptions-=b  " remove bottom scroll bar
   set guioptions-=m  " hide menu bar
   set guioptions-=T  " hide tool bar
+
+  set fuoptions=maxvert,maxhorz
+  set noballooneval
 endif
