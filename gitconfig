@@ -1,5 +1,7 @@
 [user]
-	email = edgardcastro@gmail.com
+	email = castro@edgard.org
 	name = Edgard Castro
 [push]
 	default = simple
+[mergetool]
+	keepBackup = true

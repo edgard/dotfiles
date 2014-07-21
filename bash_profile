@@ -17,8 +17,8 @@ export GREP_OPTIONS="--color --exclude-dir=.svn --exclude-dir=.git --binary-file
 #export GOROOT="(brew --prefix)/Cellar/go/(go version | cut -f3 -d' ' | sed 's/go//')/libexec"
 #export PATH="$PATH:$GOROOT/bin:$GOPATH/bin"
 
-# context
-export PATH=$PATH:/usr/local/context/tex/texmf-osx-64/bin
+# localbin before everything
+export PATH="/usr/local/bin:$PATH"
 
 # autojump
 [[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
