@@ -21,4 +21,6 @@ if has("gui_macvim")
 
   set fuoptions=maxvert,maxhorz
   set noballooneval
+
+  set mouse=a
 endif

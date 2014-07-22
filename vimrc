@@ -154,7 +154,6 @@ set noshelltemp
 set autoread
 set fileformats+=mac
 
-set mouse=a
 set mousehide
 set ttyfast
 set lazyredraw
