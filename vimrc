@@ -73,7 +73,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
 " bundles
 NeoBundle 'SirVer/ultisnips'
-NeoBundle 'Valloric/YouCompleteMe.git', { 'build' : { 'unix' : './install.sh --clang-completer --system-libclang' } }
+NeoBundle 'Valloric/YouCompleteMe.git', { 'build' : { 'unix' : './install.sh' } }
 NeoBundle 'bling/vim-airline'
 NeoBundle 'fisadev/vim-ctrlp-cmdpalette'
 NeoBundle 'flazz/vim-colorschemes'
