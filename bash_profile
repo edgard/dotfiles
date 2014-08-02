@@ -17,6 +17,9 @@ export GREP_OPTIONS="--color --exclude-dir=.svn --exclude-dir=.git --binary-file
 #export GOROOT="(brew --prefix)/Cellar/go/(go version | cut -f3 -d' ' | sed 's/go//')/libexec"
 #export PATH="$PATH:$GOROOT/bin:$GOPATH/bin"
 
+# rbenv
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
 # localbin before everything
 export PATH="/usr/local/bin:$PATH"
 
