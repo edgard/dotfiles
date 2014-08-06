@@ -72,6 +72,7 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 " bundles
+NeoBundle 'Shougo/vimproc.vim', { 'build' : { 'unix' : 'make -f make_unix.mak' } }
 NeoBundle 'SirVer/ultisnips'
 NeoBundle 'Valloric/YouCompleteMe.git', { 'build' : { 'unix' : './install.sh' } }
 NeoBundle 'bling/vim-airline'
