@@ -26,7 +26,7 @@ alias hist='history | grep'
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 # autojump
-[[ -f $(brew --prefix)/etc/autojump.sh ]] && . $(brew --prefix)/etc/autojump.sh
+[[ -f $(brew --prefix)/etc/autojump.sh ]] && . "$(brew --prefix)/etc/autojump.sh"
 
 # bash completion
-[[ -f $(brew --prefix)/etc/bash_completion ]] && . $(brew --prefix)/etc/bash_completion
+[[ -f $(brew --prefix)/etc/bash_completion ]] && . "$(brew --prefix)/etc/bash_completion"
