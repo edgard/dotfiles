@@ -4,7 +4,6 @@
 
 set all&
 set nocompatible
-set runtimepath+=~/.vim/bundle/neobundle.vim/
 
 " disable to bootstrap
 syntax off
@@ -67,38 +66,36 @@ call EnsureExists(g:ctrlp_cache_dir)
 " => Script Bundles
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" bootstrap neobundle
-call neobundle#begin(expand('~/.vim/bundle/'))
-NeoBundleFetch 'Shougo/neobundle.vim'
+" bootstrap vim-plug
+call plug#begin()
 
 " bundles
-NeoBundle 'Shougo/vimproc.vim', { 'build' : { 'unix' : 'make -f make_mac.mak' } }
-NeoBundle 'SirVer/ultisnips'
-NeoBundle 'Valloric/YouCompleteMe.git', { 'build' : { 'unix' : './install.sh' } }
-NeoBundle 'bling/vim-airline'
-NeoBundle 'fisadev/vim-ctrlp-cmdpalette'
-NeoBundle 'flazz/vim-colorschemes'
-NeoBundle 'godlygeek/tabular'
-NeoBundle 'greyblake/vim-preview'
-NeoBundle 'honza/vim-snippets'
-NeoBundle 'kien/ctrlp.vim'
-NeoBundle 'mbbill/undotree'
-NeoBundle 'mhinz/vim-signify'
-NeoBundle 'mhinz/vim-startify'
-NeoBundle 'nathanaelkane/vim-indent-guides'
-NeoBundle 'rking/ag.vim'
-NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'terryma/vim-expand-region'
-NeoBundle 'terryma/vim-multiple-cursors'
-NeoBundle 'tpope/vim-abolish'
-NeoBundle 'tpope/vim-endwise'
-NeoBundle 'sheerun/vim-polyglot'
-NeoBundle 'chase/vim-ansible-yaml'
+Plug 'SirVer/ultisnips'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
+Plug 'bling/vim-airline'
+Plug 'fisadev/vim-ctrlp-cmdpalette'
+Plug 'flazz/vim-colorschemes'
+Plug 'godlygeek/tabular'
+Plug 'greyblake/vim-preview'
+Plug 'honza/vim-snippets'
+Plug 'kien/ctrlp.vim'
+Plug 'mbbill/undotree'
+Plug 'mhinz/vim-signify'
+Plug 'mhinz/vim-startify'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'rking/ag.vim'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/syntastic'
+Plug 'terryma/vim-expand-region'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-endwise'
+Plug 'sheerun/vim-polyglot'
+Plug 'chase/vim-ansible-yaml'
 
-" finish loading neobundle
-call neobundle#end()
+" finish loading plugins
+call plug#end()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -324,4 +321,3 @@ autocmd BufWritePre * :call StripTrailingWhitespaces()
 syntax on
 filetype on
 filetype plugin indent on
-NeoBundleCheck
