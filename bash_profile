@@ -3,9 +3,6 @@
 # environment variables
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
-export EDITOR="vim"
-export VISUAL="vim"
-export SVN_EDITOR="vim"
 export PAGER="less"
 export LESS="-RQM"
 export GZIP="-v9N"
@@ -18,9 +15,9 @@ alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgree
 alias hist='history | grep'
 
 # go
-#export GOPATH="$HOME/.go"
-#export GOROOT="(brew --prefix)/Cellar/go/(go version | cut -f3 -d' ' | sed 's/go//')/libexec"
-#export PATH="$PATH:$GOROOT/bin:$GOPATH/bin"
+export GOPATH="$HOME/.go"
+export GOROOT="$(brew --prefix)/Cellar/go/$(go version | cut -f3 -d' ' | sed 's/go//')/libexec"
+export PATH="$PATH:$GOROOT/bin:$GOPATH/bin"
 
 # rbenv
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
@@ -30,3 +27,8 @@ if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 # bash completion
 [[ -f $(brew --prefix)/etc/bash_completion ]] && . "$(brew --prefix)/etc/bash_completion"
+
+# boot2docker
+export DOCKER_HOST=tcp://192.168.59.103:2376
+export DOCKER_CERT_PATH=/Users/edgard/.boot2docker/certs/boot2docker-vm
+export DOCKER_TLS_VERIFY=1
