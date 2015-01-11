@@ -18,9 +18,9 @@ export EDITOR="atom -w -n"
 
 # aliases
 alias ls="ls -GFh --color=auto"
-alias grep="grep --color --exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
+alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-alias hist='history | grep'
+alias h='history | grep'
 
 # dircolors
 if [ -f "$HOME/.dir_colors" ] ; then
