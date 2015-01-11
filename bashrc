@@ -23,14 +23,14 @@ alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgree
 alias h='history | grep'
 
 # dircolors
-[[ -f "$HOME/.dir_colors" ]] && eval $(dircolors -b $HOME/.dir_colors)
+[[ -f "$HOME/.dir_colors" ]] && eval "$(dircolors -b $HOME/.dir_colors)"
 
 # go
 export GOPATH="$HOME/.go"
 export PATH="$PATH:$GOPATH/bin"
 
 # rbenv
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+[[ -f /usr/bin/rbenv ]] && eval "$(rbenv init -)"
 
 # autojump
 [[ -s /etc/profile.d/autojump.sh ]] && source /etc/profile.d/autojump.sh
