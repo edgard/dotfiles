@@ -4,3 +4,6 @@ Host *
 Host htpc
   HostName 192.168.25.240
   User htpc
+
+Host etacarinae
+  HostName etacarinae.edgard.org
