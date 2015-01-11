@@ -13,7 +13,7 @@
       'solarized-dark-ui'
       'solarized-dark-syntax'
     ]
-    'projectHome': '/Users/edgard/Documents/code'
+    'projectHome': '/home/edgard/Documents/code'
   'exception-reporting':
     'userId': '1b98cd61-c072-c275-56fd-5715ea36d0bd'
   'welcome':
