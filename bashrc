@@ -27,12 +27,11 @@ if [ -f "$HOME/.dir_colors" ] ; then
 fi
 
 # go
-#export GOPATH="$HOME/.go"
-#export GOROOT="$(brew --prefix)/Cellar/go/$(go version | cut -f3 -d' ' | sed 's/go//')/libexec"
-#export PATH="$PATH:$GOROOT/bin:$GOPATH/bin"
+export GOPATH="$HOME/.go"
+export PATH="$PATH:$GOPATH/bin"
 
 # rbenv
-#if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 # autojump
 [[ -s /etc/profile.d/autojump.sh ]] && source /etc/profile.d/autojump.sh
