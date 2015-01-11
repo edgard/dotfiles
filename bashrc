@@ -23,9 +23,7 @@ alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgree
 alias h='history | grep'
 
 # dircolors
-if [ -f "$HOME/.dir_colors" ] ; then
-  eval $(dircolors -b $HOME/.dir_colors)
-fi
+[[ -f "$HOME/.dir_colors" ]] && eval $(dircolors -b $HOME/.dir_colors)
 
 # go
 export GOPATH="$HOME/.go"
