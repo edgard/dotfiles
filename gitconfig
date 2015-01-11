@@ -1,9 +1,7 @@
 # This is Git's per-user configuration file.
-[core]
-	user = Edgard Castro
-	email = castro@edgard.org
-[push]
-	default = simple
 [user]
 	name = Edgard Castro
 	email = castro@edgard.org
+
+[push]
+	default = simple

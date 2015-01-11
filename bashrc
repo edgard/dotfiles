@@ -14,6 +14,7 @@ export LC_ALL="en_US.UTF-8"
 export PAGER="less"
 export LESS="-RQM"
 export GZIP="-v9N"
+export EDITOR="atom -w -n"
 
 # aliases
 alias ls="ls -GFh --color=auto"
