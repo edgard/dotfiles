@@ -22,6 +22,7 @@ alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias update="pacaur -Syu; apm upgrade"
 alias h='history | grep'
+alias open='xdg-open'
 
 # dircolors
 [[ -f "$HOME/.dir_colors" ]] && eval "$(dircolors -b $HOME/.dir_colors)"
