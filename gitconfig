@@ -1,7 +1,13 @@
-# This is Git's per-user configuration file.
+[core]
+	autocrlf = input
+[merge]
+	ff = only
+[fetch]
+	prune = true
+[push]
+        default = simple
+[color]
+	ui = auto
 [user]
 	name = Edgard Castro
 	email = castro@edgard.org
-
-[push]
-	default = simple
