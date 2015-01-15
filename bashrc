@@ -17,7 +17,7 @@ export GZIP="-v9N"
 export EDITOR="atom -w -n"
 
 # aliases
-alias ls="ls -GFh --color=auto"
+alias ls="ls -Fh --color=auto"
 alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias update="pacaur -Syu; apm upgrade"
