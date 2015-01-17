@@ -9,8 +9,6 @@
 PS1='[\u@\h \W]\$ '
 
 # environment variables
-export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
 export PAGER="less"
 export LESS="-RQM"
 export GZIP="-v9N"
@@ -21,8 +19,8 @@ alias ls="ls -Fh --color=auto"
 alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias update="pacaur -Syu; apm upgrade"
-alias h='history | grep'
-alias open='xdg-open'
+alias h="history | grep"
+alias open="xdg-open"
 
 # dircolors
 [[ -f "$HOME/.dir_colors" ]] && eval "$(dircolors -b $HOME/.dir_colors)"
