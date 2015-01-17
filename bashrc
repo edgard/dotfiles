@@ -21,6 +21,7 @@ alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgree
 alias update="pacaur -Syu; apm upgrade"
 alias h="history | grep"
 alias open="xdg-open"
+syncdoc() { rsync -az --delete --include="*" /home/edgard/Documents/ $1:/home/edgard/Documents/; }
 
 # dircolors
 [[ -f "$HOME/.dir_colors" ]] && eval "$(dircolors -b $HOME/.dir_colors)"
