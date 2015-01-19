@@ -1,7 +1,7 @@
 [core]
 	autocrlf = input
 [merge]
-	ff = only
+#	ff = only
 [fetch]
 	prune = true
 [push]
