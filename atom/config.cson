@@ -1,25 +1,28 @@
-'*':
-  'editor':
-    'fontFamily': 'PragmataPro'
-    'showInvisibles': true
-    'showIndentGuide': true
-    'invisibles': {}
-  'core':
-    'disabledPackages': [
-      'autocomplete'
-      'spell-check'
+"*":
+  editor:
+    fontFamily: "PragmataPro"
+    showInvisibles: true
+    showIndentGuide: true
+    invisibles: {}
+    autoIndentOnPaste: false
+  core:
+    disabledPackages: [
+      "autocomplete"
+      "spell-check"
     ]
-    'themes': [
-      'solarized-dark-ui'
-      'solarized-dark-syntax'
+    themes: [
+      "solarized-dark-ui"
+      "solarized-dark-syntax"
     ]
-    'projectHome': '/home/edgard/Documents/code'
-  'exception-reporting':
-    'userId': '1b98cd61-c072-c275-56fd-5715ea36d0bd'
-  'welcome':
-    'showOnStartup': false
-  'autocomplete-plus': {}
-  'minimap': {}
-  'git-diff':
-    'showIconsInEditorGutter': true
-  'spell-check': {}
+    projectHome: "/home/edgard/Documents/code"
+  "exception-reporting":
+    userId: "1b98cd61-c072-c275-56fd-5715ea36d0bd"
+  welcome:
+    showOnStartup: false
+  "autocomplete-plus": {}
+  minimap: {}
+  "git-diff":
+    showIconsInEditorGutter: true
+  "spell-check": {}
+  "atom-terminal":
+    app: "/usr/bin/gnome-terminal"
