@@ -30,7 +30,8 @@ export GOPATH="$HOME/.go"
 export PATH="$PATH:$GOPATH/bin"
 
 # rbenv
-[[ -f /usr/bin/rbenv ]] && eval "$(rbenv init -)"
+export PATH="$HOME/.rbenv/bin:$PATH"
+[[ -f "$HOME/.rbenv/bin/rbenv" ]] && eval "$(rbenv init -)"
 
 # autojump
 [[ -s /etc/profile.d/autojump.bash ]] && source /etc/profile.d/autojump.bash
