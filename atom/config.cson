@@ -3,8 +3,8 @@
     fontFamily: "PragmataPro"
     showInvisibles: true
     showIndentGuide: true
-    invisibles: {}
     autoIndentOnPaste: false
+    invisibles: {}
   core:
     disabledPackages: [
       "autocomplete"
