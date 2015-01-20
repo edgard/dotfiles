@@ -18,7 +18,6 @@ export EDITOR="atom -w -n"
 alias ls="ls -Fh --color=auto"
 alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-alias update="pacaur -Syu; apm upgrade"
 alias h="history | grep"
 alias open="xdg-open"
 syncdoc() { rsync -azv --delete --include="*" /home/edgard/Documents/ $1:/home/edgard/Documents/; }
