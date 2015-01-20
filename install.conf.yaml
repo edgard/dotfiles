@@ -1,0 +1,22 @@
+- clean: ['~']
+
+- link:
+    ~/.bashrc:
+        force: true
+        path: bashrc
+    ~/dir_colors:
+        force: true
+        path: dir_colors
+    ~/.gitconfig:
+        force: true
+        path: gitconfig
+    ~/.ssh/config:
+        create: true
+        force: true
+        path: ssh/config
+    ~/.atom/config.cson:
+        force: true
+        path: atom/config.cson
+
+- shell:
+    - [git submodule update --init --recursive, Installing/updating submodules]
