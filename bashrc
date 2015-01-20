@@ -34,7 +34,7 @@ export PATH="$PATH:$GOPATH/bin"
 [[ -f /usr/bin/rbenv ]] && eval "$(rbenv init -)"
 
 # autojump
-[[ -s /etc/profile.d/autojump.sh ]] && source /etc/profile.d/autojump.sh
+[[ -s /etc/profile.d/autojump.bash ]] && source /etc/profile.d/autojump.bash
 
 # autocomplete
 [[ -e "$HOME/.ssh/config" ]] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh
