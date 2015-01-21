@@ -20,3 +20,4 @@
 
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]
+    - [chmod 600 ssh/config, Fix ssh config permission]
