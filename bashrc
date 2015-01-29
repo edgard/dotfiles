@@ -10,15 +10,12 @@ PS1='[\u@\h \W]\$ '
 
 # environment variables
 export PAGER="less"
-export LESS="-RQM"
-export GZIP="-v9N"
 export EDITOR="atom -w -n"
 
 # aliases
 alias ls="ls -Fh --color=auto"
 alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-alias h="history | grep"
 alias open="xdg-open"
 alias update="sudo yum upgrade -y; apm upgrade"
 syncdoc() { rsync -azv --delete --include="*" /home/edgard/Documents/ $1:/home/edgard/Documents/; }
