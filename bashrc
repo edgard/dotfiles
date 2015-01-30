@@ -23,10 +23,6 @@ syncdoc() { rsync -azv --delete --include="*" /home/edgard/Documents/ $1:/home/e
 # dircolors
 [[ -f "$HOME/.dir_colors" ]] && eval "$(dircolors -b $HOME/.dir_colors)"
 
-# go
-export GOPATH="$HOME/.go"
-export PATH="$PATH:$GOPATH/bin"
-
 # rbenv
 export PATH="$HOME/.rbenv/bin:$PATH"
 [[ -f "$HOME/.rbenv/bin/rbenv" ]] && eval "$(rbenv init -)"
