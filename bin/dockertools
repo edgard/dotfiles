@@ -31,7 +31,6 @@ dockertools_cleanup_volumes() {
       return
     fi
     echo "Delete unused volume directories from $targetdir"
-    echo $(sudo ls -1 ${targetdir}/* 2>/dev/null)
     for dir in $(sudo ls -1 ${targetdir}/ 2>/dev/null)
     do
       if [[ "${dir}" =~ [0-9a-f]{64} ]]; then
