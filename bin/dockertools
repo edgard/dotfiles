@@ -1,0 +1,65 @@
+#!/bin/bash
+
+dockertools_cleanup_containers() {
+  images=$(docker ps -aq)
+  if [[ -z "$images" ]]; then
+    echo "No containers to remove"
+  else
+    docker rm ${images}
+  fi
+}
+
+dockertools_cleanup_images() {
+  images=$(docker images | grep -e "^<none>" | awk '{print $3}')
+  if [[ -z "$images" ]]; then
+    echo "No images to remove"
+  else
+    docker rmi ${images}
+  fi
+}
+
+dockertools_cleanup_volumes() {
+  dockerdir=/var/lib/docker
+  volumesdir=${dockerdir}/volumes
+  vfsdir=${dockerdir}/vfs/dir
+  allvolumes=()
+
+  function delete_volumes() {
+    targetdir=$1
+    if [[ ! -d ${targetdir} ]]; then
+      echo "Directory ${targetdir} does not exist, skipping."
+      return
+    fi
+    echo "Delete unused volume directories from $targetdir"
+    echo $(sudo ls -1 ${targetdir}/* 2>/dev/null)
+    for dir in $(sudo ls -1 ${targetdir}/ 2>/dev/null)
+    do
+      if [[ "${dir}" =~ [0-9a-f]{64} ]]; then
+        if [[ ${allvolumes[@]} =~ "${dir}" ]]; then
+          echo "In use ${dir}"
+        else
+          echo "Deleting ${dir}"
+          sudo rm -rf ${targetdir}/${dir}
+        fi
+      else
+        echo "Not a volume ${dir}"
+      fi
+    done
+  }
+
+  for container in $(docker ps -a -q --no-trunc); do
+    allvolumes+=${container}
+    for vid in $(docker inspect --format='{{range $vol, $path := .Volumes}}{{$path}}{{"\n"}}{{end}}' ${container}); do
+      if [[ "${vid##*/}" =~ [0-9a-f]{64} ]]; then
+        allvolumes+=("${vid##*/}")
+      fi
+    done
+  done
+
+  delete_volumes ${volumesdir}
+  delete_volumes ${vfsdir}
+}
+
+alias d-cleanup-containers=dockertools_cleanup_containers
+alias d-cleanup-images=dockertools_cleanup_images
+alias d-cleanup-volumes=dockertools_cleanup_volumes

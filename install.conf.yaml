@@ -18,6 +18,10 @@
         create: true
         force: true
         path: atom/config.cson
+    ~/.bin/dockertools:
+        create: true
+        force: true
+        path: bin/dockertools
 
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]
