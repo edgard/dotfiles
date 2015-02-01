@@ -18,6 +18,10 @@
         create: true
         force: true
         path: atom/config.cson
+    ~/.bin/misctools:
+        create: true
+        force: true
+        path: bin/misctools
     ~/.bin/dockertools:
         create: true
         force: true

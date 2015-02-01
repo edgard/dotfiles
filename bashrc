@@ -18,7 +18,6 @@ alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias open="xdg-open"
 alias update="sudo yum upgrade -y; apm upgrade"
-syncdoc() { rsync -azv --delete --include="*" /home/edgard/Documents/ $1:/home/edgard/Documents/; }
 
 # dircolors
 [[ -f "$HOME/.dir_colors" ]] && eval "$(dircolors -b $HOME/.dir_colors)"
@@ -32,6 +31,9 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 
 # autocomplete
 [[ -e "$HOME/.ssh/config" ]] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh
+
+# misctools
+source ~/.bin/misctools
 
 # dockertools
 source ~/.bin/dockertools
