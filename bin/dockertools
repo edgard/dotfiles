@@ -1,11 +1,11 @@
 #!/bin/bash
 
 dockertools_cleanup_containers() {
-  images=$(docker ps -aq)
-  if [[ -z "$images" ]]; then
+  containers=$(docker ps -aq)
+  if [[ -z "$containers" ]]; then
     echo "No containers to remove"
   else
-    docker rm ${images}
+    docker rm ${containers}
   fi
 }
 
