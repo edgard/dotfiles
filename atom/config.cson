@@ -3,7 +3,6 @@
     fontFamily: "PragmataPro"
     showInvisibles: true
     showIndentGuide: true
-    autoIndentOnPaste: false
     invisibles: {}
   core:
     disabledPackages: [
