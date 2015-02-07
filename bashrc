@@ -23,10 +23,6 @@ alias update="sudo yum upgrade -y; apm upgrade"
 # dircolors
 [[ -f "$HOME/.dir_colors" ]] && eval "$(dircolors -b $HOME/.dir_colors)"
 
-# rbenv
-export PATH="$HOME/.rbenv/bin:$PATH"
-[[ -f "$HOME/.rbenv/bin/rbenv" ]] && eval "$(rbenv init -)"
-
 # autojump
 [[ -s /etc/profile.d/autojump.bash ]] && source /etc/profile.d/autojump.bash
 
