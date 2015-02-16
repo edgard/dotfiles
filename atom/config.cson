@@ -9,11 +9,11 @@
       "autocomplete"
       "spell-check"
     ]
-    themes: [
-      "solarized-dark-ui"
-      "solarized-dark-syntax"
-    ]
     projectHome: "/home/edgard/Documents/code"
+    themes: [
+      "one-dark-ui"
+      "one-dark-syntax"
+    ]
   "exception-reporting":
     userId: "1b98cd61-c072-c275-56fd-5715ea36d0bd"
   welcome:
