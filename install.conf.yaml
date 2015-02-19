@@ -20,6 +20,10 @@
         create: true
         force: true
         path: terminator/config
+    ~/.screenrc:
+        create: true
+        force: true
+        path: screenrc
     ~/.bin/misctools:
         create: true
         force: true
