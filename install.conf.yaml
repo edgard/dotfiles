@@ -16,6 +16,10 @@
         create: true
         force: true
         path: atom/config.cson
+    ~/.config/terminator/config:
+        create: true
+        force: true
+        path: terminator/config
     ~/.bin/misctools:
         create: true
         force: true
