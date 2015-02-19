@@ -10,12 +10,14 @@
 [profiles]
   [[default]]
     palette = "#073642:#dc322f:#859900:#b58900:#268bd2:#d33682:#2aa198:#eee8d5:#373737:#cb4b16:#586e75:#657b83:#839496:#6c71c4:#93a1a1:#fdf6e3"
-    font = PragmataPro 12
+    copy_on_selection = True
     background_image = None
+    custom_command = 'cd $HOME && bash -c "screen"'
     use_system_font = False
     foreground_color = "#839496"
+    use_custom_command = True
     login_shell = True
-    copy_on_selection = True
+    font = PragmataPro 12
     background_color = "#002b36"
     scrollback_infinite = True
 [layouts]
