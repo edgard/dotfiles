@@ -16,6 +16,7 @@
     use_system_font = False
     foreground_color = "#839496"
     use_custom_command = True
+    login_shell = True
     show_titlebar = False
     font = PragmataPro 12
     background_color = "#002b36"
@@ -25,6 +26,7 @@
     [[[child1]]]
       type = Terminal
       parent = window0
+      profile = default
     [[[window0]]]
       type = Window
       parent = ""
