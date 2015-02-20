@@ -2,6 +2,7 @@ autodetach off
 crlf off
 startup_message off
 vbell off
+defutf8 on
 term xterm-256color
 termcapinfo xterm* ti@:te@
 altscreen on
