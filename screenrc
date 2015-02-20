@@ -1,2 +1,9 @@
-termcapinfo xterm* ti@:te@
 autodetach off
+crlf off
+startup_message off
+vbell off
+term xterm-256color
+termcapinfo xterm* ti@:te@
+altscreen on
+setenv PROMPT_COMMAND 'echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/\~}\033\\"'
+hardstatus string "%h"
