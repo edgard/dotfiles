@@ -2,9 +2,6 @@
     ~/.bashrc:
         force: true
         path: bashrc
-    ~/.dir_colors:
-        force: true
-        path: dir_colors
     ~/.gitconfig:
         force: true
         path: gitconfig
