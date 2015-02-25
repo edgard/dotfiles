@@ -28,3 +28,4 @@
   linter: {}
   "atom-beautify":
     _analyticsUserId: "a6a0720b-ef9b-4635-a6bf-67af0c531216"
+  "go-plus": {}
