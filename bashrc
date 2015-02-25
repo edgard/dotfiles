@@ -29,6 +29,10 @@ alias update="sudo yum upgrade -y; apm upgrade"
 # autocomplete
 [[ -e "$HOME/.ssh/config" ]] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh
 
+# go
+export GOPATH=$HOME/.go
+export PATH=$PATH:$GOPATH/bin
+
 # misctools
 source ~/.bin/misctools
 
