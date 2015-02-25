@@ -1,20 +1,20 @@
 #!/bin/bash
 
 dockertools_cleanup_containers() {
-  containers=$(docker ps -aq)
+  containers=$(sudo docker ps -aq)
   if [[ -z "$containers" ]]; then
     echo "No containers to remove"
   else
-    docker rm ${containers}
+    sudo docker rm ${containers}
   fi
 }
 
 dockertools_cleanup_images() {
-  images=$(docker images | grep -e "^<none>" | awk '{print $3}')
+  images=$(sudo docker images | grep -e "^<none>" | awk '{print $3}')
   if [[ -z "$images" ]]; then
     echo "No images to remove"
   else
-    docker rmi ${images}
+    sudo docker rmi ${images}
   fi
 }
 
@@ -46,9 +46,9 @@ dockertools_cleanup_volumes() {
     done
   }
 
-  for container in $(docker ps -a -q --no-trunc); do
+  for container in $(sudo docker ps -a -q --no-trunc); do
     allvolumes+=${container}
-    for vid in $(docker inspect --format='{{range $vol, $path := .Volumes}}{{$path}}{{"\n"}}{{end}}' ${container}); do
+    for vid in $(sudo docker inspect --format='{{range $vol, $path := .Volumes}}{{$path}}{{"\n"}}{{end}}' ${container}); do
       if [[ "${vid##*/}" =~ [0-9a-f]{64} ]]; then
         allvolumes+=("${vid##*/}")
       fi
