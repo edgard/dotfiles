@@ -16,20 +16,10 @@
         create: true
         force: true
         path: atom/config.cson
-    ~/.bin/misctools:
-        create: true
-        force: true
-        path: bin/misctools
-    ~/.bin/dockertools:
-        create: true
-        force: true
-        path: bin/dockertools
     ~/.bin/shell-extension-install:
         create: true
         force: true
         path: bin/shell-extension-install
-
-
 
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]

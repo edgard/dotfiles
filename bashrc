@@ -19,6 +19,7 @@ alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgree
 alias autopep8="autopep8 --max-line-length=999"
 alias open="xdg-open"
 alias update="sudo yum upgrade -y; apm upgrade"
+syncdoc() { rsync -azv --delete --include="*" /home/edgard/Documents/ $1:/home/edgard/Documents/; }
 
 # dircolors
 [[ -f "$HOME/.dir_colors" ]] && eval "$(dircolors -b $HOME/.dir_colors)"
@@ -32,9 +33,3 @@ alias update="sudo yum upgrade -y; apm upgrade"
 # go
 export GOPATH=$HOME/Documents/code/go
 export PATH=$PATH:$GOPATH/bin
-
-# misctools
-source ~/.bin/misctools
-
-# dockertools
-source ~/.bin/dockertools
