@@ -1,3 +1,5 @@
-These dotfiles are managed by dotbot
+# Dotfiles managed by [DotBot](https://github.com/anishathalye/dotbot)
 
-To install them, clone this repo to ~/.dotfiles and type ./install
+## Install
+    git clone https://github.com/edgard/dotfiles.git ~/.dotfiles
+    cd ~/.dotfiles && ./install
