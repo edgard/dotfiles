@@ -8,6 +8,11 @@
 # Bash prompt
 PS1='[\u@\h \W]\$ '
 
+# Bash options
+shopt -s histappend
+shopt -s checkwinsize
+shopt -s direxpand
+
 # environment variables
 export PAGER="less"
 export EDITOR="atom -w -n"
