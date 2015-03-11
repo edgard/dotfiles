@@ -2,13 +2,13 @@
 # ~/.bashrc
 #
 
-# If not running interactively, don't do anything
+# if not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-# Bash prompt
+# bash prompt
 PS1='[\u@\h \W]\$ '
 
-# Bash options
+# bash options
 shopt -s histappend
 shopt -s checkwinsize
 shopt -s direxpand
