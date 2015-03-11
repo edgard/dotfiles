@@ -1,3 +1,5 @@
+- clean: ['~']
+
 - link:
     ~/.bashrc:
         force: true
