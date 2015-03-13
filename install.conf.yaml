@@ -18,7 +18,7 @@
         create: true
         force: true
         path: atom/config.cson
-    ~/.bin/shell-extension-install:
+    ~/.local/bin/shell-extension-install:
         create: true
         force: true
         path: bin/shell-extension-install
