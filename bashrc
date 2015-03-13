@@ -38,3 +38,6 @@ syncdoc() { rsync -azv --delete --include="*" /home/edgard/Documents/ $1:/home/e
 # go
 export GOPATH=$HOME/Documents/code/go
 export PATH=$PATH:$GOPATH/bin
+
+# cwd first in path
+export PATH=.:$PATH
