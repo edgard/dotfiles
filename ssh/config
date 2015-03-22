@@ -1,6 +1,3 @@
-Host *
-  ForwardAgent yes
-
 Host htpc
   HostName 192.168.25.240
 
