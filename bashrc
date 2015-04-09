@@ -24,6 +24,7 @@ alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias open="xdg-open"
 alias update="sudo yum upgrade --skip-broken; apm upgrade"
+alias rpmlistkeys="rpm -q gpg-pubkey --qf '%{name}-%{version}-%{release} --> %{summary}\n'"
 syncdoc() { rsync -azv --delete --include="*" /home/edgard/Documents/ $1:/home/edgard/Documents/; }
 
 # dircolors
