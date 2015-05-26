@@ -24,7 +24,7 @@ alias ls="ls -Fh --color=auto"
 alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias open="xdg-open"
-alias update="sudo yum upgrade --skip-broken; apm upgrade"
+alias update="sudo dnf upgrade; apm upgrade"
 alias rpmlistkeys="rpm -qa --nodigest --nosignature --qf '%{VERSION}-%{RELEASE} %{SUMMARY}\n' gpg-pubkey\* \ | sed 's/ gpg(/ /;s/)$//'"
 syncdoc() { rsync -azv --delete --include="*" /home/edgard/Documents/ $1:/home/edgard/Documents/; }
 
