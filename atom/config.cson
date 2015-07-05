@@ -4,6 +4,7 @@
     showInvisibles: true
     showIndentGuide: true
     invisibles: {}
+    fontSize: 16
   core:
     disabledPackages: [
       "autocomplete"
