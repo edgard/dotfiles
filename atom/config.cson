@@ -30,7 +30,7 @@
   "atom-beautify":
     _analyticsUserId: "a6a0720b-ef9b-4635-a6bf-67af0c531216"
   "go-plus":
-    goPath: "/home/edgard/Documents/code/go"
+    goPath: "/Users/edgard/Documents/code/go"
   tabs:
     enableVcsColoring: true
   "status-bar": {}

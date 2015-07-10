@@ -1,9 +1,9 @@
 - clean: ['~']
 
 - link:
-    ~/.bashrc:
+    ~/.bash_profile:
         force: true
-        path: bashrc
+        path: bash_profile
     ~/.inputrc:
         force: true
         path: inputrc
@@ -22,4 +22,3 @@
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]
     - [chmod 600 ssh/config, Fix ssh config permission]
-    - [chmod 775 bin/shell-extension-install, Fix shell-extension-install permission]
