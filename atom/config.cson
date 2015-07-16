@@ -34,3 +34,4 @@
   tabs:
     enableVcsColoring: true
   "status-bar": {}
+  "linter-elixirc": {}

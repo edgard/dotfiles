@@ -18,6 +18,10 @@
         create: true
         force: true
         path: atom/config.cson
+    ~/.config/gocode/config.json:
+        create: true
+        force: true
+        path: config/gocode/config.json
 
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]
