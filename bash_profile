@@ -24,6 +24,7 @@ export VISUAL="atom -w -n"
 alias ls="ls -FGh"
 alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias update="brew update && brew upgrade; apm update -y"
 
 # dircolors
 [[ -f "$HOME/.dir_colors" ]] && eval "$(dircolors -b $HOME/.dir_colors)"
