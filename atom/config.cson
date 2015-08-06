@@ -9,29 +9,22 @@
     disabledPackages: [
       "autocomplete"
       "spell-check"
+      "background-tips"
+      "exception-reporting"
+      "metrics"
     ]
     projectHome: "/home/edgard/Documents/code"
     themes: [
       "one-dark-ui"
       "one-dark-syntax"
     ]
-  "exception-reporting":
-    userId: "1b98cd61-c072-c275-56fd-5715ea36d0bd"
   welcome:
     showOnStartup: false
-  "autocomplete-plus": {}
-  minimap: {}
   "git-diff":
     showIconsInEditorGutter: true
-  "spell-check": {}
-  "atom-terminal":
-    app: "/usr/bin/gnome-terminal"
-  linter: {}
   "atom-beautify":
-    _analyticsUserId: "a6a0720b-ef9b-4635-a6bf-67af0c531216"
+    analytics: false
   "go-plus":
     goPath: "/Users/edgard/Documents/code/go"
   tabs:
     enableVcsColoring: true
-  "status-bar": {}
-  "linter-elixirc": {}
