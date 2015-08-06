@@ -22,6 +22,10 @@
         create: true
         force: true
         path: config/gocode/config.json
+    ~/.hushlogin:
+        create: true
+        force: true
+        path: hushlogin
 
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]
