@@ -14,10 +14,6 @@
         create: true
         force: true
         path: ssh/config
-    ~/.atom/config.cson:
-        create: true
-        force: true
-        path: atom/config.cson
     ~/.config/gocode/config.json:
         create: true
         force: true

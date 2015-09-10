@@ -5,6 +5,17 @@
 # if not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+# os detection
+if_os () { [[ $OSTYPE == *$1* ]]; }
+if_nix () {
+  case "$OSTYPE" in
+    *linux*|*hurd*|*msys*|*cygwin*|*sua*|*interix*) sys="gnu";;
+    *bsd*|*darwin*) sys="bsd";;
+    *sunos*|*solaris*|*indiana*|*illumos*|*smartos*) sys="sun";;
+  esac
+  [[ "${sys}" == "$1" ]];
+}
+
 # bash prompt
 PS1='[\u@\h \W]\$ '
 
@@ -17,23 +28,27 @@ HISTCONTROL=ignoreboth
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 export PAGER="less"
-export EDITOR="atom -w -n"
-export VISUAL="atom -w -n"
+export EDITOR="subl -w -n"
+export VISUAL="subl -w -n"
 
 # aliases
-alias ls="ls -FGh"
 alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-alias update="brew update && brew upgrade; apm update -y"
+if_nix gnu && alias ls="ls -FGh --color=auto"
+if_nix bsd && alias ls="ls -FGh"
+if_os linux && alias update="sudo apt-get update && sudo apt-get dist-upgrade"
+if_os darwin && alias update="brew update && brew upgrade"
+if_nix gnu && alias open="xdg-open"
 
 # dircolors
 [[ -f "$HOME/.dir_colors" ]] && eval "$(dircolors -b $HOME/.dir_colors)"
 
 # autojump
-[[ -f /usr/local/etc/profile.d/autojump.sh ]] && source "/usr/local/etc/profile.d/autojump.sh"
+(if_os linux && [[ -f /usr/share/autojump/autojump.bash ]]) && source "/usr/share/autojump/autojump.bash"
+(if_os darwin && [[ -f /usr/local/etc/profile.d/autojump.sh ]]) && source "/usr/local/etc/profile.d/autojump.sh"
 
 # bash completion
-[[ -f /usr/local/etc/bash_completion ]] && source "/usr/local/etc/bash_completion"
+(if_os darwin && [[ -f /usr/local/etc/bash_completion ]]) && source "/usr/local/etc/bash_completion"
 
 # autocomplete ssh
 [[ -f "$HOME/.ssh/config" ]] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh
