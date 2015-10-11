@@ -10,6 +10,9 @@
     ~/.gitconfig:
         force: true
         path: gitconfig
+    ~/.gitignore_global:
+        force: true
+        path: gitignore_global
     ~/.ssh/config:
         create: true
         force: true

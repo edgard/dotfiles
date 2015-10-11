@@ -1,4 +1,5 @@
-#[core]
+[core]
+  excludesfile = ~/.gitignore_global
 #	autocrlf = input
 #[merge]
 #	ff = only
