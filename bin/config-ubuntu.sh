@@ -37,11 +37,16 @@ gsettings set org.compiz.place:/org/compiz/profiles/unity/plugins/place/ mode 1
 gsettings set com.canonical.Unity.Launcher favorites "['application://google-chrome.desktop', 'application://chrome-hmjkmjkepdijhoojdojkdfohbdgmmhki-Default.desktop', 'application://chrome-ojcflmmmcfpacggndoaaflkmcoblhnbh-Default.desktop', 'application://chrome-mojepfklcankkmikonjlnidiooanmpbb-Default.desktop', 'application://sublime-text.desktop', 'application://gnome-terminal.desktop', 'unity://running-apps', 'application://org.gnome.Nautilus.desktop', 'unity://expo-icon', 'unity://devices', 'unity://desktop-icon']"
 
 # terminal
-gsettings set org.gnome.Terminal.Legacy.Settings dark-theme true
 gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode 'tab'
 gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" use-system-font false
 gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" font "'PragmataPro 12'"
 gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" login-shell true
+gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" palette "['rgb(26,26,26)', 'rgb(244,0,95)', 'rgb(152,224,36)', 'rgb(250,132,25)', 'rgb(157,101,255)', 'rgb(244,0,95)', 'rgb(88,209,235)', 'rgb(196,197,181)', 'rgb(98,94,76)', 'rgb(244,0,95)', 'rgb(152,224,36)', 'rgb(224,213,97)', 'rgb(157,101,255)', 'rgb(244,0,95)', 'rgb(88,209,235)', 'rgb(246,246,239)']"
+gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" background-color "'rgb(26,26,26)'"
+gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" foreground-color "'rgb(196,197,181)'"
+gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" bold-color "'rgb(196,197,181)'"
+gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" bold-color-same-as-fg true
+gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" use-theme-colors false
 
 # deja-dup
 gsettings set org.gnome.DejaDup include-list "['\$HOME']"
