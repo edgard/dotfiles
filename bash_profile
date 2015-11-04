@@ -54,7 +54,7 @@ if_nix gnu && alias open="xdg-open"
 [[ -f "$HOME/.ssh/config" ]] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh
 
 # go
-export GOPATH=$HOME/Dropbox/Projects/go
+export GOPATH=$HOME/Documents/Projects/go
 export PATH=$PATH:$GOPATH/bin
 
 # cwd first in path

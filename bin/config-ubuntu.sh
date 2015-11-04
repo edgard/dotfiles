@@ -32,3 +32,6 @@ gsettings set org.gnome.DejaDup backend "'file'"
 gsettings set org.gnome.DejaDup.File path "'smb://user@tc/tc-disk/Backup/${HOSTNAME}'"
 gsettings set org.gnome.DejaDup delete-after 182
 gsettings set org.gnome.DejaDup periodic-period 1
+
+# thunderbird
+gvfs-mime --set text/calendar thunderbird.desktop
