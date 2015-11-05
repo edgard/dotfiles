@@ -21,6 +21,10 @@
         create: true
         force: true
         path: config/gocode/config.json
+    ~/.config/fontconfig/fonts.conf:
+        create: true
+        force: true
+        path: config/fontconfig/fonts.conf
     ~/.hushlogin:
         create: true
         force: true
