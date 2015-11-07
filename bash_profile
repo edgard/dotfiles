@@ -38,7 +38,7 @@ if_nix gnu && alias ls="ls -FGh --color=auto"
 if_nix bsd && alias ls="ls -FGh"
 if_os linux && alias update="sudo apt-get update && sudo apt-get dist-upgrade"
 if_os darwin && alias update="brew update && brew upgrade"
-if_nix gnu && alias open="xdg-open"
+if_nix gnu && alias open="gnome-open &> /dev/null"
 
 # dircolors
 [[ -f "$HOME/.dir_colors" ]] && eval "$(dircolors -b $HOME/.dir_colors)"
