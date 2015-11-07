@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# install gnome-extensions
+GNOME_VERSION=$(gnome-shell --version | awk '{split($3,a,"."); print a[1]"."a[2];}')
+./shell-extension-install "${GNOME_VERSION}" 517    # caffeine
+./shell-extension-install "${GNOME_VERSION}" 307    # dash-to-dock
+./shell-extension-install "${GNOME_VERSION}" 1005   # focus my window
+./shell-extension-install "${GNOME_VERSION}" 277    # impatience
+./shell-extension-install "${GNOME_VERSION}" 495    # topicons
+
 # gnome-shell
 gsettings set org.gnome.desktop.datetime automatic-timezone true
 gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us+intl')]"
