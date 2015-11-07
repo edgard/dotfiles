@@ -5,7 +5,7 @@ gsettings set org.gnome.desktop.datetime automatic-timezone true
 gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us+intl')]"
 gsettings set org.gnome.desktop.interface clock-format "'12h'"
 gsettings set org.gtk.Settings.FileChooser clock-format "'12h'"
-gsettings set org.gnome.desktop.interface icon-theme "'Numix-Circle' "
+gsettings set org.gnome.desktop.interface icon-theme "'Numix-Circle'"
 gsettings set org.gnome.desktop.peripherals.mouse speed -1.0
 gsettings set org.gnome.desktop.wm.preferences button-layout "'appmenu:minimize,maximize,close'"
 gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type "'suspend'"
@@ -14,7 +14,7 @@ gsettings set org.gnome.system.locale region "'en_US.UTF-8'"
 gsettings set org.gnome.system.location enabled true
 
 # terminal (soda-monokai)
-gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode 'tab'
+gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode "'tab'"
 gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" use-system-font false
 gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" font "'PragmataPro 12'"
 gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" login-shell true
