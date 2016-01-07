@@ -25,8 +25,6 @@ shopt -s checkwinsize
 HISTCONTROL=ignoreboth
 
 # environment variables
-export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
 export PAGER="less"
 export EDITOR="subl -w -n"
 export VISUAL="subl -w -n"
