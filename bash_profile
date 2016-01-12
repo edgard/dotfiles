@@ -26,8 +26,8 @@ HISTCONTROL=ignoreboth
 
 # environment variables
 export PAGER="less"
-export EDITOR="subl -w -n"
-export VISUAL="subl -w -n"
+export EDITOR="atom -w -n"
+export VISUAL="atom -w -n"
 
 # aliases
 alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
