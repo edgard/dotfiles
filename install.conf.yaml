@@ -33,6 +33,10 @@
         create: true
         force: true
         path: hushlogin
+    ~/.config/redshift.conf:
+        create: true
+        force: true
+        path: config/redshift.conf
 
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]
