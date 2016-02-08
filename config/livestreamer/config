@@ -1,0 +1,3 @@
+player=vlc --file-caching=5000 --network-caching=5000
+hls-segment-threads=3
+hds-segment-threads=3
