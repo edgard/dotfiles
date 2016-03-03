@@ -22,7 +22,11 @@ PS1='[\u@\h \W]\$ '
 # bash options
 shopt -s histappend
 shopt -s checkwinsize
-HISTCONTROL=ignoreboth
+shopt -s cmdhist
+HISTCONTROL="erasedups:ignoreboth"
+HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history"
+HISTSIZE=500000
+HISTFILESIZE=100000
 
 # environment variables
 export PAGER="less"
