@@ -30,15 +30,15 @@ HISTFILESIZE=100000
 
 # environment variables
 export PAGER="less"
-export EDITOR="atom -w -n"
-export VISUAL="atom -w -n"
+export EDITOR="code -w -n"
+export VISUAL="code -w -n"
 
 # aliases
 alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 if_nix gnu && alias ls="ls -FGh --color=auto"
 if_nix bsd && alias ls="ls -FGh"
-if_os linux && alias update="sudo apt-get update && sudo apt-get dist-upgrade; apm update; sudo ~/Documents/Apps/hardcode-fixer/fix.sh; rm -f ~/.local/share/applications/telegramdesktop.desktop"
+if_os linux && alias update="sudo apt-get update && sudo apt-get dist-upgrade; sudo ~/Documents/Apps/hardcode-fixer/fix.sh; rm -f ~/.local/share/applications/telegramdesktop.desktop"
 if_os darwin && alias update="brew update && brew upgrade"
 if_nix gnu && alias open="gnome-open &> /dev/null"
 

@@ -17,14 +17,6 @@
         create: true
         force: true
         path: ssh/config
-    ~/.atom/config.cson:
-        create: true
-        force: true
-        path: atom/config.cson
-    ~/.config/gocode/config.json:
-        create: true
-        force: true
-        path: config/gocode/config.json
     ~/.config/fontconfig/fonts.conf:
         create: true
         force: true
@@ -41,6 +33,10 @@
         create: true
         force: true
         path: config/livestreamer/config
+    ~/.config/Code/User/settings.json:
+        create: true
+        force: true
+        path: config/Code/User/settings.json
 
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]

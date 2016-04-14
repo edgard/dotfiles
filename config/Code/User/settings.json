@@ -1,0 +1,16 @@
+// Place your settings in this file to overwrite the default settings
+{
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.fontFamily": "PragmataPro",
+    "editor.fontSize": 16,
+    "editor.rulers": [80],
+    "editor.roundedSelection": false,
+    "editor.scrollBeyondLastLine": false,
+    "editor.wrappingColumn": -1,
+    "editor.renderWhitespace": true,
+    "window.reopenFolders": "none",
+    "files.autoSave": "on",
+    "files.trimTrailingWhitespace": true,
+    "go.formatOnSave": true,
+    "go.gopath": "/home/edgard/Documents/Projects/go"
+}
