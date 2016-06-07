@@ -3,14 +3,15 @@
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.fontFamily": "PragmataPro",
     "editor.fontSize": 16,
-    "editor.rulers": [80],
-    "editor.roundedSelection": false,
-    "editor.scrollBeyondLastLine": false,
-    "editor.wrappingColumn": -1,
+    "editor.hideCursorInOverviewRuler": true,
     "editor.renderWhitespace": true,
-    "window.reopenFolders": "none",
-    "files.autoSave": "on",
+    "editor.roundedSelection": false,
+    "editor.rulers": [80],
+    "editor.scrollBeyondLastLine": false,
+    "editor.selectionHighlight": false,
+    "editor.wrappingColumn": -1,
     "files.trimTrailingWhitespace": true,
+    "window.reopenFolders": "none",
     "go.formatOnSave": true,
     "go.gopath": "/home/edgard/Documents/Projects/go"
-}
+    }
