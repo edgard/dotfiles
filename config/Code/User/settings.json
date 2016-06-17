@@ -1,7 +1,7 @@
 // Place your settings in this file to overwrite the default settings
 {
     "diffEditor.ignoreTrimWhitespace": false,
-    "editor.fontFamily": "PragmataPro",
+    "editor.fontFamily": "PragmataPro Mono",
     "editor.fontSize": 16,
     "editor.hideCursorInOverviewRuler": true,
     "editor.renderWhitespace": true,
