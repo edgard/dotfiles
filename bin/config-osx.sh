@@ -97,7 +97,7 @@ defaults write com.apple.screencapture disable-shadow -bool true
 defaults write NSGlobalDomain AppleFontSmoothing -int 2
 
 # Disable auto-adjust brightness
-sudo defaults write /Library/Preferences/com.apple.iokit.AmbientLightSensor.plist "Automatic Display Enabled" -bool false
+#sudo defaults write /Library/Preferences/com.apple.iokit.AmbientLightSensor.plist "Automatic Display Enabled" -bool false
 
 
 ###############################################################################
@@ -180,22 +180,43 @@ defaults write com.google.Chrome DisablePrintPreview -bool true
 # Brew
 ###############################################################################
 
-echo "Would you like to install brew and related apps? (y/n)"
+echo "Would you like to install brew and apps? (y/n)"
 read -r response
 if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
-  # Install brew and applications
+  # Install brew and cask
   ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  brew tap caskroom/cask
+  
+  # Install applications
   brew install android-platform-tools
   brew install ansible
   brew install aria2
   brew install asciinema
   brew install autojump
   brew install bash-completion
-  brew install docker
-  brew install docker-machine
   brew install go
+  brew install node
   brew install gpg
   brew install mercurial
   brew install ssh-copy-id
   brew install the_silver_searcher
+  
+  brew cask install android-file-transfer
+  brew cask install appcleaner
+  brew cask install caffeine
+  brew cask install calibre
+  brew cask install darktable
+  brew cask install dropbox
+  brew cask install flux
+  brew cask install gimp
+  brew cask install google-chrome
+  brew cask install inkscape
+  brew cask install spectacle
+  brew cask install spotify
+  brew cask install telegram-desktop
+  brew cask install the-unarchiver
+  brew cask install transmission
+  brew cask install virtualbox  
+  brew cask install visual-studio-code  
+  brew cask install vlc
 fi
