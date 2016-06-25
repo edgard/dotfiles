@@ -210,7 +210,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
   brew cask install flux
   brew cask install gimp
   brew cask install google-chrome
-  brew cask install inkscape
+  brew cask install java
   brew cask install spectacle
   brew cask install spotify
   brew cask install telegram-desktop
