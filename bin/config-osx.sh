@@ -186,7 +186,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
   # Install brew and cask
   ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   brew tap caskroom/cask
-  
+
   # Install applications
   brew install android-platform-tools
   brew install ansible
@@ -200,7 +200,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
   brew install mercurial
   brew install ssh-copy-id
   brew install the_silver_searcher
-  
+
   brew cask install android-file-transfer
   brew cask install appcleaner
   brew cask install caffeine
@@ -216,7 +216,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
   brew cask install telegram-desktop
   brew cask install the-unarchiver
   brew cask install transmission
-  brew cask install virtualbox  
-  brew cask install visual-studio-code  
+  brew cask install virtualbox
+  brew cask install visual-studio-code
   brew cask install vlc
 fi
