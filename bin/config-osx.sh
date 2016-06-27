@@ -213,6 +213,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
   brew cask install java
   brew cask install spectacle
   brew cask install spotify
+  brew cask install steermouse
   brew cask install telegram-desktop
   brew cask install the-unarchiver
   brew cask install transmission
