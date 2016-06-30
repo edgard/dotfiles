@@ -205,7 +205,9 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
   brew cask install appcleaner
   brew cask install caffeine
   brew cask install calibre
+  brew cask install chrome-remote-desktop-host
   brew cask install darktable
+  brew cask install displaycal
   brew cask install dropbox
   brew cask install flux
   brew cask install gimp
