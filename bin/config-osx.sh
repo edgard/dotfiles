@@ -208,6 +208,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
   brew cask install chrome-remote-desktop-host
   brew cask install darktable
   brew cask install displaycal
+  brew cask install docker
   brew cask install dropbox
   brew cask install flux
   brew cask install gimp
