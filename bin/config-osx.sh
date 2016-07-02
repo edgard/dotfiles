@@ -169,6 +169,14 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
 
 ###############################################################################
+# Misc
+###############################################################################
+
+# Turn on local firewall
+sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
+
+
+###############################################################################
 # Chrome
 ###############################################################################
 
