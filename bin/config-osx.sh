@@ -222,9 +222,11 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
   brew cask install gimp
   brew cask install google-chrome
   brew cask install java
+  brew cask install logitech-myharmony
   brew cask install spectacle
   brew cask install spotify
   brew cask install steermouse
+  brew cask install subsmarine
   brew cask install telegram-desktop
   brew cask install the-unarchiver
   brew cask install transmission
