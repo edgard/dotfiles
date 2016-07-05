@@ -1,0 +1,4 @@
+player=totem
+hls-segment-threads=3
+hds-segment-threads=3
+player-continuous-http

@@ -17,10 +17,26 @@
         create: true
         force: true
         path: ssh/config
+    ~/.config/fontconfig/fonts.conf:
+        create: true
+        force: true
+        path: config/fontconfig/fonts.conf
     ~/.hushlogin:
         create: true
         force: true
         path: hushlogin
+    ~/.config/redshift.conf:
+        create: true
+        force: true
+        path: config/redshift.conf
+    ~/.config/livestreamer/config:
+        create: true
+        force: true
+        path: config/livestreamer/config
+    ~/.config/Code/User/settings.json:
+        create: true
+        force: true
+        path: config/Code/User/settings.json
 
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]
