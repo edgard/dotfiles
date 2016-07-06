@@ -15,7 +15,7 @@ gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us+intl')]"
 gsettings set org.gnome.desktop.interface clock-format "'12h'"
 gsettings set org.gtk.Settings.FileChooser clock-format "'12h'"
 gsettings set org.gnome.desktop.interface icon-theme "'Numix-Circle'"
-gsettings set org.gnome.desktop.peripherals.mouse speed -1.0
+gsettings set org.gnome.desktop.peripherals.mouse speed -0.8
 gsettings set org.gnome.desktop.wm.preferences button-layout "'appmenu:minimize,maximize,close'"
 gsettings set org.gnome.mutter center-new-windows true
 gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type "'suspend'"
