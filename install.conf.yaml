@@ -29,10 +29,6 @@
         create: true
         force: true
         path: config/redshift.conf
-    ~/.config/livestreamer/config:
-        create: true
-        force: true
-        path: config/livestreamer/config
     ~/.config/Code/User/settings.json:
         create: true
         force: true
