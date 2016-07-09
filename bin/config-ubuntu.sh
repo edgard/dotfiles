@@ -22,7 +22,7 @@ gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type "'s
 gsettings set org.gnome.shell.overrides dynamic-workspaces false
 gsettings set org.gnome.system.locale region "'en_US.UTF-8'"
 gsettings set org.gnome.system.location enabled true
-gsettings set org.gnome.shell favorite-apps "['org.gnome.Nautilus.desktop', 'gnome-terminal.desktop', 'code.desktop', 'chrome-hmjkmjkepdijhoojdojkdfohbdgmmhki-Default.desktop', 'thunderbird.desktop', 'telegram.desktop', 'google-chrome.desktop']"
+gsettings set org.gnome.shell favorite-apps "['org.gnome.Nautilus.desktop', 'gnome-terminal.desktop', 'code.desktop', 'spotify.desktop', 'chrome-hmjkmjkepdijhoojdojkdfohbdgmmhki-Default.desktop', 'telegram.desktop', 'google-chrome.desktop']"
 
 # ext: caffeine
 GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/caffeine@patapon.info/schemas gsettings set org.gnome.shell.extensions.caffeine show-notifications false
