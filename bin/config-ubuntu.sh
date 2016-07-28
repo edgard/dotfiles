@@ -1,13 +1,16 @@
 #!/bin/bash
 
 # install gnome-extensions
-GNOME_VERSION=$(gnome-shell --version | awk '{split($3,a,"."); print a[1]"."a[2];}')
-./shell-extension-install "${GNOME_VERSION}" 517    # caffeine
-./shell-extension-install "${GNOME_VERSION}" 307    # dash-to-dock
-./shell-extension-install "${GNOME_VERSION}" 1005   # focus my window
-./shell-extension-install "${GNOME_VERSION}" 277    # impatience
-./shell-extension-install "${GNOME_VERSION}" 495    # topicons
-gsettings set org.gnome.shell enabled-extensions "['caffeine@patapon.info', 'dash-to-dock@micxgx.gmail.com', 'focus-my-window@varianto25.com', 'impatience@gfxmonk.net', 'topIcons@adel.gadllah@gmail.com']"
+read -n 1 -p "Would you like to install gnome extensions? (y/n) " -r response; echo
+if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+    GNOME_VERSION=$(gnome-shell --version | awk '{split($3,a,"."); print a[1]"."a[2];}')
+    ./shell-extension-install "${GNOME_VERSION}" 517    # caffeine
+    ./shell-extension-install "${GNOME_VERSION}" 307    # dash-to-dock
+    ./shell-extension-install "${GNOME_VERSION}" 1005   # focus my window
+    ./shell-extension-install "${GNOME_VERSION}" 277    # impatience
+    ./shell-extension-install "${GNOME_VERSION}" 495    # topicons
+    gsettings set org.gnome.shell enabled-extensions "['caffeine@patapon.info', 'dash-to-dock@micxgx.gmail.com', 'focus-my-window@varianto25.com', 'impatience@gfxmonk.net', 'topIcons@adel.gadllah@gmail.com']"
+fi
 
 # gnome-shell
 gsettings set org.gnome.desktop.datetime automatic-timezone true
