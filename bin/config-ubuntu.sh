@@ -9,7 +9,8 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
     ./shell-extension-install "${GNOME_VERSION}" 1005   # focus my window
     ./shell-extension-install "${GNOME_VERSION}" 277    # impatience
     ./shell-extension-install "${GNOME_VERSION}" 495    # topicons
-    gsettings set org.gnome.shell enabled-extensions "['caffeine@patapon.info', 'dash-to-dock@micxgx.gmail.com', 'focus-my-window@varianto25.com', 'impatience@gfxmonk.net', 'topIcons@adel.gadllah@gmail.com']"
+    ./shell-extension-install "${GNOME_VERSION}" 39     # putwindows
+    gsettings set org.gnome.shell enabled-extensions "['caffeine@patapon.info', 'dash-to-dock@micxgx.gmail.com', 'focus-my-window@varianto25.com', 'impatience@gfxmonk.net', 'topIcons@adel.gadllah@gmail.com', 'putWindow@clemens.lab21.org']"
 fi
 
 # gnome-shell
@@ -38,6 +39,32 @@ GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.g
 GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas gsettings set org.gnome.shell.extensions.dash-to-dock show-apps-at-top true
 GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas gsettings set org.gnome.shell.extensions.dash-to-dock dock-position "'BOTTOM'"
 GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas gsettings set org.gnome.shell.extensions.dash-to-dock apply-custom-theme true
+
+# ext: putwindows
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow move-focus-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow move-focus-north-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow move-focus-east-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow move-focus-south-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow move-focus-west-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow move-focus-cycle-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow move-focus-left-screen-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow move-focus-right-screen-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-corner-ne-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-corner-nw-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-corner-se-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-corner-sw-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-center-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-location-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-right-screen-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-left-screen-enabled 0
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-side-w-enabled 1
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-side-s-enabled 1
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-side-e-enabled 1
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-side-n-enabled 1
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-side-w "['<Super>Left']"
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-side-s "['<Super>Down']"
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-side-e "['<Super>Right']"
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-side-n "['<Super>Up']"
 
 # terminal (one-dark)
 gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode "'tab'"
