@@ -26,7 +26,7 @@ gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type "'s
 gsettings set org.gnome.shell.overrides dynamic-workspaces false
 gsettings set org.gnome.system.locale region "'en_US.UTF-8'"
 gsettings set org.gnome.system.location enabled true
-gsettings set org.gnome.shell favorite-apps "['org.gnome.Nautilus.desktop', 'gnome-terminal.desktop', 'code.desktop', 'spotify.desktop', 'chrome-hmjkmjkepdijhoojdojkdfohbdgmmhki-Default.desktop', 'thunderbird.desktop', 'telegram.desktop', 'google-chrome.desktop']"
+gsettings set org.gnome.shell favorite-apps "['org.gnome.Nautilus.desktop', 'gnome-terminal.desktop', 'code.desktop', 'spotify.desktop', 'org.gnome.Contacts.desktop', 'org.gnome.Calendar.desktop', 'chrome-hmjkmjkepdijhoojdojkdfohbdgmmhki-Default.desktop', 'nylas.desktop', 'telegram.desktop', 'google-chrome.desktop']"
 gsettings set org.gnome.nautilus.preferences sort-directories-first true
 gsettings set org.gtk.Settings.FileChooser sort-directories-first true
 gsettings set org.gnome.nautilus.preferences executable-text-activation "'launch'"
