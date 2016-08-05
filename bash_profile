@@ -38,7 +38,7 @@ alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 if_nix gnu && alias ls="ls -FGh --color=auto"
 if_nix bsd && alias ls="ls -FGh"
-if_os linux && alias update="sudo apt-get update && sudo apt-get dist-upgrade; sudo /opt/hardcode-fixer/fix.sh; /opt/Hardcode-Tray/hardcode-tray --apply; rm -f ~/.local/share/applications/telegramdesktop.desktop"
+if_os linux && alias update="sudo apt-get update && sudo apt-get dist-upgrade; sudo /opt/hardcode-fixer/fix.sh; /opt/Hardcode-Tray/hardcode-tray --apply; rm -f ~/.local/share/applications/telegramdesktop.desktop; sudo chown -R edgard.edgard /opt/{telegram,hardcode-fixer,Hardcode-Tray}"
 if_os darwin && alias update="brew update && brew upgrade"
 if_nix gnu && alias open="gnome-open &> /dev/null"
 
