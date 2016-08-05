@@ -24,7 +24,7 @@ shopt -s histappend
 shopt -s checkwinsize
 shopt -s cmdhist
 HISTCONTROL="erasedups:ignoreboth"
-HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history"
+HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:update"
 HISTSIZE=500000
 HISTFILESIZE=100000
 
