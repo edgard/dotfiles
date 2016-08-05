@@ -43,7 +43,7 @@ if_os darwin && alias update="brew update && brew upgrade"
 if_nix gnu && alias open="gnome-open &> /dev/null"
 
 # dircolors
-[[ -f "$HOME/.dir_colors" ]] && eval "$(dircolors -b $HOME/.dir_colors)"
+[[ -f "$HOME/.dir_colors" ]] && eval "$(dircolors -b "$HOME/.dir_colors")"
 
 # autojump
 (if_os linux && [[ -f /usr/share/autojump/autojump.bash ]]) && source "/usr/share/autojump/autojump.bash"
