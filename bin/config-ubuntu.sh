@@ -10,7 +10,9 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
     ./shell-extension-install "${GNOME_VERSION}" 277    # impatience
     ./shell-extension-install "${GNOME_VERSION}" 495    # topicons
     ./shell-extension-install "${GNOME_VERSION}" 39     # putwindows
-    gsettings set org.gnome.shell enabled-extensions "['caffeine@patapon.info', 'dash-to-dock@micxgx.gmail.com', 'focus-my-window@varianto25.com', 'impatience@gfxmonk.net', 'topIcons@adel.gadllah@gmail.com', 'putWindow@clemens.lab21.org']"
+    ./shell-extension-install "${GNOME_VERSION}" 15     # alternate-tab
+    ./shell-extension-install "${GNOME_VERSION}" 355    # status area horizontal spacing
+    gsettings set org.gnome.shell enabled-extensions "['caffeine@patapon.info', 'dash-to-dock@micxgx.gmail.com', 'focus-my-window@varianto25.com', 'impatience@gfxmonk.net', 'topIcons@adel.gadllah@gmail.com', 'putWindow@clemens.lab21.org', 'alternate-tab@gnome-shell-extensions.gcampax.github.com', 'status-area-horizontal-spacing@mathematical.coffee.gmail.com']"
 fi
 
 # gnome-shell
@@ -85,6 +87,9 @@ GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab
 GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-side-s "['<Alt><Super>Down']"
 GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-side-e "['<Alt><Super>Right']"
 GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow put-to-side-n "['<Alt><Super>Up']"
+
+# ext: status area horizontal spacing
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/status-area-horizontal-spacing@mathematical.coffee.gmail.com/schemas gsettings set org.gnome.shell.extensions.status-area-horizontal-spacing hpadding 3
 
 # terminal (one-dark)
 gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode "'tab'"
