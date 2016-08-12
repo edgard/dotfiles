@@ -110,3 +110,8 @@ gsettings set org.gnome.DejaDup backend "'file'"
 gsettings set org.gnome.DejaDup.File path "'smb://user@tc/tc-disk/Backup/${HOSTNAME}'"
 gsettings set org.gnome.DejaDup delete-after 182
 gsettings set org.gnome.DejaDup periodic-period 1
+
+# mimetypes
+gvfs-mime --set x-scheme-handler/mailto google-chrome.desktop
+gvfs-mime --set x-scheme-handler/webcal google-chrome.desktop
+gvfs-mime --set text/calendar google-chrome.desktop
