@@ -12,7 +12,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
     ./shell-extension-install "${GNOME_VERSION}" 39     # putwindows
     ./shell-extension-install "${GNOME_VERSION}" 15     # alternate-tab
     ./shell-extension-install "${GNOME_VERSION}" 355    # status area horizontal spacing
-    gsettings set org.gnome.shell enabled-extensions "['caffeine@patapon.info', 'dash-to-dock@micxgx.gmail.com', 'focus-my-window@varianto25.com', 'impatience@gfxmonk.net', 'topIcons@adel.gadllah@gmail.com', 'putWindow@clemens.lab21.org', 'alternate-tab@gnome-shell-extensions.gcampax.github.com', 'status-area-horizontal-spacing@mathematical.coffee.gmail.com']"
+    gsettings set org.gnome.shell enabled-extensions "['caffeine@patapon.info', 'dash-to-dock@micxgx.gmail.com', 'focus-my-window@varianto25.com', 'impatience@gfxmonk.net', 'topIcons@adel.gadllah@gmail.com', 'putWindow@clemens.lab21.org', 'alternate-tab@gnome-shell-extensions.gcampax.github.com', 'status-area-horizontal-spacing@mathematical.coffee.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com']"
 fi
 
 # gnome-shell
@@ -21,6 +21,8 @@ gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us+intl')]"
 gsettings set org.gnome.desktop.interface clock-format "'12h'"
 gsettings set org.gtk.Settings.FileChooser clock-format "'12h'"
 gsettings set org.gnome.desktop.interface icon-theme "'Numix-Circle'"
+gsettings set org.gnome.desktop.interface gtk-theme "'Arc'"
+gsettings set org.gnome.shell.extensions.user-theme name "'Arc-Dark'"
 gsettings set org.gnome.desktop.peripherals.mouse speed -0.8
 gsettings set org.gnome.desktop.wm.preferences button-layout "'appmenu:minimize,maximize,close'"
 gsettings set org.gnome.mutter center-new-windows true
@@ -32,21 +34,6 @@ gsettings set org.gnome.shell favorite-apps "['org.gnome.Nautilus.desktop', 'gno
 gsettings set org.gnome.nautilus.preferences sort-directories-first true
 gsettings set org.gtk.Settings.FileChooser sort-directories-first true
 gsettings set org.gnome.nautilus.preferences executable-text-activation "'launch'"
-
-# shortcuts: printscreen
-gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot "''"
-gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ command "'shutter -f'"
-gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ name "'Screenshot'"
-gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ binding "'Print'"
-gsettings set org.gnome.settings-daemon.plugins.media-keys window-screenshot "''"
-gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/ command "'shutter -w'"
-gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/ name "'Screenshot Window'"
-gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/ binding "'<Alt>Print'"
-gsettings set org.gnome.settings-daemon.plugins.media-keys area-screenshot "''"
-gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/ command "'shutter -s'"
-gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/ name "'Screenshot Area'"
-gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/ binding "'<Shift>Print'"
-gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/']"
 
 # ext: caffeine
 GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/caffeine@patapon.info/schemas gsettings set org.gnome.shell.extensions.caffeine show-notifications false
@@ -61,6 +48,7 @@ GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.g
 GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas gsettings set org.gnome.shell.extensions.dash-to-dock hide-delay 0.200
 GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas gsettings set org.gnome.shell.extensions.dash-to-dock show-delay 0.100
 GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas gsettings set org.gnome.shell.extensions.dash-to-dock require-pressure-to-show false
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas gsettings set org.gnome.shell.extensions.dash-to-dock apply-custom-theme false
 
 # ext: putwindows
 GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/putWindow@clemens.lab21.org/schemas gsettings set org.gnome.shell.extensions.org-lab21-putwindow move-focus-enabled 0
@@ -103,15 +91,7 @@ gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/prof
 gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" bold-color-same-as-fg true
 gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" use-theme-colors false
 
-# deja-dup
-gsettings set org.gnome.DejaDup include-list "['\$HOME']"
-gsettings set org.gnome.DejaDup exclude-list "['\$TRASH', '\$DOWNLOAD']"
-gsettings set org.gnome.DejaDup backend "'file'"
-gsettings set org.gnome.DejaDup.File path "'smb://user@tc/tc-disk/Backup/${HOSTNAME}'"
-gsettings set org.gnome.DejaDup delete-after 182
-gsettings set org.gnome.DejaDup periodic-period 1
-
 # mimetypes
-gvfs-mime --set x-scheme-handler/mailto google-chrome.desktop
-gvfs-mime --set x-scheme-handler/webcal google-chrome.desktop
-gvfs-mime --set text/calendar google-chrome.desktop
+gvfs-mime --set x-scheme-handler/mailto thunderbird.desktop
+gvfs-mime --set x-scheme-handler/webcal thunderbird.desktop
+gvfs-mime --set text/calendar thunderbird.desktop
