@@ -25,6 +25,10 @@
         create: true
         force: true
         path: config/Code/User/settings.json
+    ~/.conkyrc:
+        create: true
+        force: true
+        path: conkyrc
 
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]
