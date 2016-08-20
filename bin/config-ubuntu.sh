@@ -12,7 +12,10 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
     ./shell-extension-install "${GNOME_VERSION}" 657    # shelltile
     ./shell-extension-install "${GNOME_VERSION}" 15     # alternate-tab
     ./shell-extension-install "${GNOME_VERSION}" 355    # status area horizontal spacing
-    gsettings set org.gnome.shell enabled-extensions "['caffeine@patapon.info', 'dash-to-dock@micxgx.gmail.com', 'focus-my-window@varianto25.com', 'impatience@gfxmonk.net', 'topIcons@adel.gadllah@gmail.com', 'alternate-tab@gnome-shell-extensions.gcampax.github.com', 'status-area-horizontal-spacing@mathematical.coffee.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'auto-move-windows@gnome-shell-extensions.gcampax.github.com', 'ShellTile@emasab.it']"
+    ./shell-extension-install "${GNOME_VERSION}" 118    # no topleft hot corner
+    ./shell-extension-install "${GNOME_VERSION}" 18     # native window placement
+    ./shell-extension-install "${GNOME_VERSION}" 320    # window overlay icons
+    gsettings set org.gnome.shell enabled-extensions "['user-theme@gnome-shell-extensions.gcampax.github.com', 'caffeine@patapon.info', 'dash-to-dock@micxgx.gmail.com', 'focus-my-window@varianto25.com', 'impatience@gfxmonk.net', 'topIcons@adel.gadllah@gmail.com', 'ShellTile@emasab.it', 'alternate-tab@gnome-shell-extensions.gcampax.github.com', 'status-area-horizontal-spacing@mathematical.coffee.gmail.com', 'nohotcorner@azuri.free.fr', 'native-window-placement@gnome-shell-extensions.gcampax.github.com', 'windowoverlay-icons@sustmidown.centrum.cz']"
 fi
 
 # gnome-shell
