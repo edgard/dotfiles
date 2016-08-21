@@ -37,6 +37,7 @@ gsettings set org.gnome.shell favorite-apps "['org.gnome.Nautilus.desktop', 'gno
 gsettings set org.gnome.nautilus.preferences sort-directories-first true
 gsettings set org.gtk.Settings.FileChooser sort-directories-first true
 gsettings set org.gnome.nautilus.preferences executable-text-activation "'launch'"
+gsettings set org.gnome.settings-daemon.plugins.media-keys terminal "'<Super>Return'"
 
 # ext: caffeine
 GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/caffeine@patapon.info/schemas gsettings set org.gnome.shell.extensions.caffeine show-notifications false
