@@ -22,7 +22,7 @@ conky.config = {
 };
 
 conky.text = [[
-${goto 80}${voffset 100}${color1}${font Kenyan Coffee:size=95}${time %I:%M}${font Kenyan Coffee:size=20}${time %p}
-${goto 85}${font Cantarell:size=20}${time %B %d, %Y}
-${goto 75}${voffset 10}${color2}${font Shimes One PERSONAL USE:size=70}${time %A}
+${goto 80}${voffset 100}${alignc}${color1}${font Kenyan Coffee:size=95}${time %I:%M}${font Kenyan Coffee:size=20}${time %p}
+${goto 85}${alignc}${offset -10}${font Cantarell:size=20}${time %B %d, %Y}
+${goto 75}${voffset 10}${alignc}${offset -10}${color2}${font Shimes One PERSONAL USE:size=70}${time %A}
 ]]
