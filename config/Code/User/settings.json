@@ -11,6 +11,5 @@
     "editor.wrappingColumn": -1,
     "files.trimTrailingWhitespace": true,
     "window.reopenFolders": "none",
-    "go.formatOnSave": true,
     "go.gopath": "/home/edgard/Documents/Projects/go"
     }
