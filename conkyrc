@@ -7,10 +7,10 @@ conky.config = {
 	draw_borders = false,
 	draw_outline = false,
 	draw_shades = false,
-	gap_x = 0,
-	gap_y = 0,
-	minimum_height = 500,
-	minimum_width = 400,
+	minimum_height = 250,
+	minimum_width = 350,
+	gap_x = 50,
+	gap_y = 550,
 	own_window = true,
 	own_window_argb_visual = true,
 	own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
@@ -22,7 +22,7 @@ conky.config = {
 };
 
 conky.text = [[
-${goto 80}${voffset 100}${alignc}${color1}${font Kenyan Coffee:size=95}${time %I:%M}${font Kenyan Coffee:size=20}${time %p}
-${goto 85}${alignc}${offset -10}${font Cantarell:size=20}${time %B %d, %Y}
-${goto 75}${voffset 10}${alignc}${offset -10}${color2}${font Shimes One PERSONAL USE:size=70}${time %A}
+${alignc}${color1}${font Kenyan Coffee:size=95}${time %I:%M}${font Kenyan Coffee:size=20}${time %p}
+${alignc}${offset -10}${font Cantarell:size=20}${time %B %d, %Y}
+${voffset 15}${alignc}${offset -10}${color2}${font Shimes One PERSONAL USE:size=70}${time %A}
 ]]
