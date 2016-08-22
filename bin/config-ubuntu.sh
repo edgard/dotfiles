@@ -69,6 +69,9 @@ GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/impatience@gfxmonk.ne
 # ext: status area horizontal spacing
 GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/status-area-horizontal-spacing@mathematical.coffee.gmail.com/schemas gsettings set org.gnome.shell.extensions.status-area-horizontal-spacing hpadding 3
 
+# ext: shelltile
+GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/ShellTile@emasab.it/schemas gsettings set org.gnome.shell.extensions.shelltile gap-between-windows 5
+
 # terminal (one-dark)
 gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode "'tab'"
 gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" use-system-font false
