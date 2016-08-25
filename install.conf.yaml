@@ -1,34 +1,20 @@
+- defaults:
+    link:
+      create: true
+      relink: true
+      force: true
+
 - clean: ['~']
 
 - link:
-    ~/.bash_profile:
-        force: true
-        path: bash_profile
-    ~/.inputrc:
-        force: true
-        path: inputrc
-    ~/.gitconfig:
-        force: true
-        path: gitconfig
-    ~/.gitignore_global:
-        force: true
-        path: gitignore_global
-    ~/.ssh/config:
-        create: true
-        force: true
-        path: ssh/config
-    ~/.hushlogin:
-        create: true
-        force: true
-        path: hushlogin
-    ~/.config/Code/User/settings.json:
-        create: true
-        force: true
-        path: config/Code/User/settings.json
-    ~/.conkyrc:
-        create: true
-        force: true
-        path: conkyrc
+    ~/.bash_profile: bash_profile
+    ~/.config/Code/User/settings.json: config/Code/User/settings.json
+    ~/.conkyrc: conkyrc
+    ~/.gitconfig: gitconfig
+    ~/.gitignore_global: gitignore_global
+    ~/.hushlogin: hushlogin
+    ~/.inputrc: inputrc
+    ~/.ssh/config: ssh/config
 
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]
