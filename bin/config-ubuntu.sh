@@ -74,6 +74,7 @@ GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/ShellTile@emasab.it/s
 
 # terminal (one-dark)
 gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode "'tab'"
+gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar false
 gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" use-system-font false
 gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" font "'PragmataPro Mono 12'"
 gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" login-shell true
