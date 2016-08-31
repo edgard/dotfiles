@@ -1,0 +1,20 @@
+"*":
+  core:
+    allowPendingPaneItems: false
+    automaticallyUpdate: false
+    projectHome: "/home/edgard/Documents/Projects"
+  editor:
+    fontFamily: "PragmataPro Mono"
+    fontSize: 16
+    scrollPastEnd: true
+    showInvisibles: true
+  "exception-reporting":
+    userId: "ce41a537-3861-9bae-0f3a-00419ee23746"
+  "go-config":
+    gopath: "/home/edgard/Documents/Projects/go"
+  gofmt:
+    formatTool: "goreturns"
+  tabs:
+    addNewTabsAtEnd: true
+  welcome:
+    showOnStartup: false

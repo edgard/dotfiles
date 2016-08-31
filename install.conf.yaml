@@ -7,8 +7,8 @@
 - clean: ['~']
 
 - link:
+    ~/.atom/config.cson: atom/config.cson
     ~/.bash_profile: bash_profile
-    ~/.config/Code/User/settings.json: config/Code/User/settings.json
     ~/.conkyrc: conkyrc
     ~/.gitconfig: gitconfig
     ~/.gitignore_global: gitignore_global
