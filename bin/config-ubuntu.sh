@@ -4,18 +4,18 @@
 read -n 1 -p "Would you like to install gnome extensions? (y/n) " -r response; echo
 if [[ $response =~ ^([yY])$ ]]; then
     GNOME_VERSION=$(gnome-shell --version | awk '{split($3,a,"."); print a[1]"."a[2];}')
-    ./shell-extension-install "${GNOME_VERSION}" 517    # caffeine
-    ./shell-extension-install "${GNOME_VERSION}" 307    # dash-to-dock
-    ./shell-extension-install "${GNOME_VERSION}" 1005   # focus my window
-    ./shell-extension-install "${GNOME_VERSION}" 277    # impatience
-    ./shell-extension-install "${GNOME_VERSION}" 495    # topicons
-    ./shell-extension-install "${GNOME_VERSION}" 657    # shelltile
-    ./shell-extension-install "${GNOME_VERSION}" 15     # alternate-tab
-    ./shell-extension-install "${GNOME_VERSION}" 355    # status area horizontal spacing
-    ./shell-extension-install "${GNOME_VERSION}" 118    # no topleft hot corner
-    ./shell-extension-install "${GNOME_VERSION}" 320    # window overlay icons
-    ./shell-extension-install "${GNOME_VERSION}" 905    # refresh wifi connections
-    ./shell-extension-install "${GNOME_VERSION}" 904    # disconnect wifi
+    ./gnomeshell-extension-manage --install --version "${GNOME_VERSION}" --extension-id 517    # caffeine
+    ./gnomeshell-extension-manage --install --version "${GNOME_VERSION}" --extension-id 307    # dash-to-dock
+    ./gnomeshell-extension-manage --install --version "${GNOME_VERSION}" --extension-id 1005   # focus my window
+    ./gnomeshell-extension-manage --install --version "${GNOME_VERSION}" --extension-id 277    # impatience
+    ./gnomeshell-extension-manage --install --version "${GNOME_VERSION}" --extension-id 495    # topicons
+    ./gnomeshell-extension-manage --install --version "${GNOME_VERSION}" --extension-id 657    # shelltile
+    ./gnomeshell-extension-manage --install --version "${GNOME_VERSION}" --extension-id 15     # alternate-tab
+    ./gnomeshell-extension-manage --install --version "${GNOME_VERSION}" --extension-id 355    # status area horizontal spacing
+    ./gnomeshell-extension-manage --install --version "${GNOME_VERSION}" --extension-id 118    # no topleft hot corner
+    ./gnomeshell-extension-manage --install --version "${GNOME_VERSION}" --extension-id 320    # window overlay icons
+    ./gnomeshell-extension-manage --install --version "${GNOME_VERSION}" --extension-id 905    # refresh wifi connections
+    ./gnomeshell-extension-manage --install --version "${GNOME_VERSION}" --extension-id 904    # disconnect wifi
     gsettings set org.gnome.shell enabled-extensions "['user-theme@gnome-shell-extensions.gcampax.github.com', 'caffeine@patapon.info', 'dash-to-dock@micxgx.gmail.com', 'focus-my-window@varianto25.com', 'impatience@gfxmonk.net', 'topIcons@adel.gadllah@gmail.com', 'ShellTile@emasab.it', 'alternate-tab@gnome-shell-extensions.gcampax.github.com', 'status-area-horizontal-spacing@mathematical.coffee.gmail.com', 'nohotcorner@azuri.free.fr', 'windowoverlay-icons@sustmidown.centrum.cz', 'refresh-wifi@kgshank.net', 'disconnect-wifi@kgshank.net']"
 fi
 
