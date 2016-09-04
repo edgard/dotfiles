@@ -2,7 +2,7 @@
 
 # install gnome-extensions
 read -n 1 -p "Would you like to install gnome extensions? (y/n) " -r response; echo
-if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+if [[ $response =~ ^([yY])$ ]]; then
     GNOME_VERSION=$(gnome-shell --version | awk '{split($3,a,"."); print a[1]"."a[2];}')
     ./shell-extension-install "${GNOME_VERSION}" 517    # caffeine
     ./shell-extension-install "${GNOME_VERSION}" 307    # dash-to-dock
