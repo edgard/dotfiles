@@ -25,6 +25,18 @@ if [[ $response =~ ^([yY])$ ]]; then
   apm install atom-beautify go-plus language-ansible linter-ansible-linting linter-pylint pigments sort-lines tab-control
 fi
 
+# install icon fixers
+read -n 1 -p "Would you like to install icon fixers? (y/n) " -r response; echo
+if [[ $response =~ ^([yY])$ ]]; then
+  sudo git clone https://github.com/Foggalong/hardcode-fixer.git /opt/hardcode-fixer/
+  sudo git clone https://github.com/bil-elmoussaoui/Hardcode-Tray.git /opt/Hardcode-Tray/
+
+  TOUSER=${USER}
+  TOGROUP=$(id -gn)
+  sudo chown -R "${TOUSER}"."${TOGROUP}" /opt/{hardcode-fixer,Hardcode-Tray}
+fi
+
+
 # gnome-shell
 gsettings set org.gnome.desktop.datetime automatic-timezone true
 gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us+intl')]"
