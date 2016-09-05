@@ -40,11 +40,10 @@ gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type "'s
 gsettings set org.gnome.shell.overrides dynamic-workspaces false
 gsettings set org.gnome.system.locale region "'en_US.UTF-8'"
 gsettings set org.gnome.system.location enabled true
-gsettings set org.gnome.shell favorite-apps "['org.gnome.Nautilus.desktop', 'gnome-terminal.desktop', 'atom.desktop', 'spotify.desktop', 'whatsie.desktop', 'telegram.desktop', 'google-chrome.desktop']"
+gsettings set org.gnome.shell favorite-apps "['org.gnome.Nautilus.desktop', 'gnome-terminal.desktop', 'atom.desktop', 'spotify.desktop', 'whatsie.desktop', 'telegramdesktop.desktop', 'google-chrome.desktop']"
 gsettings set org.gnome.nautilus.preferences sort-directories-first true
 gsettings set org.gtk.Settings.FileChooser sort-directories-first true
 gsettings set org.gnome.nautilus.preferences executable-text-activation "'launch'"
-gsettings set org.gnome.settings-daemon.plugins.media-keys terminal "'<Super>Return'"
 gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-1 "['<Shift><Super>1']"
 gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-2 "['<Shift><Super>2']"
 gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-3 "['<Shift><Super>3']"
@@ -91,8 +90,3 @@ gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/prof
 gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" bold-color "'rgb(171,178,191)'"
 gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" bold-color-same-as-fg true
 gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$(gsettings get org.gnome.Terminal.ProfilesList default | sed s/^\'// | sed s/\'$//)/" use-theme-colors false
-
-# mimetypes
-gvfs-mime --set x-scheme-handler/mailto thunderbird.desktop
-gvfs-mime --set x-scheme-handler/webcal thunderbird.desktop
-gvfs-mime --set text/calendar thunderbird.desktop
