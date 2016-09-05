@@ -9,8 +9,8 @@ conky.config = {
 	draw_shades = false,
 	minimum_height = 250,
 	minimum_width = 350,
-	gap_x = 50,
-	gap_y = 550,
+	gap_x = 60,
+	gap_y = 110,
 	own_window = true,
 	own_window_argb_visual = true,
 	own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
@@ -23,6 +23,6 @@ conky.config = {
 
 conky.text = [[
 ${alignc}${color1}${font Kenyan Coffee:size=95}${time %I:%M}${font Kenyan Coffee:size=20}${time %p}
-${alignc}${offset -10}${font Cantarell:size=20}${time %B %d, %Y}
+${alignc}${offset -10}${font Cantarell:size=18}${time %B %d, %Y}
 ${voffset 15}${alignc}${offset -10}${color2}${font Shimes One PERSONAL USE:size=70}${time %A}
 ]]
