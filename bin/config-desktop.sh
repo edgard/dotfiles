@@ -23,6 +23,7 @@ fi
 read -n 1 -p "Would you like to install atom extensions? (y/n) " -r response; echo
 if [[ $response =~ ^([yY])$ ]]; then
   apm install atom-beautify go-plus language-ansible linter-ansible-linting linter-pylint pigments sort-lines tab-control
+  apm dedupe
 fi
 
 # install icon fixers
