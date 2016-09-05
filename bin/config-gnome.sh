@@ -22,7 +22,7 @@ fi
 # install atom extensions
 read -n 1 -p "Would you like to install atom extensions? (y/n) " -r response; echo
 if [[ $response =~ ^([yY])$ ]]; then
-  apm install atom-beautify go-plus language-ansible pigments sort-lines tab-control
+  apm install atom-beautify go-plus language-ansible linter-ansible-linting linter-pylint pigments sort-lines tab-control
 fi
 
 # gnome-shell
