@@ -9,7 +9,6 @@
 - link:
     ~/.atom/config.cson: atom/config.cson
     ~/.bash_profile: bash_profile
-    ~/.conkyrc: conkyrc
     ~/.gitconfig: gitconfig
     ~/.gitignore_global: gitignore_global
     ~/.hushlogin: hushlogin
