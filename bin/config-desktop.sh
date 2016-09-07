@@ -66,6 +66,8 @@ gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-1  "['<Super>
 gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-2  "['<Super>2']"
 gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-3  "['<Super>3']"
 gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-4  "['<Super>4']"
+gsettings set org.gnome.settings-daemon.plugins.xsettings hinting "'full'"
+gsettings set org.gnome.settings-daemon.plugins.xsettings antialiasing "'rgba'"
 
 # ext: caffeine
 GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/caffeine@patapon.info/schemas gsettings set org.gnome.shell.extensions.caffeine show-notifications false
