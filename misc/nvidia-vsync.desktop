@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=nvidia-settings --assign CurrentMetaMode="DP-0: 1920x1080_120 +0+420 { ForceCompositionPipeline = On }, HDMI-0: 1920x1080_60 +1920+0 { Rotation = right, ForceCompositionPipeline = On }"
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[en_US]=NVIDIA VSync Hack
+Name=NVIDIA VSync Hack
+Comment[en_US]=NVIDIA ForceCompositionPipeline hack to fix tearing
+Comment=NVIDIA ForceCompositionPipeline hack to fix tearing
