@@ -19,14 +19,14 @@ HISTFILESIZE=100000
 
 # environment variables
 export PAGER="less"
-export EDITOR="atom -w -n"
-export VISUAL="atom -w -n"
+export EDITOR="code -w -n"
+export VISUAL="code -w -n"
 
 # aliases
 alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --binary-files=without-match"
 alias gl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias ls="ls -FGh --color=auto"
-alias update="pacaur -Syyu; sudo pacman -Rns $(pacman -Qtdq); apm upgrade; (cd /opt/hardcode-fixer && git pull); sudo /opt/hardcode-fixer/fix.sh; (cd /opt/Hardcode-Tray && git pull); /opt/Hardcode-Tray/hardcode-tray --apply; rm -f ~/.local/share/applications/telegramdesktop.desktop; sudo chown -R edgard.users /opt/{hardcode-fixer,Hardcode-Tray}"
+alias update="pacaur -Syyu; sudo pacman -Rns $(pacman -Qtdq); (cd /opt/hardcode-fixer && git pull); sudo /opt/hardcode-fixer/fix.sh; (cd /opt/Hardcode-Tray && git pull); /opt/Hardcode-Tray/hardcode-tray --apply; rm -f ~/.local/share/applications/telegramdesktop.desktop; sudo chown -R edgard.users /opt/{hardcode-fixer,Hardcode-Tray}"
 alias open="xdg-open &> /dev/null"
 
 # autojump

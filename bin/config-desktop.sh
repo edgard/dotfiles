@@ -19,13 +19,6 @@ if [[ $response =~ ^([yY])$ ]]; then
     gsettings set org.gnome.shell enabled-extensions "['user-theme@gnome-shell-extensions.gcampax.github.com', 'caffeine@patapon.info', 'dash-to-dock@micxgx.gmail.com', 'focus-my-window@varianto25.com', 'impatience@gfxmonk.net', 'topIcons@adel.gadllah@gmail.com', 'ShellTile@emasab.it', 'alternate-tab@gnome-shell-extensions.gcampax.github.com', 'status-area-horizontal-spacing@mathematical.coffee.gmail.com', 'nohotcorner@azuri.free.fr', 'windowoverlay-icons@sustmidown.centrum.cz', 'refresh-wifi@kgshank.net', 'disconnect-wifi@kgshank.net']"
 fi
 
-# install atom extensions
-read -n 1 -p "Would you like to install atom extensions? (y/n) " -r response; echo
-if [[ $response =~ ^([yY])$ ]]; then
-  apm install atom-beautify go-plus language-ansible linter-ansible-linting linter-pylint pigments sort-lines tab-control
-  apm dedupe
-fi
-
 # install icon fixers
 read -n 1 -p "Would you like to install icon fixers? (y/n) " -r response; echo
 if [[ $response =~ ^([yY])$ ]]; then
@@ -53,7 +46,7 @@ gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type "'s
 gsettings set org.gnome.shell.overrides dynamic-workspaces false
 gsettings set org.gnome.system.locale region "'en_US.UTF-8'"
 gsettings set org.gnome.system.location enabled true
-gsettings set org.gnome.shell favorite-apps "['org.gnome.Nautilus.desktop', 'gnome-terminal.desktop', 'atom.desktop', 'spotify.desktop', 'whatsie.desktop', 'telegramdesktop.desktop', 'google-chrome.desktop']"
+gsettings set org.gnome.shell favorite-apps "['org.gnome.Nautilus.desktop', 'gnome-terminal.desktop', 'visual-studio-code.desktop', 'spotify.desktop', 'whatsie.desktop', 'telegramdesktop.desktop', 'google-chrome.desktop']"
 gsettings set org.gnome.nautilus.preferences sort-directories-first true
 gsettings set org.gtk.Settings.FileChooser sort-directories-first true
 gsettings set org.gnome.nautilus.preferences executable-text-activation "'launch'"
