@@ -14,6 +14,7 @@
     ~/.hushlogin: hushlogin
     ~/.inputrc: inputrc
     ~/.ssh/config: ssh/config
+    ~/.config/qt5ct/qt5ct.conf: config/qt5ct/qt5ct.conf
 
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]
