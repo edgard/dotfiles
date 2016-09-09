@@ -12,7 +12,6 @@
     ~/.gitconfig: gitconfig
     ~/.gitignore_global: gitignore_global
     ~/.hushlogin: hushlogin
-    ~/.inputrc: inputrc
     ~/.ssh/config: ssh/config
     ~/.config/qt5ct/qt5ct.conf: config/qt5ct/qt5ct.conf
 

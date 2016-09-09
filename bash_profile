@@ -12,6 +12,13 @@ PS1='[\u@\h \W]\$ '
 shopt -s histappend
 shopt -s checkwinsize
 shopt -s cmdhist
+bind 'set show-all-if-ambiguous on'
+bind 'set completion-ignore-case on'
+bind 'set visible-stats on'
+bind 'set mark-symlinked-directories on'
+bind 'set skip-completed-text on'
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
 HISTCONTROL="erasedups:ignoreboth"
 HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:update"
 HISTSIZE=500000
