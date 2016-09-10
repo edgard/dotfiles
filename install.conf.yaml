@@ -9,6 +9,7 @@
 - link:
     ~/.bash_profile: bash_profile
     ~/.config/Code/User/settings.json: config/Code/User/settings.json
+    ~/.config/mimeapps.list: config/mimeapps.list
     ~/.gitconfig: gitconfig
     ~/.gitignore_global: gitignore_global
     ~/.ssh/config: ssh/config
