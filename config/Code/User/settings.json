@@ -17,5 +17,6 @@
     "go.lintTool": "gometalinter",
     "python.formatting.autopep8Args": ["--max-line-length", "300"],
     "window.reopenFolders": "none",
-    "workbench.editor.enablePreview": false
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false
 }
