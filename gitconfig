@@ -1,14 +1,19 @@
 [core]
   excludesfile = ~/.gitignore_global
-#	autocrlf = input
-#[merge]
-#	ff = only
 [fetch]
-	prune = true
+  prune = true
 [push]
-        default = simple
+  default = simple
 [color]
-	ui = auto
+  ui = auto
 [user]
-	name = Edgard Castro
-	email = castro@edgard.org
+  name = Edgard Castro
+  email = castro@edgard.org
+[alias]
+  co = checkout
+  ci = commit
+  st = status
+  br = branch
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --date=short
+  type = cat-file -t
+  dump = cat-file -p
