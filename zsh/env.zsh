@@ -1,7 +1,7 @@
 # history
 HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=500000
+SAVEHIST=500000
 
 
 # prompt
