@@ -1,5 +1,15 @@
-Host htpc
-  HostName 192.168.25.240
-
-Host etacarinae
-  HostName etacarinae.edgard.org
+### default for all ###
+Host *
+     ControlMaster auto
+     ControlPath ~/.ssh/cm-%r@%h-%p
+     ControlPersist 600
+     ForwardAgent no
+     ForwardX11 no
+     ForwardX11Trusted yes
+     ServerAliveInterval 60
+     ServerAliveCountMax 30
+     StrictHostKeyChecking ask
+     UseRoaming no
+     PasswordAuthentication no
+     ChallengeResponseAuthentication no
+     PubkeyAuthentication yes
