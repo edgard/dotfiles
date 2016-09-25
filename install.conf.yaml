@@ -11,6 +11,7 @@
     ~/.zshrc: zshrc
     ~/.config/Code/User/settings.json: config/Code/User/settings.json
     ~/.config/mimeapps.list: config/mimeapps.list
+    ~/.config/redshift.conf: config/redshift.conf
     ~/.gitconfig: gitconfig
     ~/.gitignore_global: gitignore_global
     ~/.ssh/config: ssh/config
