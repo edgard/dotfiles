@@ -103,10 +103,11 @@ config_gnome() {
 install_iconfixers() {
   sudo git clone https://github.com/Foggalong/hardcode-fixer.git /opt/hardcode-fixer/
   sudo git clone https://github.com/bil-elmoussaoui/Hardcode-Tray.git /opt/Hardcode-Tray/
+  sudo git clone https://github.com/numixproject/numix-folders.git /opt/numix-folders/
 
   TOUSER=${USER}
   TOGROUP=$(id -gn)
-  sudo chown -R "${TOUSER}"."${TOGROUP}" /opt/{hardcode-fixer,Hardcode-Tray}
+  sudo chown -R "${TOUSER}"."${TOGROUP}" /opt/{hardcode-fixer,Hardcode-Tray,numix-folders}
 }
 
 
