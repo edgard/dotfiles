@@ -17,5 +17,7 @@ zstyle ':completion:*:warnings' format $'-- no matches found --'
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
 
 
-# syntax highlighting
+# auto suggestion config
 ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=red'
+ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=("${(@)ZSH_AUTOSUGGEST_ACCEPT_WIDGETS:#forward-char}")
+ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=(forward-char)
