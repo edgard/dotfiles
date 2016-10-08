@@ -6,7 +6,7 @@ alias grep='grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git
 alias open='xdg-open &> /dev/null'
 
 update() {
-    pacaur -Syyu && sudo pacman -Rns $(pacman -Qtdq)
+    pacaur -Syyu $* && sudo pacman -Rns $(pacman -Qtdq)
 
     opt_repos="hardcode-fixer,Hardcode-Tray,numix-folders"
     current_user=${USER}
