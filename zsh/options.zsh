@@ -8,7 +8,6 @@ setopt chase_links              # Resolve symbolic links to their true values wh
 setopt complete_in_word         # Allow completion from within a word/phrase
 setopt correct                  # Spelling correction for commands
 setopt extended_history         # Save timestamp of command and duration
-setopt glob_dots                # Do not require a leading '.' in a filename to be matched explicitly
 setopt hist_expire_dups_first   # When trimming history, lose oldest duplicates first
 setopt hist_fcntl_lock          # With this option locking is done by means of the system's fcntl call, where this method is available
 setopt hist_find_no_dups        # When searching history don't display results already cycled through twice
