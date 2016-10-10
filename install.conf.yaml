@@ -9,7 +9,6 @@
 - link:
     ~/.zsh: zsh
     ~/.zshrc: zshrc
-    ~/.config/Code/User/settings.json: config/Code/User/settings.json
     ~/.config/mimeapps.list: config/mimeapps.list
     ~/.config/redshift.conf: config/redshift.conf
     ~/.config/numix-folders: config/numix-folders
