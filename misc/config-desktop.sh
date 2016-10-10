@@ -99,18 +99,6 @@ config_gnome() {
 }
 
 
-# install icon fixers
-install_iconfixers() {
-  sudo git clone https://github.com/Foggalong/hardcode-fixer.git /opt/hardcode-fixer/
-  sudo git clone https://github.com/bil-elmoussaoui/Hardcode-Tray.git /opt/Hardcode-Tray/
-  sudo git clone https://github.com/numixproject/numix-folders.git /opt/numix-folders/
-
-  TOUSER=${USER}
-  TOGROUP=$(id -gn)
-  sudo chown -R "${TOUSER}"."${TOGROUP}" /opt/{hardcode-fixer,Hardcode-Tray,numix-folders}
-}
-
-
 # generate ssh keys
 generate_sshkeys() {
   ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""
@@ -118,10 +106,9 @@ generate_sshkeys() {
 
 
 # Install menu
-cmd=(dialog --no-shadow --separate-output --checklist "Select options:" 11 76 4)
+cmd=(dialog --no-shadow --separate-output --checklist "Select options:" 10 76 4)
 options=("install_gnome_extensions" "Install GNOME extensions" on
          "config_gnome" "Configure GNOME" on
-         "install_iconfixers" "Install icon fixers" on
          "generate_sshkeys" "Generate new SSH keys" off)
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 clear
