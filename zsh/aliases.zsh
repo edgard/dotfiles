@@ -6,7 +6,7 @@ alias grep='grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git
 alias open='xdg-open &> /dev/null'
 
 update() {
-    pacaur -Syyu $* && sudo pacman -Rns $(pacman -Qtdq)
+    pacaur -Syyu --needed $* && sudo pacman -Rns $(pacman -Qtdq)
 
     sudo hardcode-fixer
     sudo -E /opt/hardcode-tray-fixer/script.py --apply
