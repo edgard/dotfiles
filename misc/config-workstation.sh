@@ -130,15 +130,19 @@ install_vscode_extensions() {
 
 # install desktop fixes
 install_desktop_fixes() {
-  sed -i 's#^\(GRUB_CMDLINE_LINUX=".*\)"$#\1 ivrs_ioapic[9]=00:14.0 ivrs_ioapic[10]=00:00.1"#' /etc/default/grub
+  sed -i 's#^\(GRUB_CMDLINE_LINUX=".*\)"$#\1 ivrs_ioapic[9]=00:14.0 ivrs_ioapic[10]=00:00.1 video=vesa:off vga=normal"#' /etc/default/grub
   sudo grub-mkconfig -o /boot/grub/grub.cfg
 
-  sudo mkdir -p /etc/X11/xorg.conf.d
-  sudo cp files/20-nvidia.conf /etc/X11/xorg.conf.d/
-  sudo chown root.root /etc/X11/xorg.conf.d/20-nvidia.conf
+  sudo mkdir -p /etc/X11/xorg.conf.d && sudo chown root.root /etc/X11/xorg.conf.d
+  sudo cp files/20-nvidia.conf /etc/X11/xorg.conf.d/ && sudo chown root.root /etc/X11/xorg.conf.d/20-nvidia.conf
 
   mkdir -p ~/.config/autostart
   cp files/nvidia-vsync.desktop ~/.config/autostart
+
+  sudo mkdir -p /etc/sensors.d && sudo chown root.root /etc/sensors.d
+  sudo cp files/asus-crosshair-formula-v.conf /etc/sensors.d/ && sudo chown root.root /etc/sensors.d/asus-crosshair-formula-v.conf
+
+  echo 'it87' | sudo tee -a /etc/modules-load.d/sensors-asus-crosshair-formula-v.conf && sudo chown root.root /etc/modules-load.d/sensors-asus-crosshair-formula-v.conf
 }
 
 
