@@ -134,7 +134,6 @@ options=("install_gnome_extensions" "Install GNOME extensions" on
          "generate_sshkeys" "Generate new SSH keys" off)
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 clear
-for choice in $choices
-do
+for choice in $choices; do
   eval "${choice}"
 done
