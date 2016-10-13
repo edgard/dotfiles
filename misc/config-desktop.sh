@@ -104,11 +104,33 @@ generate_sshkeys() {
   ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""
 }
 
+# install vscode extensions
+install_vscode_extensions() {
+  modules="
+    Borke.Puppet
+    DavidAnson.vscode-markdownlint
+    dbankier.vscode-instant-markdown
+    donjayamanne.githistory
+    donjayamanne.python
+    haaaad.ansible
+    HookyQR.beautify
+    lukehoban.Go
+    ms-vscode.latex
+    PeterJausovec.vscode-docker
+    samverschueren.final-newline
+    steve8708.Align
+    zhuangtongfa.Material-theme
+  "
+  for module in $modules; do
+    code --install-extension "$module" || true
+  done
+}
 
 # Install menu
-cmd=(dialog --no-shadow --separate-output --checklist "Select options:" 10 76 4)
+cmd=(dialog --no-shadow --separate-output --checklist "Select options:" 11 76 4)
 options=("install_gnome_extensions" "Install GNOME extensions" on
          "config_gnome" "Configure GNOME" on
+         "install_vscode_extensions" "Install VSCode extensions" on
          "generate_sshkeys" "Generate new SSH keys" off)
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 clear
