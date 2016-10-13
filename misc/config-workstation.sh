@@ -104,6 +104,7 @@ generate_sshkeys() {
   ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""
 }
 
+
 # install vscode extensions
 install_vscode_extensions() {
   modules="
@@ -126,11 +127,36 @@ install_vscode_extensions() {
   done
 }
 
+
+# install desktop fixes
+install_desktop_fixes() {
+  sed -i 's#^\(GRUB_CMDLINE_LINUX=".*\)"$#\1 ivrs_ioapic[9]=00:14.0 ivrs_ioapic[10]=00:00.1"#' /etc/default/grub
+  sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+  sudo mkdir -p /etc/X11/xorg.conf.d
+  sudo cp files/20-nvidia.conf /etc/X11/xorg.conf.d/
+  sudo chown root.root /etc/X11/xorg.conf.d/20-nvidia.conf
+
+  mkdir -p ~/.config/autostart
+  cp files/nvidia-vsync.desktop ~/.config/autostart
+}
+
+
+# install laptop fixes
+install_laptop_fixes() {
+  sudo mkdir -p /etc/X11/xorg.conf.d
+  sudo cp files/20-intel.conf /etc/X11/xorg.conf.d/
+  sudo chown root.root /etc/X11/xorg.conf.d/20-intel.conf
+}
+
+
 # Install menu
-cmd=(dialog --no-shadow --separate-output --checklist "Select options:" 11 76 4)
+cmd=(dialog --no-shadow --separate-output --checklist "Select options:" 13 76 7)
 options=("install_gnome_extensions" "Install GNOME extensions" on
          "config_gnome" "Configure GNOME" on
          "install_vscode_extensions" "Install VSCode extensions" on
+         "install_desktop_fixes" "Install desktop fixes" off
+         "install_laptop_fixes" "Install laptop fixes" off
          "generate_sshkeys" "Generate new SSH keys" off)
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 clear
