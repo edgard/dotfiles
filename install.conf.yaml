@@ -13,6 +13,7 @@
     ~/.config/mimeapps.list: config/mimeapps.list
     ~/.config/redshift.conf: config/redshift.conf
     ~/.config/numix-folders: config/numix-folders
+    ~/.config/pacaur/config: config/pacaur/config
     ~/.gitconfig: gitconfig
     ~/.gitignore_global: gitignore_global
     ~/.ssh/config: ssh/config
