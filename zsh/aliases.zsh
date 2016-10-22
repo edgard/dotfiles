@@ -4,6 +4,7 @@ alias history='history 1'
 alias ls='ls -FGh --color=auto'
 alias grep='grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --exclude-dir=.bzr --exclude-dir=CVS --binary-files=without-match'
 alias open='xdg-open &> /dev/null'
+alias cleanup='sudo pacman -Rsn $(pacman -Qqdt)'
 
 update() {
     pacaur -Syyuu --needed $* && sudo pacman -Rns $(pacman -Qtdq)
