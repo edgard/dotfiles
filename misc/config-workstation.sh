@@ -35,7 +35,7 @@ config_gnome() {
   gsettings set org.gnome.shell.overrides dynamic-workspaces false
   gsettings set org.gnome.system.locale region "'en_US.UTF-8'"
   gsettings set org.gnome.system.location enabled true
-  gsettings set org.gnome.shell favorite-apps "['org.gnome.Nautilus.desktop', 'org.gnome.Terminal.desktop', 'visual-studio-code.desktop', 'spotify.desktop', 'whatsie.desktop', 'telegramdesktop.desktop', 'google-chrome.desktop']"
+  gsettings set org.gnome.shell favorite-apps "['google-chrome.desktop', 'telegramdesktop.desktop', 'whatsie.desktop', 'spotify.desktop', 'visual-studio-code.desktop', 'org.gnome.Terminal.desktop', 'org.gnome.Nautilus.desktop']"
   gsettings set org.gnome.nautilus.preferences sort-directories-first true
   gsettings set org.gtk.Settings.FileChooser sort-directories-first true
   gsettings set org.gnome.nautilus.preferences executable-text-activation "'launch'"
@@ -66,7 +66,7 @@ config_gnome() {
   # ext: dash-to-dock
   GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas gsettings set org.gnome.shell.extensions.dash-to-dock preferred-monitor 0
   GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas gsettings set org.gnome.shell.extensions.dash-to-dock show-apps-at-top true
-  GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas gsettings set org.gnome.shell.extensions.dash-to-dock dock-position "'BOTTOM'"
+  GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas gsettings set org.gnome.shell.extensions.dash-to-dock dock-position "'LEFT'"
   GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas gsettings set org.gnome.shell.extensions.dash-to-dock apply-custom-theme true
   GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas gsettings set org.gnome.shell.extensions.dash-to-dock click-action "'minimize'"
   GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas gsettings set org.gnome.shell.extensions.dash-to-dock animation-time 0.100
