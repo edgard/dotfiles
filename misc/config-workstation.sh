@@ -76,7 +76,7 @@ config_gnome() {
   GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas gsettings set org.gnome.shell.extensions.dash-to-dock apply-custom-theme false
 
   # ext: impatience
-  GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/impatience@gfxmonk.net/schemas gsettings set org.gnome.shell.extensions.net.gfxmonk.impatience speed-factor 0.5
+  GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/impatience@gfxmonk.net/schemas gsettings set org.gnome.shell.extensions.net.gfxmonk.impatience speed-factor 0.35
 
   # ext: status area horizontal spacing
   GSETTINGS_SCHEMA_DIR=~/.local/share/gnome-shell/extensions/status-area-horizontal-spacing@mathematical.coffee.gmail.com/schemas gsettings set org.gnome.shell.extensions.status-area-horizontal-spacing hpadding 3
