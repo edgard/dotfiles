@@ -1,17 +1,17 @@
 conky.config={
-    --- Conky settings
     background=true,
     update_interval=1,
     double_buffer=true,
     no_buffers=true,
     imlib_cache_size=10,
 
-    --- Window specifications
+    default_color="#ABB2BF",
+    color1="#5C6370",
+    color2="#D19A66",
+
     gap_x=0,
-    gap_y=-120,
+    gap_y=-155,
     alignment="bottom_middle",
-    -- font="PragmataPro Mono:size=10",
-    --use_xft=true,
     own_window=true,
     own_window_type=normal,
     own_window_transparent=true,
@@ -23,40 +23,47 @@ conky.config={
 };
 
 conky.text= [[
-    ${color #5b6dad}Load:${alignr}$color${loadavg 1} ${loadavg 2} ${loadavg 3}
+    ${color1}Load:${alignr}${color}${loadavg}
+    ${color1}Temp:${alignr}${color}CPU ${hwmon 0 temp 1}C ${color1}|${color} GPU ${execi 30 nvidia-settings -query [gpu:0]/GPUCoreTemp -t}C
 
-    ${color #5b6dad}CPU:${alignr}${color grey}$cpu%
-    ${color #5b6dad}${cpugraph 32}
-    CPU1 ${cpu cpu1}% ${goto 80}${cpubar cpu1}
-    CPU2 ${cpu cpu2}% ${goto 80}${cpubar cpu2}
-    CPU3 ${cpu cpu3}% ${goto 80}${cpubar cpu3}
-    CPU4 ${cpu cpu4}% ${goto 80}${cpubar cpu4}
-    CPU5 ${cpu cpu5}% ${goto 80}${cpubar cpu5}
-    CPU6 ${cpu cpu6}% ${goto 80}${cpubar cpu6}
-    CPU7 ${cpu cpu7}% ${goto 80}${cpubar cpu7}
-    CPU8 ${cpu cpu8}% ${goto 80}${cpubar cpu8}
 
-    ${color #5b6dad}RAM:${alignr}$color$mem/$memmax
-    ${color #5b6dad}${memgraph 32}
+    ${color1}CPU:${alignr}${color}$cpu%
+    ${color1}${cpugraph}
+    CPU1 ${cpu cpu1}% ${tab}${cpubar cpu1}
+    CPU2 ${cpu cpu2}% ${tab}${cpubar cpu2}
+    CPU3 ${cpu cpu3}% ${tab}${cpubar cpu3}
+    CPU4 ${cpu cpu4}% ${tab}${cpubar cpu4}
+    CPU5 ${cpu cpu5}% ${tab}${cpubar cpu5}
+    CPU6 ${cpu cpu6}% ${tab}${cpubar cpu6}
+    CPU7 ${cpu cpu7}% ${tab}${cpubar cpu7}
+    CPU8 ${cpu cpu8}% ${tab}${cpubar cpu8}
 
-    ${color #5b6dad}Disk:${alignr}$color${fs_free /}
-    ${color #5b6dad}${fs_bar 6 /}
+    ${color1}MEM:${alignr}${color}${mem} / ${memmax}
+    ${color1}${memgraph}
 
-    ${color #5b6dad}Net Down:${alignr}$color${downspeedf enp5s0}KiB/s
-    ${color #5b6dad}${downspeedgraph enp5s0 32}
-    ${color #5b6dad}Net Up:${alignr}$color${upspeedf enp5s0}KiB/s
-    ${color #5b6dad}${upspeedgraph enp5s0 32}
+    ${color1}Disk:${alignr}${color}${fs_used} / ${fs_size}
+    ${color1}${diskiograph}
 
-    ${color #5b6dad}Processes CPU
-    ${color #ddaa00}${top name 1} ${top cpu 1}
-    ${color #5b6dad}${top name 2} ${top cpu 2}
-    ${color #5b6dad}${top name 3} ${top cpu 3}
+    ${color1}Net Down:${alignr}${color}${downspeedf enp5s0}KiB/s
+    ${color1}${downspeedgraph enp5s0 15}
+    ${color1}Net Up:${alignr}${color}${upspeedf enp5s0}KiB/s
+    ${color1}${upspeedgraph enp5s0 15}
 
-    ${color #5b6dad}Processes RAM
-    ${color #ddaa00}${top_mem name 1} ${top_mem mem 1}
-    ${color #5b6dad}${top_mem name 2} ${top_mem mem 2}
-    ${color #5b6dad}${top_mem name 3} ${top_mem mem 3}
 
-    ${color #5b6dad}Temperatures
-    ${color #5b6dad}CPU: ${hwmon 0 temp 1}C${alignr}GPU: ${execi 60 nvidia-settings -query [gpu:0]/GPUCoreTemp -t}C
+    ${color1}Processes ${hr}
+
+    ${color1}CPU Usage
+    ${color2}${top name 1} ${top cpu 1}%
+    ${color1}${top name 2} ${top cpu 2}%
+    ${color1}${top name 3} ${top cpu 3}%
+
+    ${color1}MEM Usage
+    ${color2}${top_mem name 1} ${top_mem mem 1}%
+    ${color1}${top_mem name 2} ${top_mem mem 2}%
+    ${color1}${top_mem name 3} ${top_mem mem 3}%
+
+    ${color1}IO Usage
+    ${color2}${top_io name 1} ${top_io io_perc 1}%
+    ${color1}${top_io name 2} ${top_io io_perc 2}%
+    ${color1}${top_io name 3} ${top_io io_perc 3}%
 ]]
