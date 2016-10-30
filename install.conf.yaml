@@ -9,6 +9,7 @@
 - link:
     ~/.zsh: zsh
     ~/.zshrc: zshrc
+    ~/.conkyrc: conkyrc
     ~/.config/Code/User/settings.json: config/Code/User/settings.json
     ~/.config/mimeapps.list: config/mimeapps.list
     ~/.config/redshift.conf: config/redshift.conf

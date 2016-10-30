@@ -1,0 +1,62 @@
+conky.config={
+    --- Conky settings
+    background=true,
+    update_interval=1,
+    double_buffer=true,
+    no_buffers=true,
+    imlib_cache_size=10,
+
+    --- Window specifications
+    gap_x=0,
+    gap_y=-120,
+    alignment="bottom_middle",
+    -- font="PragmataPro Mono:size=10",
+    --use_xft=true,
+    own_window=true,
+    own_window_type=normal,
+    own_window_transparent=true,
+    own_window_argb_visual=true,
+    own_window_argb_value=255,
+    own_window_hints="undecorated,sticky,skip_taskbar,skip_pager,below",
+    border_inner_margin=0,
+    border_outer_margin=0,
+};
+
+conky.text= [[
+    ${color #5b6dad}Load:${alignr}$color${loadavg 1} ${loadavg 2} ${loadavg 3}
+
+    ${color #5b6dad}CPU:${alignr}${color grey}$cpu%
+    ${color #5b6dad}${cpugraph 32}
+    CPU1 ${cpu cpu1}% ${goto 80}${cpubar cpu1}
+    CPU2 ${cpu cpu2}% ${goto 80}${cpubar cpu2}
+    CPU3 ${cpu cpu3}% ${goto 80}${cpubar cpu3}
+    CPU4 ${cpu cpu4}% ${goto 80}${cpubar cpu4}
+    CPU5 ${cpu cpu5}% ${goto 80}${cpubar cpu5}
+    CPU6 ${cpu cpu6}% ${goto 80}${cpubar cpu6}
+    CPU7 ${cpu cpu7}% ${goto 80}${cpubar cpu7}
+    CPU8 ${cpu cpu8}% ${goto 80}${cpubar cpu8}
+
+    ${color #5b6dad}RAM:${alignr}$color$mem/$memmax
+    ${color #5b6dad}${memgraph 32}
+
+    ${color #5b6dad}Disk:${alignr}$color${fs_free /}
+    ${color #5b6dad}${fs_bar 6 /}
+
+    ${color #5b6dad}Net Down:${alignr}$color${downspeedf enp5s0}KiB/s
+    ${color #5b6dad}${downspeedgraph enp5s0 32}
+    ${color #5b6dad}Net Up:${alignr}$color${upspeedf enp5s0}KiB/s
+    ${color #5b6dad}${upspeedgraph enp5s0 32}
+
+    ${color #5b6dad}Processes CPU
+    ${color #ddaa00}${top name 1} ${top cpu 1}
+    ${color #5b6dad}${top name 2} ${top cpu 2}
+    ${color #5b6dad}${top name 3} ${top cpu 3}
+
+    ${color #5b6dad}Processes RAM
+    ${color #ddaa00}${top_mem name 1} ${top_mem mem 1}
+    ${color #5b6dad}${top_mem name 2} ${top_mem mem 2}
+    ${color #5b6dad}${top_mem name 3} ${top_mem mem 3}
+
+    ${color #5b6dad}Temperatures
+    ${color #5b6dad}CPU: ${hwmon 0 temp 1}C${alignr}GPU: ${execi 60 nvidia-settings -query [gpu:0]/GPUCoreTemp -t}C
+]]
