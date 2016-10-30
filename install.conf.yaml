@@ -7,18 +7,18 @@
 - clean: ['~']
 
 - link:
-    ~/.zsh: zsh
-    ~/.zshrc: zshrc
-    ~/.conkyrc: conkyrc
     ~/.config/Code/User/settings.json: config/Code/User/settings.json
     ~/.config/mimeapps.list: config/mimeapps.list
-    ~/.config/redshift.conf: config/redshift.conf
     ~/.config/numix-folders: config/numix-folders
     ~/.config/pacaur/config: config/pacaur/config
+    ~/.config/qt5ct/qt5ct.conf: config/qt5ct/qt5ct.conf
+    ~/.config/redshift.conf: config/redshift.conf
+    ~/.conkyrc: conkyrc
     ~/.gitconfig: gitconfig
     ~/.gitignore_global: gitignore_global
     ~/.ssh/config: ssh/config
-    ~/.config/qt5ct/qt5ct.conf: config/qt5ct/qt5ct.conf
+    ~/.zsh: zsh
+    ~/.zshrc: zshrc
 
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]
