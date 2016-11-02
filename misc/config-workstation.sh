@@ -134,6 +134,7 @@ install_desktop_fixes() {
 
   sudo mkdir -p /etc/X11/xorg.conf.d && sudo chown root.root /etc/X11/xorg.conf.d
   sudo cp files/20-nvidia.conf /etc/X11/xorg.conf.d/ && sudo chown root.root /etc/X11/xorg.conf.d/20-nvidia.conf
+  sudo cp files/20-mouse-accel-flat.conf /etc/X11/xorg.conf.d/ && sudo chown root.root /etc/X11/xorg.conf.d/20-mouse-accel-flat.conf
 
   mkdir -p ~/.config/autostart
   cp files/nvidia-vsync.desktop ~/.config/autostart
@@ -148,8 +149,8 @@ install_desktop_fixes() {
 # install laptop fixes
 install_laptop_fixes() {
   sudo mkdir -p /etc/X11/xorg.conf.d
-  sudo cp files/20-intel.conf /etc/X11/xorg.conf.d/
-  sudo chown root.root /etc/X11/xorg.conf.d/20-intel.conf
+  sudo cp files/20-intel.conf /etc/X11/xorg.conf.d/ && sudo chown root.root /etc/X11/xorg.conf.d/20-intel.conf
+  sudo cp files/20-mouse-accel-flat.conf /etc/X11/xorg.conf.d/ && sudo chown root.root /etc/X11/xorg.conf.d/20-mouse-accel-flat.conf
 }
 
 
