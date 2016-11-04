@@ -10,7 +10,7 @@ update() {
     pacaur -Syyuu --needed $* && sudo pacman -Rns $(pacman -Qtdq)
 
     sudo hardcode-fixer
-    sudo -E /opt/hardcode-tray-fixer/script.py --apply
+    hardcode-tray --apply
     sudo numix-folders -p
 
     rm -f ~/.local/share/applications/telegramdesktop.desktop
