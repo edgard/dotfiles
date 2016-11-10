@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=nvidia-settings --assign CurrentMetaMode="DP-0: 1920x1080_120 +0+420 { ForceCompositionPipeline = On }, HDMI-0: 1920x1080_60 +1920+0 { Rotation = right, ForceCompositionPipeline = On }, DVI-D-0: 800x600 +560+1500 { Rotation = invert, ForceCompositionPipeline = On }"
+Exec=nvidia-settings --assign CurrentMetaMode="DVI-D-0: 1920x1080_60_0 +1920+0 {rotation=right, ForceCompositionPipeline=On}, DVI-I-1: 1920x1080_120 +0+420 {ForceCompositionPipeline=On}"
 Hidden=false
 NoDisplay=false
 X-GNOME-Autostart-enabled=true

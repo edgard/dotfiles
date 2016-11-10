@@ -9,9 +9,9 @@ conky.config={
     color1="#5C6370",
     color2="#D19A66",
 
-    gap_x=0,
-    gap_y=-155,
-    alignment="bottom_middle",
+    gap_x=1750,
+    gap_y=30,
+    alignment="top_left",
     own_window=true,
     own_window_type=normal,
     own_window_transparent=true,
@@ -44,10 +44,10 @@ conky.text= [[
     ${color1}Disk:${alignr}${color}${fs_used} / ${fs_size}
     ${color1}${diskiograph}
 
-    ${color1}Net Down:${alignr}${color}${downspeedf enp5s0}KiB/s
-    ${color1}${downspeedgraph enp5s0 15}
-    ${color1}Net Up:${alignr}${color}${upspeedf enp5s0}KiB/s
-    ${color1}${upspeedgraph enp5s0 15}
+    ${color1}Net Down:${alignr}${color}${downspeedf wlp0s18f2u2}KiB/s
+    ${color1}${downspeedgraph wlp0s18f2u2 15}
+    ${color1}Net Up:${alignr}${color}${upspeedf wlp0s18f2u2}KiB/s
+    ${color1}${upspeedgraph wlp0s18f2u2 15}
 
 
     ${color1}Processes ${hr}
