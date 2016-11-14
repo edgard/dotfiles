@@ -11,7 +11,4 @@ update() {
 
     sudo hardcode-fixer
     hardcode-tray --apply
-    sudo numix-folders -p
-
-    rm -f ~/.local/share/applications/telegramdesktop.desktop
 }
