@@ -4,6 +4,7 @@
 
 # plugins
 source ~/.zsh/plugins/zsh-completions/zsh-completions.plugin.zsh
+source ~/.zsh/plugins/git-flow-completion/git-flow-completion.zsh
 source ~/.zsh/plugins/z/z.sh
 source ~/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source ~/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -12,6 +13,7 @@ source ~/.zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.
 
 # config
 source ~/.zsh/options.zsh
+source ~/.zsh/windowtitle.zsh
 source ~/.zsh/completion.zsh
 source ~/.zsh/env.zsh
 source ~/.zsh/aliases.zsh

@@ -1,5 +1,7 @@
-# Dotfiles managed by [DotBot](https://github.com/anishathalye/dotbot)
+# dotfiles
 
-## Install
-    git clone https://gitlab.com/edgard/dotfiles.git ~/.dotfiles
-    cd ~/.dotfiles && ./install
+## Install dotfiles
+
+    git clone https://github.com/edgard/dotfiles.git ~/.dotfiles
+    cd ~/.dotfiles
+    ./install

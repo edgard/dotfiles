@@ -11,12 +11,15 @@
     "editor.rulers": [80],
     "editor.wrappingColumn": -1,
     "extensions.autoUpdate": true,
+    "files.hotExit": false,
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
     "go.gopath": "/home/edgard/Documents/Projects/go",
     "go.lintTool": "gometalinter",
     "python.formatting.autopep8Args": ["--max-line-length", "300"],
+    "window.fullScreenZenMode": false,
     "window.reopenFolders": "none",
     "workbench.editor.enablePreview": false,
-    "workbench.editor.enablePreviewFromQuickOpen": false
+    "workbench.editor.enablePreviewFromQuickOpen": false,
+    "workbench.welcome.enabled": false
 }

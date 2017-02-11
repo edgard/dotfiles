@@ -1,18 +1,21 @@
 [submodule "dotbot"]
 	path = dotbot
 	url = https://github.com/anishathalye/dotbot
-[submodule "zsh/plugins/z"]
-	path = zsh/plugins/z
+[submodule "files/zsh/plugins/z"]
+	path = files/zsh/plugins/z
 	url = https://github.com/rupa/z.git
-[submodule "zsh/plugins/zsh-autosuggestions"]
-	path = zsh/plugins/zsh-autosuggestions
+[submodule "files/zsh/plugins/zsh-autosuggestions"]
+	path = files/zsh/plugins/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions.git
-[submodule "zsh/plugins/zsh-completions"]
-	path = zsh/plugins/zsh-completions
+[submodule "files/zsh/plugins/zsh-completions"]
+	path = files/zsh/plugins/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions.git
-[submodule "zsh/plugins/zsh-history-substring-search"]
-	path = zsh/plugins/zsh-history-substring-search
+[submodule "files/zsh/plugins/zsh-history-substring-search"]
+	path = files/zsh/plugins/zsh-history-substring-search
 	url = https://github.com/zsh-users/zsh-history-substring-search.git
-[submodule "zsh/plugins/zsh-syntax-highlighting"]
-	path = zsh/plugins/zsh-syntax-highlighting
+[submodule "files/zsh/plugins/zsh-syntax-highlighting"]
+	path = files/zsh/plugins/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule "files/zsh/plugins/git-flow-completion"]
+	path = files/zsh/plugins/git-flow-completion
+	url = https://github.com/petervanderdoes/git-flow-completion.git

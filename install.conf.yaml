@@ -4,23 +4,23 @@
       relink: true
       force: true
 
-- clean: ['~']
+- clean: ['~', '~/.config']
 
 - link:
-    ~/.config/Code/User/settings.json: config/Code/User/settings.json
-    ~/.config/mimeapps.list: config/mimeapps.list
-    ~/.config/numix-folders: config/numix-folders
-    ~/.config/pacaur/config: config/pacaur/config
-    ~/.config/qt5ct/qt5ct.conf: config/qt5ct/qt5ct.conf
-    ~/.config/redshift.conf: config/redshift.conf
-    ~/.conkyrc: conkyrc
-    ~/.gitconfig: gitconfig
-    ~/.gitignore_global: gitignore_global
-    ~/.ssh/config: ssh/config
-    ~/.zsh: zsh
-    ~/.zshrc: zshrc
+    ~/.config/autostart: files/config/autostart
+    ~/.config/chromium-flags.conf: files/config/chromium-flags.conf
+    ~/.config/Code/User/settings.json: files/config/Code/User/settings.json
+    ~/.config/fontconfig/fonts.conf: files/config/fontconfig/fonts.conf
+    ~/.config/neofetch/config: files/config/neofetch/config
+    ~/.config/pacaur/config: files/config/pacaur/config
+    ~/.config/redshift.conf: files/config/redshift.conf
+    ~/.gitconfig: files/gitconfig
+    ~/.gitignore_global: files/gitignore_global
+    ~/.ssh/config: files/ssh/config
+    ~/.zsh: files/zsh
+    ~/.zshrc: files/zshrc
 
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]
     - [git submodule update --remote, Updating remote tracking submodules]
-    - [chmod 600 ssh/config, Fix ssh config permission]
+    - [chmod 600 files/ssh/config, Fix ssh config permission]
