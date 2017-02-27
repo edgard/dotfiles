@@ -17,3 +17,5 @@
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --date=short
   type = cat-file -t
   dump = cat-file -p
+[http "https://gopkg.in"]
+       followRedirects = true
