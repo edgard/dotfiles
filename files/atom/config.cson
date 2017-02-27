@@ -1,0 +1,41 @@
+"*":
+  "autocomplete-ansible":
+    pythonPaths: "/usr/bin/python2"
+  "autocomplete-python":
+    pythonPaths: "/home/edgard/.virtualenvs/$PROJECT_NAME/bin/python;/usr/bin/python"
+    useSnippets: "all"
+  core:
+    allowPendingPaneItems: false
+    autoHideMenuBar: true
+    automaticallyUpdate: false
+    disabledPackages: [
+      "language-gfm"
+      "exception-reporting"
+      "metrics"
+    ]
+    projectHome: "/home/edgard/Documents/Projects"
+    restorePreviousWindowsOnStart: false
+    telemetryConsent: "no"
+  editor:
+    fontFamily: "PragmataPro Mono"
+    fontSize: 16
+    scrollPastEnd: true
+    showIndentGuide: true
+    showInvisibles: true
+  "file-icons":
+    coloured: false
+  "go-plus":
+    lint:
+      args: [
+        "--aggregate"
+        "--vendored-linters"
+        "--vendor"
+        "--tests"
+        "--json"
+        "."
+      ]
+    panelDisplayMode: "closed"
+    test:
+      runTestsOnSave: false
+  welcome:
+    showOnStartup: false
