@@ -11,4 +11,6 @@ update() {
 
     sudo hardcode-fixer
     hardcode-tray --apply --conversion-tool Inkscape --theme Papirus --size 22
+
+    rm -f ~/.local/share/applications/telegramdesktop.desktop
 }
