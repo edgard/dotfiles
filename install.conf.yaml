@@ -8,7 +8,6 @@
 
 - link:
     ~/.atom/config.cson: files/atom/config.cson
-    ~/.config/chromium-flags.conf: files/config/chromium-flags.conf
     ~/.config/fontconfig/fonts.conf: files/config/fontconfig/fonts.conf
     ~/.config/neofetch/config: files/config/neofetch/config
     ~/.config/pacaur/config: files/config/pacaur/config
