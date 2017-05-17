@@ -11,7 +11,6 @@
     ~/.config/fontconfig/fonts.conf: files/config/fontconfig/fonts.conf
     ~/.config/neofetch/config: files/config/neofetch/config
     ~/.config/pacaur/config: files/config/pacaur/config
-    ~/.config/redshift.conf: files/config/redshift.conf
     ~/.gitconfig: files/gitconfig
     ~/.gitignore_global: files/gitignore_global
     ~/.ssh/config: files/ssh/config
