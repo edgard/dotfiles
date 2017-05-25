@@ -13,14 +13,7 @@ export PAGER='less'
 export LESS='-R'
 export EDITOR='atom -w -n'
 export VISUAL='atom -w -n'
-export BROWSER='chromium'
 export PROJECT_HOME=~/Documents/Projects
-
-
-# env: virtualenvwrapper
-if [[ -f /usr/bin/virtualenvwrapper.sh ]]; then
-  source /usr/bin/virtualenvwrapper.sh
-fi
 
 
 # env: go
