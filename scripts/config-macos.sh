@@ -232,6 +232,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
     skype
     sourcetree
     spotify
+    steermouse
     telegram-desktop
     transmission
     vagrant
