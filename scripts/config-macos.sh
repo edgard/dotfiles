@@ -5,6 +5,8 @@
 sudo -v
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
+# Disable GateKeeper
+sudo spctl --master-disable
 
 ###############################################################################
 # General UI/UX
