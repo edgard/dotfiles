@@ -225,8 +225,11 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
     bartender
     calibre
     cleanmymac
+    disk-inventory-x
+    handbrake
     docker
     dropbox
+    go2shell
     firefox
     google-chrome
     iterm
