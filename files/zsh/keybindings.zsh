@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 # keybindings
 bindkey -e
 bindkey ' ' magic-space

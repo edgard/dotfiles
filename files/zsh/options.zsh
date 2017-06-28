@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 # additional options
 setopt always_to_end            # When completing from the middle of a word, move the cursor to the end of the word
 setopt append_history           # Allow multiple terminal sessions to all append to one zsh command history

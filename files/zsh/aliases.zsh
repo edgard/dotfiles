@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 # aliases
 alias j='z'
 alias history='history 1'

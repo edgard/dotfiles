@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 # plugins
 if_os linux && source /usr/share/zsh/scripts/zplug/init.zsh
 if_os darwin && export ZPLUG_HOME=/usr/local/opt/zplug && source $ZPLUG_HOME/init.zsh

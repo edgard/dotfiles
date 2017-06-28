@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 # completion styles
 zstyle ':completion:*' accept-exact-dirs true
 zstyle ':completion:*' add-space true
