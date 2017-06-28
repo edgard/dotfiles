@@ -3,18 +3,6 @@
 # if not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-# os detection
-if_os () { [[ $OSTYPE == *$1* ]]; }
-if_nix () {
-  case "$OSTYPE" in
-    *linux*|*hurd*|*msys*|*cygwin*|*sua*|*interix*) sys="gnu";;
-    *bsd*|*darwin*) sys="bsd";;
-    *sunos*|*solaris*|*indiana*|*illumos*|*smartos*) sys="sun";;
-  esac
-  [[ "${sys}" == "$1" ]];
-}
-
-
 # plugins
 source ~/.zsh/plugins.zsh
 
