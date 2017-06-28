@@ -237,6 +237,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 
   CASKAPPS="
     adapter
+    alfred
     android-file-transfer
     android-platform-tools
     atom
