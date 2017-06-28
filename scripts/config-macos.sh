@@ -245,12 +245,12 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
     calibre
     cleanmymac
     disk-inventory-x
-    handbrake
     docker
     dropbox
-    go2shell
     firefox
+    go2shell
     google-chrome
+    handbrake
     iterm
     libreoffice
     skype
