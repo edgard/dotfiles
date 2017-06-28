@@ -121,7 +121,8 @@ defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 
 # Default file windows opens at user homedir
-defaults write com.apple.finder NewWindowTargetPath -string "file://$HOME/"
+defaults write com.apple.finder NewWindowTarget -string "PfLo"
+defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}"
 
 # Disable the warning before emptying the Trash
 defaults write com.apple.finder WarnOnEmptyTrash -bool false
