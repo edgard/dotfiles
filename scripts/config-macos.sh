@@ -223,6 +223,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
     asciinema
     glide
     go
+    go-delve/delve/delve
     gpg
     jq
     ripgrep
