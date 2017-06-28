@@ -182,6 +182,11 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 # Turn on local firewall
 sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
 
+# Disable Creation of Metadata Files on Network Volumes
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+
+# Disable Creation of Metadata Files on USB Volumes
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 
 ###############################################################################
 # Chrome
