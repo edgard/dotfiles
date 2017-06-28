@@ -130,6 +130,10 @@ defaults write com.apple.finder WarnOnEmptyTrash -bool false
 # Disable the warning when changing a file extension
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
+# Expand Save Panel by Default
+defaults write -g NSNavPanelExpandedStateForSaveMode -bool true
+defaults write -g NSNavPanelExpandedStateForSaveMode2 -bool true
+
 
 ###############################################################################
 # Dock & Mission Control
