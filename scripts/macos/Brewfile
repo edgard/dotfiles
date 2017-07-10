@@ -1,0 +1,50 @@
+# Console apps
+brew "ansible"
+brew "ansible-lint"
+brew "aria2"
+brew "asciinema"
+brew "glide"
+brew "gnupg"
+brew "go"
+brew "go-delve/delve/delve"
+brew "jq"
+brew "ripgrep"
+brew "shellcheck"
+brew "ssh-copy-id"
+brew "wrk"
+brew "zplug"
+
+# GUI apps
+cask "adapter"
+cask "alfred"
+cask "android-file-transfer"
+cask "android-platform-tools"
+cask "atom"
+cask "bartender"
+cask "calibre"
+cask "cleanmymac"
+cask "docker"
+cask "dropbox"
+cask "firefox"
+cask "go2shell"
+cask "google-chrome"
+cask "handbrake"
+cask "iterm2"
+cask "skype"
+cask "sourcetree"
+cask "spotify"
+cask "telegram-desktop"
+cask "transmission"
+cask "vagrant"
+cask "virtualbox"
+cask "vlc"
+
+# App Store Apps
+mas "1Password", id: 443987910
+mas "Amphetamine", id: 937984704
+mas "Magnet", id: 441258766
+mas "Microsoft OneNote", id: 784801555
+mas "Skitch", id: 425955336
+mas "The Unarchiver", id: 425424353
+mas "Transmit", id: 403388562
+mas "Wunderlist", id: 410628904

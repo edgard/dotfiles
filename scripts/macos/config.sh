@@ -211,62 +211,12 @@ defaults write com.apple.TextEdit RichText -int 0
 echo "Would you like to install brew and apps? (y/n)"
 read -r response
 if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
-  # Install brew and cask
+  # Install brew/cask/mas/bundle
   ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   brew tap caskroom/cask
-
-  # Install applications
-  APPS="
-    ansible
-    ansible-lint
-    aria2
-    asciinema
-    glide
-    go
-    go-delve/delve/delve
-    gpg
-    jq
-    ripgrep
-    shellcheck
-    ssh-copy-id
-    wrk
-    zplug
-  "
-  for app in $APPS; do
-    brew install $app
-  done
-
-  CASKAPPS="
-    adapter
-    alfred
-    android-file-transfer
-    android-platform-tools
-    atom
-    bartender
-    calibre
-    cleanmymac
-    disk-inventory-x
-    docker
-    dropbox
-    firefox
-    go2shell
-    google-chrome
-    handbrake
-    iterm
-    libreoffice
-    skype
-    sourcetree
-    spotify
-    steermouse
-    telegram-desktop
-    transmission
-    vagrant
-    virtualbox
-    vlc
-   "
-  for app in $CASKAPPS; do
-    brew cask install $app
-  done
+  brew tap Homebrew/bundle
+  brew install mas
+  brew bundle
 fi
 
 echo "Would you like to install atom extensions? (y/n)"
