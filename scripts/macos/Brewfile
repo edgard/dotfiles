@@ -16,35 +16,37 @@ brew "zplug"
 
 # GUI apps
 cask "adapter"
+cask "adobe-dng-converter"
 cask "alfred"
-cask "android-file-transfer"
-cask "android-platform-tools"
 cask "atom"
 cask "bartender"
 cask "calibre"
 cask "cleanmymac"
 cask "docker"
-cask "dropbox"
 cask "firefox"
 cask "go2shell"
 cask "google-chrome"
 cask "handbrake"
 cask "iterm2"
+cask "minikube"
 cask "skype"
 cask "sourcetree"
-cask "spotify"
+cask "steermouse"
 cask "telegram-desktop"
 cask "transmission"
 cask "vagrant"
 cask "virtualbox"
+cask "viscosity"
 cask "vlc"
 
 # App Store Apps
 mas "1Password", id: 443987910
 mas "Amphetamine", id: 937984704
+mas "Keynote", id: 409183694
 mas "Magnet", id: 441258766
-mas "Microsoft OneNote", id: 784801555
-mas "Skitch", id: 425955336
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+mas "Parcel", id: 639968404
 mas "The Unarchiver", id: 425424353
 mas "Transmit", id: 403388562
-mas "Wunderlist", id: 410628904
+mas "iMovie", id: 408981434
