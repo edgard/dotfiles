@@ -134,8 +134,8 @@ defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 defaults write com.apple.finder _FXSortFoldersFirst -bool Yes
 
 # Expand Save Panel by Default
-defaults write -g NSNavPanelExpandedStateForSaveMode -bool true
-defaults write -g NSNavPanelExpandedStateForSaveMode2 -bool true
+#defaults write -g NSNavPanelExpandedStateForSaveMode -bool true
+#defaults write -g NSNavPanelExpandedStateForSaveMode2 -bool true
 
 
 ###############################################################################
