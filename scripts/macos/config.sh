@@ -16,7 +16,7 @@ sudo spctl --master-disable
 defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 
 # Save to disk, rather than iCloud by default
-defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+#defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
 # Check for software updates daily, not just once per week
 defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
@@ -24,6 +24,15 @@ defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 # Disable smart quotes and smart dashes
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+
+# Disable autocorrect
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+
+# Disable capitalize words
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+
+# Disable period on double space
+defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
 
 # Disable the 'Are you sure you want to open this application?' dialog
 defaults write com.apple.LaunchServices LSQuarantine -bool false
@@ -191,6 +200,7 @@ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 # Disable Creation of Metadata Files on USB Volumes
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 
+
 ###############################################################################
 # Chrome
 ###############################################################################
@@ -200,11 +210,25 @@ defaults write com.google.Chrome DisablePrintPreview -bool true
 
 
 ###############################################################################
+# Safari
+###############################################################################
+
+# Enable Develop menu
+defaults write com.apple.Safari IncludeDevelopMenu -int 1
+
+
+###############################################################################
 # TextEdit
 ###############################################################################
 
 # Use Plain Text Mode as Default
 defaults write com.apple.TextEdit RichText -int 0
+
+# Open new document instead of file dialog by Default
+defaults write com.apple.TextEdit NSShowAppCentricOpenPanelInsteadOfUntitledFile -bool false
+
+# Disable auto spelling
+defaults write /Users/"${USER}"/Library/Containers/com.apple.TextEdit/Data/Library/Preferences/com.apple.TextEdit.plist CheckSpellingWhileTyping -bool false
 
 
 ###############################################################################
