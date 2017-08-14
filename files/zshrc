@@ -8,7 +8,7 @@ source ~/.zsh/plugins.zsh
 
 # config
 source ~/.zsh/options.zsh
-source ~/.zsh/windowtitle.zsh
+#source ~/.zsh/windowtitle.zsh
 source ~/.zsh/completion.zsh
 source ~/.zsh/env.zsh
 source ~/.zsh/aliases.zsh
