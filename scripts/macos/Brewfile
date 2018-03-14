@@ -1,52 +1,65 @@
-# Console apps
+tap "caskroom/cask"
+tap "caskroom/drivers"
+tap "go-delve/delve"
+tap "homebrew/bundle"
+tap "homebrew/core"
+tap "kryptco/tap"
 brew "ansible"
 brew "ansible-lint"
-brew "aria2"
-brew "asciinema"
-brew "glide"
+brew "awscli"
+brew "dep"
 brew "gnupg"
-brew "go"
 brew "go-delve/delve/delve"
+brew "go"
 brew "jq"
 brew "kryptco/tap/kr"
+brew "kubernetes-cli"
+brew "mas"
 brew "ripgrep"
 brew "shellcheck"
-brew "wrk"
+brew "terraform"
 brew "zplug"
-
-# GUI apps
 cask "adapter"
-cask "adobe-dng-converter"
-cask "alfred"
-cask "atom"
+cask "appcleaner"
 cask "bartender"
 cask "calibre"
 cask "cleanmymac"
+cask "daisydisk"
 cask "docker"
 cask "firefox"
 cask "go2shell"
+cask "google-backup-and-sync"
 cask "google-chrome"
 cask "handbrake"
+cask "imageoptim"
 cask "iterm2"
+cask "kaleidoscope"
 cask "minikube"
+cask "minishift"
+cask "paw"
 cask "skype"
-cask "sourcetree"
+cask "spotify"
 cask "steermouse"
 cask "telegram-desktop"
+cask "tower"
 cask "transmission"
+cask "tunnelblick"
 cask "vagrant"
 cask "virtualbox"
-cask "viscosity"
+cask "visual-studio-code"
 cask "vlc"
-
-# App Store Apps
-mas "1Password", id: 443987910
 mas "Amphetamine", id: 937984704
+mas "GarageBand", id: 682658836
+mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
 mas "Magnet", id: 441258766
+mas "Microsoft OneNote", id: 784801555
+mas "Microsoft Remote Desktop", id: 1295203466
+mas "NewFileMenu", id: 1064959555
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
-mas "Parcel", id: 639968404
+mas "Proxie", id: 897814548
+mas "Slack", id: 803453959
 mas "The Unarchiver", id: 425424353
+mas "Todoist", id: 585829637
 mas "Transmit", id: 403388562
-mas "iMovie", id: 408981434

@@ -8,8 +8,12 @@ source ~/.zsh/plugins.zsh
 
 # config
 source ~/.zsh/options.zsh
-#source ~/.zsh/windowtitle.zsh
 source ~/.zsh/completion.zsh
-source ~/.zsh/env.zsh
 source ~/.zsh/aliases.zsh
+source ~/.zsh/functions.zsh
 source ~/.zsh/keybindings.zsh
+source ~/.zsh/env.zsh
+#source ~/.zsh/windowtitle.zsh
+
+# kryptonite
+export GPG_TTY=$(tty)

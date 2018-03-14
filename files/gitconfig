@@ -6,9 +6,13 @@
 	default = simple
 [color]
 	ui = auto
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
 [user]
 	name = Edgard Castro
-	email = castro@edgard.org
+	email = edgardcastro@gmail.com
 [alias]
 	co = checkout
 	ci = commit
@@ -19,9 +23,22 @@
 	dump = cat-file -p
 [http "https://gopkg.in"]
 	followRedirects = true
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+[mergetool "Kaleidoscope"]
+	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+	trustexitcode = true
+[merge]
+	tool = Kaleidoscope
+[difftool "Kaleidoscope"]
+	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[difftool]
+	prompt = false
+[mergetool]
+	prompt = false
+[diff]
+	tool = Kaleidoscope
+[gpg]
+	program = /usr/local/bin/krgpg
+[commit]
+	gpgSign = true
+[tag]
+	forceSignAnnotated = true

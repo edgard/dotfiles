@@ -178,6 +178,9 @@ defaults write com.apple.dock mru-spaces -bool false
 # Disable launchpad gesture
 defaults write com.apple.dock showLaunchpadGestureEnabled -bool false
 
+# Disable dashboard
+defaults write com.apple.dashboard dashboard-enabled-state -int 1
+
 
 ###############################################################################
 # Time Machine
@@ -216,6 +219,35 @@ defaults write com.google.Chrome DisablePrintPreview -bool true
 # Enable Develop menu
 defaults write com.apple.Safari IncludeDevelopMenu -int 1
 
+# Show the full URL in the address bar (note: this still hides the scheme)
+defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
+
+# Set Safari’s home page to `about:blank` for faster loading
+defaults write com.apple.Safari HomePage -string "about:blank"
+
+# Prevent Safari from opening ‘safe’ files automatically after downloading
+defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
+
+# Show Safari’s bookmarks bar by default
+defaults write com.apple.Safari ShowFavoritesBar -bool true
+
+# Show Safari's status bar by default
+defaults write com.apple.Safari ShowOverlayStatusBar -bool true
+
+# AutoFill
+defaults write com.apple.Safari AutoFillFromAddressBook -bool true
+defaults write com.apple.Safari AutoFillPasswords -bool false
+defaults write com.apple.Safari AutoFillCreditCardData -bool false
+defaults write com.apple.Safari AutoFillMiscellaneousForms -bool true
+
+# Enable “Do Not Track”
+defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
+
+# Update extensions automatically
+defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
+
+# Make Safari’s search banners default to Contains instead of Starts With
+defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
 
 ###############################################################################
 # TextEdit
@@ -244,39 +276,4 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
   brew tap Homebrew/bundle
   brew install mas
   brew bundle
-fi
-
-echo "Would you like to install atom extensions? (y/n)"
-read -r response
-if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
-  EXTS="
-    atom-alignment
-    atom-ternjs
-    atom-typescript
-    autocomplete-ansible
-    autocomplete-json
-    autocomplete-python
-    color-picker
-    file-icons
-    git-plus
-    go-plus
-    language-ansible
-    language-docker
-    language-markdown
-    linter-ansible-linting
-    linter-csslint
-    linter-docker
-    linter-eslint
-    linter-htmlhint
-    linter-jsonlint
-    linter-markdown
-    linter-pylint
-    linter-shellcheck
-    python-tools
-    sort-lines
-    termination
-  "
-  for ext in $EXTS; do
-    apm install $ext
-  done
 fi

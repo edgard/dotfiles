@@ -18,7 +18,6 @@ zstyle ':completion:*:messages' format $'-- %d --'
 zstyle ':completion:*:warnings' format $'-- no matches found --'
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
 
-
 # auto suggestion config
 ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=red'
 ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=("${(@)ZSH_AUTOSUGGEST_ACCEPT_WIDGETS:#forward-char}")

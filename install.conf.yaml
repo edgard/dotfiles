@@ -7,12 +7,12 @@
 - clean: ['~', '~/.config']
 
 - link:
-    ~/.atom/config.cson: files/atom/config.cson
     ~/.gitconfig: files/gitconfig
     ~/.gitignore_global: files/gitignore_global
     ~/.ssh/config: files/ssh/config
     ~/.zsh: files/zsh
     ~/.zshrc: files/zshrc
+    ~/.zshenv: files/zshenv
 
 - shell:
     - [git submodule update --init --recursive, Installing/updating submodules]

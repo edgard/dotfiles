@@ -6,8 +6,12 @@ bindkey ' ' magic-space
 bindkey '^ ' autosuggest-execute
 bindkey '\ew' kill-region
 bindkey '^?' backward-delete-char
-bindkey '^[[1;5C' forward-word
-bindkey '^[[1;5D' backward-word
+
+bindkey '^[[1;2D' backward-word         # shift left arrow
+bindkey '^[[1;2C' forward-word          # shift right arrow
+bindkey '^[[1;2A' end-of-line           # shift up arrow
+bindkey '^[[1;2B' beginning-of-line     # shift down arrow
+
 bindkey "${terminfo[khome]}" beginning-of-line
 bindkey "${terminfo[kend]}" end-of-line
 bindkey "${terminfo[kich1]}" overwrite-mode
