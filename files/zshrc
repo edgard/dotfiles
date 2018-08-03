@@ -14,6 +14,3 @@ source ~/.zsh/functions.zsh
 source ~/.zsh/keybindings.zsh
 source ~/.zsh/env.zsh
 #source ~/.zsh/windowtitle.zsh
-
-# kryptonite
-export GPG_TTY=$(tty)
