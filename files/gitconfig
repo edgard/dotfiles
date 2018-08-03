@@ -36,9 +36,4 @@
 	prompt = false
 [diff]
 	tool = Kaleidoscope
-[gpg]
-	program = /usr/local/bin/krgpg
 [commit]
-	gpgSign = true
-[tag]
-	forceSignAnnotated = true
