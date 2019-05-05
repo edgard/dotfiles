@@ -1,0 +1,18 @@
+# Dev
+Host dev
+  HostName 192.168.56.2
+  User edgard
+  DynamicForward 8888
+
+# Oktane
+Host oktane
+  HostName okkie.oktaneclub.com
+  User edgard
+
+# ***REMOVED***
+Host 10.186.190.* 10.206.126.* 10.187.3.* 10.191.3.* 10.187.4.* 10.191.4.* 10.209.* 10.207.129.* 10.186.190.* 10.186.2.* 10.187.2.* 10.191.*
+  User ***REMOVED***
+  ProxyCommand socat STDIO PROXY:***REMOVED***:%h:%p,proxyport=3128
+  ServerAliveInterval 10
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null

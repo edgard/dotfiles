@@ -1,6 +1,3 @@
-# VIM
-.*.swp
-
 # OSX
 .DS_Store
 .AppleDouble
@@ -23,3 +20,10 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+
+# VIM
+.*.swp
+
+# Python
+*.pyc
+.mypy_cache

@@ -4,4 +4,4 @@
 
     git clone https://github.com/edgard/dotfiles.git ~/.dotfiles
     cd ~/.dotfiles
-    ./install
+    ./install [linux, mac, ...]

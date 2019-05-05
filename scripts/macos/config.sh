@@ -3,10 +3,17 @@
 # Ask for the administrator password upfront and run a keep-alive to update
 # existing `sudo` time stamp until script has finished
 sudo -v
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+while true; do
+    sudo -n true
+    sleep 60
+    kill -0 "$$" || exit
+done 2>/dev/null &
 
 # Disable GateKeeper
 sudo spctl --master-disable
+
+# Enable TimeMachine snapshots
+sudo tmutil enable
 
 ###############################################################################
 # General UI/UX
@@ -43,7 +50,6 @@ defaults write NSGlobalDomain AppleLanguages -array "en" "pt-BR"
 # Disable reopening of windows during login
 defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false
 
-
 ###############################################################################
 # General Power and Performance modifications
 ###############################################################################
@@ -59,7 +65,6 @@ sudo pmset -a standbydelay 86400
 
 # Reduce transparency in OS X
 #defaults write com.apple.universalaccess reduceTransparency -boolean true
-
 
 ################################################################################
 # Trackpad, mouse, keyboard
@@ -86,7 +91,6 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadTwoFin
 # Turn off keyboard illumination when computer is not used for 5 minutes
 defaults write com.apple.BezelServices kDimTime -int 300
 
-
 ###############################################################################
 # Screen
 ###############################################################################
@@ -105,11 +109,13 @@ defaults write com.apple.screencapture type -string "png"
 defaults write com.apple.screencapture disable-shadow -bool true
 
 # Enabling subpixel font rendering on non-Apple LCDs
-defaults write NSGlobalDomain AppleFontSmoothing -int 2
+defaults write NSGlobalDomain AppleFontSmoothing -int 1
+
+# Re-enable subpixel fond rendering
+defaults write -g CGFontRenderingFontSmoothingDisabled -bool false
 
 # Disable auto-adjust brightness
 sudo defaults write /Library/Preferences/com.apple.iokit.AmbientLightSensor.plist "Automatic Display Enabled" -bool false
-
 
 ###############################################################################
 # Finder
@@ -146,7 +152,6 @@ defaults write com.apple.finder _FXSortFoldersFirst -bool Yes
 #defaults write -g NSNavPanelExpandedStateForSaveMode -bool true
 #defaults write -g NSNavPanelExpandedStateForSaveMode2 -bool true
 
-
 ###############################################################################
 # Dock & Mission Control
 ###############################################################################
@@ -181,14 +186,12 @@ defaults write com.apple.dock showLaunchpadGestureEnabled -bool false
 # Disable dashboard
 defaults write com.apple.dashboard dashboard-enabled-state -int 1
 
-
 ###############################################################################
 # Time Machine
 ###############################################################################
 
 # Prevent Time Machine from prompting to use new hard drives as backup volume
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
-
 
 ###############################################################################
 # Misc
@@ -203,14 +206,12 @@ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 # Disable Creation of Metadata Files on USB Volumes
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 
-
 ###############################################################################
 # Chrome
 ###############################################################################
 
 # Using the system-native print preview dialog in Chrome
 defaults write com.google.Chrome DisablePrintPreview -bool true
-
 
 ###############################################################################
 # Safari
@@ -262,7 +263,6 @@ defaults write com.apple.TextEdit NSShowAppCentricOpenPanelInsteadOfUntitledFile
 # Disable auto spelling
 defaults write /Users/"${USER}"/Library/Containers/com.apple.TextEdit/Data/Library/Preferences/com.apple.TextEdit.plist CheckSpellingWhileTyping -bool false
 
-
 ###############################################################################
 # Brew
 ###############################################################################
@@ -270,10 +270,14 @@ defaults write /Users/"${USER}"/Library/Containers/com.apple.TextEdit/Data/Libra
 echo "Would you like to install brew and apps? (y/n)"
 read -r response
 if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
-  # Install brew/cask/mas/bundle
-  ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  brew tap caskroom/cask
-  brew tap Homebrew/bundle
-  brew install mas
-  brew bundle
+    # Install xcode and headers
+    xcode-select --install
+    sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
+
+    # Install brew/cask/mas/bundle
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    brew tap caskroom/cask
+    brew tap Homebrew/bundle
+    brew install mas
+    brew bundle
 fi

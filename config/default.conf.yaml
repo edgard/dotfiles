@@ -1,0 +1,18 @@
+---
+- defaults:
+    link:
+      create: true
+      relink: true
+      force: true
+
+- clean: ["~", "~/.config"]
+
+- link:
+    ~/.bash_logout: /dev/null
+    ~/.bash_profile: files/bash_profile
+    ~/.bashrc: files/bashrc
+    ~/.gitconfig: files/gitconfig
+    ~/.gitignore_global: files/gitignore_global
+    ~/.hushlogin: /dev/null
+    ~/.profile: /dev/null
+    ~/.ssh/config: files/ssh_config

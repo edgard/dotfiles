@@ -1,0 +1,41 @@
+{
+  "coc.preferences.colorSupport": false,
+  "coc.preferences.formatOnType": false,
+  "coc.preferences.snippets.enable": false,
+  "codeLens.enable": false,
+  "diagnostic.enable": false,
+  "signature.enable": false,
+  "suggest.preferCompleteThanJumpPlaceholder": true,
+  "languageserver": {
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": [
+        "go.mod",
+        ".vim/",
+        ".git/",
+        ".hg/"
+      ],
+      "filetypes": [
+        "go"
+      ]
+    },
+    "python": {
+      "command": "pyls",
+      "filetypes": [
+        "python"
+      ]
+    },
+    "bash": {
+      "command": "bash-language-server",
+      "args": [
+        "start"
+      ],
+      "filetypes": [
+        "sh"
+      ],
+      "ignoredRootPaths": [
+        "~"
+      ]
+    }
+  }
+}
