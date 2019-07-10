@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+[[ -f "${HOME}/.Xresources" ]] && xrdb -merge "${HOME}/.Xresources"
+
+if command -v vmware-user 1>/dev/null 2>&1; then
+	vmware-user
+fi
+
+xset r rate 200 30
+xset s off
+
+slstatus &
+
+exec dwm

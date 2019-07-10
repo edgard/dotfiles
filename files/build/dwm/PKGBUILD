@@ -1,0 +1,63 @@
+# $Id$
+# Maintainer: Edgard Castro <edgardcastro@gmail.com>
+
+pkgname=dwm-git
+pkgver=r1677.cb3f58a
+pkgrel=1
+epoch=999
+pkgdesc="A dynamic window manager for X"
+url="http://dwm.suckless.org"
+arch=('i686' 'x86_64')
+license=('MIT')
+options=(zipman)
+depends=('libx11' 'libxinerama' 'libxft' 'freetype2')
+makedepends=('git')
+provides=("${pkgname%-git}")
+conflicts=('dwm')
+source=("git+http://git.suckless.org/${pkgname%-git}"
+	"config.h"
+	"https://dwm.suckless.org/patches/pertag/dwm-pertag-20170513-ceac8c9.diff"
+	"https://dwm.suckless.org/patches/attachbelow/dwm-attachbelow-6.2.diff"
+	"https://dwm.suckless.org/patches/noborder/dwm-noborder-6.2.diff"
+	"https://dwm.suckless.org/patches/fakefullscreen/dwm-fakefullscreen-20170508-ceac8c9.diff"
+	"https://dwm.suckless.org/patches/staticmonoclesymbol/dwm-staticmonoclesymbol-6.2.diff"
+	"https://dwm.suckless.org/patches/movestack/dwm-movestack-6.1.diff"
+	"https://dwm.suckless.org/patches/statuspadding/dwm-statuspadding-20150524-c8e9479.diff")
+sha256sums=('SKIP'
+	'SKIP'
+	'11738a343ce3e5092b7eacf08f6f5c638f14fba2b2f8fe82d9b8e1864c949e22'
+	'acd334a6108cb329e91d7fee93d798cd2bba9feb079a912ec84234980c8ef2dd'
+	'9bbf5f963e5a2d23ae4b8731f0c179a8615de5715a2dbf683fbe02115e24efe0'
+	'3ab0872f66ca32ccef66e851a07087456a69fad6e7729dbec08f78e7ee93b0f3'
+	'ba8f4fcbf78c9c0f8b0c1dca27239e13a2b5ba4006589290cc3c373d5c3509d1'
+	'ff65f2e8e6a6a733edb78819c50a3ee8513043550d4157a38608d443f9ff8d73'
+	'89ffd56b0e6b307821aa02d568a1d64ab9e554e4f236f0e90695b110212c3c26')
+
+pkgver() {
+	cd "${pkgname%-git}"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+	cp config.h "${pkgname%-git}/config.h"
+
+	cd "${pkgname%-git}"
+	for file in "${source[@]}"; do
+		if [[ "${file}" == *.diff || "${file}" == *.patch ]]; then
+			echo "Applying patch $(basename ${file})..."
+			patch --forward --strip=1 --input="${srcdir}/$(basename ${file})"
+		fi
+	done
+}
+
+build() {
+	cd "${pkgname%-git}"
+	make X11INC='/usr/include/X11' X11LIB='/usr/lib/X11' FREETYPEINC='/usr/include/freetype2'
+}
+
+package() {
+	cd "${pkgname%-git}"
+	make PREFIX='/usr' DESTDIR="${pkgdir}" install
+	install -m644 -D LICENSE "${pkgdir}/usr/share/licenses/${pkgname%-git}/LICENSE"
+	install -m644 -D README "${pkgdir}/usr/share/doc/${pkgname%-git}/README"
+}

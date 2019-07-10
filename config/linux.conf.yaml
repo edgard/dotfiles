@@ -5,12 +5,14 @@
       relink: true
       force: true
 
-- clean: ["~", "~/.config"]
+- clean: ["~", "~/.config", "~/.local"]
 
 - link:
     ~/.dir_colors: files/dir_colors
-    ~/.tmux.conf: files/tmux.conf
     ~/.config/nvim: files/nvim
+    ~/.local/build: files/build
+    ~/.xinitrc: files/xinitrc
+    ~/.Xresources: files/Xresources
 
 - shell:
     - git clone https://github.com/pyenv/pyenv.git ~/.pyenv || true

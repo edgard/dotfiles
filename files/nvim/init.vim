@@ -53,7 +53,6 @@ scriptencoding utf-8
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'joshdick/onedark.vim'
 Plug 'itchyny/lightline.vim'
-Plug 'christoomey/vim-tmux-navigator'
 Plug 'easymotion/vim-easymotion'
 Plug 'godlygeek/tabular'
 Plug 'junegunn/fzf.vim'
@@ -86,9 +85,6 @@ let g:lightline = {
     \   'sleuth': 'SleuthIndicator'
     \ },
     \ }
-
-" tmux-navigator
-let g:tmux_navigator_no_mappings = 1
 
 " vim-sleuth
 let g:sleuth_automatic = 1
@@ -251,10 +247,10 @@ nnoremap <silent> <C-k> d$
 xnoremap <silent> <C-k> d$
 inoremap <silent> <C-k> <Esc>d$i
 
-nnoremap <silent> <M-Right> <C-w>l
-nnoremap <silent> <M-Left> <C-w>h
-nnoremap <silent> <M-Up> <C-w>k
-nnoremap <silent> <M-Down> <C-w>j
+nnoremap <silent> <C-Right> <C-w>l
+nnoremap <silent> <C-Left> <C-w>h
+nnoremap <silent> <C-Up> <C-w>k
+nnoremap <silent> <C-Down> <C-w>j
 
 " leader mappings
 let g:which_key_map = {}

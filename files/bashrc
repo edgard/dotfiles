@@ -14,13 +14,8 @@ export LANGUAGE="en_US.UTF-8"
 # helper funcions
 if_os() { [[ $OSTYPE == *$1* ]]; }
 
-# run tmux
-if_os linux && {
-    if command -v tmux &>/dev/null && [[ -z "$TMUX" ]]; then
-        tmux attach -t default || tmux new -s default
-        exit
-    fi
-}
+#startx
+if_os linux && if [[ -z "${DISPLAY}" ]] && [[ "$(tty)" == "/dev/tty1" ]]; then exec startx; fi
 
 # -----------------------------------------------------------------------------
 # bash options
@@ -133,13 +128,7 @@ if_os linux && {
 
     # fzf
     if command -v fzf 1>/dev/null 2>&1; then
-        export FZF_DEFAULT_OPTS="--inline-info --layout=reverse --color=dark --color=fg:#abb2bf,bg:#282c34,hl:#5c6370,fg+:#abb2bf,bg+:#2c323c,hl+:#c678dd,info:#e5c07b,prompt:#c678dd,pointer:#c678dd,marker:#e06c75,spinner:#c678dd,header:#5c6370"
-        if command -v tmux &>/dev/null && [[ -n "$TMUX" ]]; then
-            export FZF_TMUX="1"
-            export FZF_TMUX_HEIGHT="10"
-        else
-            export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} --height 10"
-        fi
+        export FZF_DEFAULT_OPTS="--inline-info --layout=reverse --height 10 --color=dark --color=fg:#abb2bf,bg:#282c34,hl:#5c6370,fg+:#abb2bf,bg+:#2c323c,hl+:#c678dd,info:#e5c07b,prompt:#c678dd,pointer:#c678dd,marker:#e06c75,spinner:#c678dd,header:#5c6370"
         if command -v fd &>/dev/null; then
             export FZF_DEFAULT_COMMAND="fd . ${HOME}"
             export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"

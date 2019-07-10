@@ -1,0 +1,63 @@
+# $Id$
+# Maintainer: Edgard Castro <edgardcastro@gmail.com>
+
+pkgname=st-git
+pkgver=r1071.caa1d8f
+pkgrel=1
+epoch=999
+pkgdesc='Simple virtual terminal emulator for X'
+url="http://st.suckless.org"
+arch=('i686' 'x86_64')
+license=('MIT')
+options=(zipman)
+depends=('libxft' 'libxext' 'xorg-fonts-misc')
+makedepends=('git' 'ncurses' 'libxext')
+provides=("${pkgname%-git}")
+conflicts=('st')
+source=("git+http://git.suckless.org/${pkgname%-git}"
+	"config.h"
+	"https://st.suckless.org/patches/anysize/st-anysize-0.8.1.diff"
+	"https://st.suckless.org/patches/bold-is-not-bright/st-bold-is-not-bright-20190127-3be4cf1.diff"
+	"https://st.suckless.org/patches/clipboard/st-clipboard-20180309-c5ba9c0.diff"
+	"https://st.suckless.org/patches/hidecursor/st-hidecursor-0.8.1.diff"
+	"https://st.suckless.org/patches/scrollback/st-scrollback-20190331-21367a0.diff"
+	"https://st.suckless.org/patches/boxdraw/st-boxdraw_v2-0.8.2.diff")
+sha256sums=('SKIP'
+            'SKIP'
+            '8118dbc50d2fe07ae10958c65366476d5992684a87a431f7ee772e27d5dee50f'
+            '329169acac7ceaf901995d6e0897913089b799d8cd150c7f04c902f4a5b8eab2'
+            '4989c03de5165234303d3929e3b60d662828972203561651aa6dc6b8f67feeb8'
+            'bf3fe4e855f67fc9ae69b7328399ce06567f6aae3c9fb7fc8e7ec26c89e41dfd'
+            'f974bc0e11bda909a6d6d529d28abde4c97e651107b6a6047f2fab8837010b43'
+            'c1b7ab7672815b73e8328ecc55300c12fddce9ecae4ab04ff4377bd9132089f6')
+
+pkgver() {
+	cd "${pkgname%-git}"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+	cp config.h "${pkgname%-git}/config.h"
+
+	cd "${pkgname%-git}"
+	for file in "${source[@]}"; do
+		if [[ "${file}" == *.diff || "${file}" == *.patch ]]; then
+			echo "Applying patch $(basename ${file})..."
+			patch --forward --strip=1 --input="${srcdir}/$(basename ${file})"
+		fi
+	done
+}
+
+build() {
+	cd "${pkgname%-git}"
+	make X11INC='/usr/include/X11' X11LIB='/usr/lib/X11'
+}
+
+package() {
+	cd "${pkgname%-git}"
+	make PREFIX='/usr' DESTDIR="${pkgdir}" TERMINFO="${pkgdir}/usr/share/terminfo" install
+	install -m644 -D LICENSE "${pkgdir}/usr/share/licenses/${pkgname%-git}/LICENSE"
+	install -m644 -D README "${pkgdir}/usr/share/doc/${pkgname%-git}/README"
+	# remove to avoid conflict with ncurses
+	rm "${pkgdir}/usr/share/terminfo/s/st" "${pkgdir}/usr/share/terminfo/s/st-256color"
+}
