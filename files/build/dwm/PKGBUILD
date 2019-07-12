@@ -22,7 +22,8 @@ source=("git+http://git.suckless.org/${pkgname%-git}"
 	"https://dwm.suckless.org/patches/fakefullscreen/dwm-fakefullscreen-20170508-ceac8c9.diff"
 	"https://dwm.suckless.org/patches/staticmonoclesymbol/dwm-staticmonoclesymbol-6.2.diff"
 	"https://dwm.suckless.org/patches/movestack/dwm-movestack-6.1.diff"
-	"https://dwm.suckless.org/patches/statuspadding/dwm-statuspadding-20150524-c8e9479.diff")
+	"https://dwm.suckless.org/patches/statuspadding/dwm-statuspadding-20150524-c8e9479.diff"
+	"https://dwm.suckless.org/patches/titlecolor/dwm-titlecolor-20190206-6.2.diff")
 sha256sums=('SKIP'
 	'SKIP'
 	'11738a343ce3e5092b7eacf08f6f5c638f14fba2b2f8fe82d9b8e1864c949e22'
@@ -31,7 +32,8 @@ sha256sums=('SKIP'
 	'3ab0872f66ca32ccef66e851a07087456a69fad6e7729dbec08f78e7ee93b0f3'
 	'ba8f4fcbf78c9c0f8b0c1dca27239e13a2b5ba4006589290cc3c373d5c3509d1'
 	'ff65f2e8e6a6a733edb78819c50a3ee8513043550d4157a38608d443f9ff8d73'
-	'89ffd56b0e6b307821aa02d568a1d64ab9e554e4f236f0e90695b110212c3c26')
+	'89ffd56b0e6b307821aa02d568a1d64ab9e554e4f236f0e90695b110212c3c26'
+	'be42cd354f183f0720cc7d4970d35fa70581c572f909a94318f820f7e64a3f47')
 
 pkgver() {
 	cd "${pkgname%-git}"
