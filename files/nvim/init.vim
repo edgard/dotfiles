@@ -64,7 +64,13 @@ Plug 'sickill/vim-pasta'
 Plug 'sjl/gundo.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'sheerun/vim-polyglot'
-Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-vim-lsp'
 Plug 'w0rp/ale'
 Plug 'tpope/vim-sleuth'
 call plug#end()
@@ -178,14 +184,39 @@ let g:go_highlight_types = 1
 let g:go_highlight_variable_assignments = 1
 let g:go_highlight_variable_declarations = 1
 
-" coc
-function! s:coc_show_documentation()
-    if (index(['vim','help'], &filetype) >= 0)
-        execute 'h '.expand('<cword>')
-    else
-        call CocAction('doHover')
-    endif
-endfunction
+" vim-lsp
+let g:lsp_diagnostics_enabled = 0
+let g:lsp_highlight_references_enabled = 0
+inoremap <expr> <Plug>(cr_prev) execute('let g:_prev_line = getline(".")')
+inoremap <expr> <Plug>(cr_do) (g:_prev_line == getline('.') ? "\<cr>" : "")
+inoremap <expr> <Plug>(cr_post) execute('unlet g:_prev_line')
+imap <expr> <CR> (pumvisible() ? "\<Plug>(cr_prev)\<C-Y>\<Plug>(cr_do)\<Plug>(cr_post)" : "\<CR>")
+augroup c_lsp
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'pyls']},
+        \ 'whitelist': ['python'],
+        \ })
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'gols',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'gopls -mode stdio']},
+        \ 'whitelist': ['go'],
+        \ })
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'bashls',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'bash-language-server start']},
+        \ 'whitelist': ['sh'],
+        \ })
+augroup END
+
+" ncm2
+let g:ncm2#complete_delay = 20
+let g:ncm2#complete_length = 1
+augroup c_ncm2
+    autocmd!
+    autocmd BufEnter * call ncm2#enable_for_buffer()
+augroup END
 
 " ale
 let g:ale_fix_on_save = 1
@@ -206,7 +237,6 @@ highlight ALEInfoSign ctermfg=10 guifg=#98c379
 let g:ale_linters = {
     \ 'ansible': ['ansible-lint'],
     \ 'dockerfile': ['hadolint'],
-    \ 'gitcommit': ['gitlint'],
     \ 'go': ['golangci-lint'],
     \ 'json': ['jsonlint'],
     \ 'python': ['bandit', 'pylint'],
@@ -357,11 +387,11 @@ nmap <nowait> <Leader><Leader> <Plug>(easymotion-bd-w)
 xmap <nowait> <Leader><Leader> <Plug>(easymotion-bd-w)
 let g:which_key_map[' '] = 'easy-motion-word'
 
-nnoremap <silent> <Leader>ld <Plug>(coc-definition)
-nnoremap <silent> <Leader>lh :call <SID>coc_show_documentation()<CR>
-nnoremap <silent> <Leader>li <Plug>(coc-implementation)
-nnoremap <silent> <Leader>lr <Plug>(coc-references)
-nnoremap <silent> <Leader>lt <Plug>(coc-type-definition)
+nnoremap <silent> <Leader>ld :LspDefinition<CR>
+nnoremap <silent> <Leader>lh :LspHover<CR>
+nnoremap <silent> <Leader>li :LspImplementation<CR>
+nnoremap <silent> <Leader>lr :LspReferences<CR>
+nnoremap <silent> <Leader>lt :LspTypeDefinition<CR>
 let g:which_key_map['l'] = {
     \ 'name': '+language-server' ,
     \ 'd': 'definition',
