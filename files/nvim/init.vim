@@ -226,8 +226,8 @@ let g:ale_set_quickfix = 1
 let g:ale_go_golangci_lint_package = 1
 let g:ale_go_golangci_lint_options = '--enable-all --disable=lll'
 let g:ale_yaml_yamllint_options = '-d "{extends: default, rules: {line-length: {max: 999}}"'
-" let g:ale_python_black_options = '--line-length 999'
-" let g:ale_python_yapf_options = '--parallel --in-place --recursive --style="{based_on_style: pep8, column_limit: 999}"'
+let g:ale_python_black_options = '--line-length 100'
+let g:ale_python_yapf_options = '--parallel --in-place --recursive --style="{based_on_style: pep8, column_limit: 100}"'
 let g:ale_sign_error = '●'
 let g:ale_sign_warning = '●'
 let g:ale_sign_info = '●'
