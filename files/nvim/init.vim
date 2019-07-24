@@ -247,6 +247,7 @@ let g:ale_linters = {
     \ }
 let g:ale_fixers = {
     \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+    \ 'ansible': ['prettier'],
     \ 'go': ['goimports'],
     \ 'json': ['fixjson', 'prettier', 'jq'],
     \ 'python': ['isort', 'yapf', 'black'],
