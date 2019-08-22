@@ -6,7 +6,6 @@ brew "mas"
 cask "appcleaner"
 cask "bartender"
 cask "displaycal"
-cask "duplicati"
 cask "firefox"
 cask "google-chrome"
 cask "handbrake"
@@ -19,5 +18,7 @@ cask "vlc"
 mas "Amphetamine", id: 937984704
 mas "DaVinci Resolve", id: 571213070
 mas "Magnet", id: 441258766
+mas "Microsoft OneNote", id: 784801555
 mas "Microsoft Remote Desktop", id: 1295203466
 mas "The Unarchiver", id: 425424353
+mas "Todoist", id: 585829637
