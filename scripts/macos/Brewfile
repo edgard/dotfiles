@@ -13,7 +13,10 @@ cask "insync"
 cask "iterm2"
 cask "krita"
 cask "transmission"
+cask "virtualbox"
+cask "virtualbox-extension-pack"
 cask "viscosity"
+cask "visual-studio-code"
 cask "vlc"
 mas "Amphetamine", id: 937984704
 mas "DaVinci Resolve", id: 571213070
