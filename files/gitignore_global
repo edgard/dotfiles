@@ -27,3 +27,6 @@ $RECYCLE.BIN/
 # Python
 *.pyc
 .mypy_cache
+
+# Vscode
+.vscode

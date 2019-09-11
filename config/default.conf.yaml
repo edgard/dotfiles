@@ -5,7 +5,7 @@
       relink: true
       force: true
 
-- clean: ["~", "~/.config"]
+- clean: ["~", "~/.config", "~/.local"]
 
 - link:
     ~/.bash_logout: /dev/null

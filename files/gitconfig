@@ -21,15 +21,5 @@
 	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --date=short
 	type = cat-file -t
 	dump = cat-file -p
-[diff]
-	tool = vimdiff
-[difftool]
-	prompt = false
-[merge]
-	tool = vimdiff
-[mergetool]
-	prompt = true
-[mergetool "vimdiff"]
-	cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 [http "https://gopkg.in"]
 	followRedirects = true
