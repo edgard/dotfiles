@@ -96,6 +96,12 @@ if_os linux && {
         -pynossl)
             unset PYTHONHTTPSVERIFY
             ;;
+        mk)
+            export CHANGE_MINIKUBE_NONE_USER="true"
+            ;;
+        -mk)
+            unset CHANGE_MINIKUBE_NONE_USER
+            ;;
         *)
             echo "Need to specify which env varibles to set"
             ;;
