@@ -11,12 +11,6 @@ export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 export LANGUAGE="en_US.UTF-8"
 
-# helper funcions
-if_os() { [[ $OSTYPE == *$1* ]]; }
-
-#startx
-if_os linux && if [[ -z "${DISPLAY}" ]] && [[ "$(tty)" == "/dev/tty1" ]]; then exec startx; fi
-
 # -----------------------------------------------------------------------------
 # bash options
 # -----------------------------------------------------------------------------
@@ -55,91 +49,81 @@ export PAGER="less"
 export LESS="FRX"
 
 # ls colors
-if_os linux && [[ -f "${HOME}/.dir_colors" ]] && eval "$(dircolors -b "${HOME}/.dir_colors")"
-if_os darwin && export LSCOLORS="ExGxFxdaCxDaDahbadacec"
+export LSCOLORS="ExGxFxdaCxDaDahbadacec"
 
 # aliases
 alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --exclude-dir=.bzr --exclude-dir=CVS --binary-files=without-match"
+alias ls="ls -FGh"
 
-if_os linux && {
-    alias ls="ls -FGhN --color=auto"
-    function update() {
-        yay -Syyuu --needed
-        yay -Rns "$(yay -Qtdq)"
-        (cd ~/.pyenv && git pull)
-        (cd ~/.pyenv/plugins/pyenv-virtualenv && git pull)
-        (cd ~/.pyenv/plugins/xxenv-latest && git pull)
-        (cd ~/.tfenv && git pull)
-    }
-    function setenv() {
-        case $1 in
-        proxy)
-            local _proxy="http://***REMOVED***:3128"
-            export http_proxy="${_proxy}"
-            export https_proxy="${_proxy}"
-            export HTTP_PROXY="${_proxy}"
-            export HTTPS_PROXY="${_proxy}"
-            export ALL_PROXY="${_proxy}"
-            ;;
-        -proxy)
-            unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY
-            ;;
-        creds)
-            export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/.creds/gcp/jenkins.json"
-            ;;
-        -creds)
-            unset GOOGLE_APPLICATION_CREDENTIALS
-            ;;
-        pynossl)
-            export PYTHONHTTPSVERIFY="0"
-            ;;
-        -pynossl)
-            unset PYTHONHTTPSVERIFY
-            ;;
-        mk)
-            export CHANGE_MINIKUBE_NONE_USER="true"
-            ;;
-        -mk)
-            unset CHANGE_MINIKUBE_NONE_USER
-            ;;
-        *)
-            echo "Need to specify which env varibles to set"
-            ;;
-        esac
-    }
+function update() {
+    brew update
+    brew upgrade
+    brew cask outdated | xargs brew cask reinstall
+    mas upgrade
+    brew cleanup -s
 }
 
-if_os darwin && {
-    alias ls="ls -FGh"
-    function update() {
-        brew update
-        brew upgrade
-        brew cask outdated | xargs brew cask reinstall
-        mas upgrade
-        brew cleanup -s
-    }
+function setenv() {
+    case $1 in
+    proxy)
+        local _proxy="http://***REMOVED***:3128"
+        export http_proxy="${_proxy}"
+        export https_proxy="${_proxy}"
+        export HTTP_PROXY="${_proxy}"
+        export HTTPS_PROXY="${_proxy}"
+        export ALL_PROXY="${_proxy}"
+        ;;
+    -proxy)
+        unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY
+        ;;
+    creds)
+        export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/.creds/gcp/jenkins.json"
+        ;;
+    -creds)
+        unset GOOGLE_APPLICATION_CREDENTIALS
+        ;;
+    pynossl)
+        export PYTHONHTTPSVERIFY="0"
+        ;;
+    -pynossl)
+        unset PYTHONHTTPSVERIFY
+        ;;
+    *)
+        echo "Need to specify which env varibles to set"
+        ;;
+    esac
 }
 
 # -----------------------------------------------------------------------------
 # tools
 # -----------------------------------------------------------------------------
-if_os linux && {
-    # go
-    if command -v go 1>/dev/null 2>&1; then
-        export GOPATH="${HOME}/.go"
-        export PATH="${GOPATH}/bin:${PATH}"
+# fzf
+if command -v fzf 1>/dev/null 2>&1; then
+    export FZF_DEFAULT_OPTS="--inline-info --layout=reverse --height 10 --color=dark --color=fg:#abb2bf,bg:#282c34,hl:#5c6370,fg+:#abb2bf,bg+:#2c323c,hl+:#c678dd,info:#e5c07b,prompt:#c678dd,pointer:#c678dd,marker:#e06c75,spinner:#c678dd,header:#5c6370"
+    if command -v fd &>/dev/null; then
+        export FZF_DEFAULT_COMMAND="fd . ${HOME}"
+        export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+        export FZF_ALT_C_COMMAND="fd -t d . ${HOME}"
     fi
+    export PROMPT_COMMAND="history -a; history -n; ${PROMPT_COMMAND}"
+    source "$(brew --prefix)/opt/fzf/shell/key-bindings.bash"
+fi
 
-    # pyenv
-    if [[ -s "${HOME}/.pyenv/bin/pyenv" ]]; then
-        export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-        export PATH="${HOME}/.pyenv/bin:${PATH}"
-        eval "$(pyenv init -)"
-    fi
+# pyenv
+if command -v pyenv 1>/dev/null 2>&1; then
+    eval "$(pyenv init -)"
+fi
 
-    # tfenv
-    [[ -s "${HOME}/.tfenv/bin/tfenv" ]] && export PATH="${HOME}/.tfenv/bin:${PATH}"
-}
+# go
+if command -v go 1>/dev/null 2>&1; then
+    export GOPATH="${HOME}/.go"
+    export PATH="${GOPATH}/bin:${PATH}"
+fi
+
+# gcloud
+if command -v gcloud 1>/dev/null 2>&1; then
+    source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"
+fi
 
 # -----------------------------------------------------------------------------
 # additional path manipulation
