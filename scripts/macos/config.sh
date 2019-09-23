@@ -58,10 +58,10 @@ defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false
 sudo pmset -a standbydelay 86400
 
 # Disable open and close window animations
-#defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -boolean false
+defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -boolean false
 
 # Disable focus ring animation
-#defaults write NSGlobalDomain NSUseAnimatedFocusRing -boolean false
+defaults write NSGlobalDomain NSUseAnimatedFocusRing -boolean false
 
 # Reduce transparency in OS X
 #defaults write com.apple.universalaccess reduceTransparency -boolean true
@@ -172,7 +172,7 @@ defaults write com.apple.dock autohide-delay -float 0
 defaults write com.apple.dock autohide-time-modifier -float 0.15
 
 # Set application minimize/maximize effects to scale
-#defaults write com.apple.dock mineffect -string scale
+defaults write com.apple.dock mineffect -string scale
 
 # Minimize windows into application icon
 defaults write com.apple.dock minimize-to-application -bool true
