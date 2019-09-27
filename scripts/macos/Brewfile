@@ -34,6 +34,7 @@ cask "insync"
 cask "iterm2"
 cask "keka"
 cask "krita"
+cask "slack"
 cask "steermouse"
 cask "transmission"
 cask "tunnelblick"
@@ -41,6 +42,7 @@ cask "virtualbox"
 cask "virtualbox-extension-pack"
 cask "visual-studio-code"
 cask "vlc"
+cask "webex-teams"
 mas "Amphetamine", id: 937984704
 mas "DaVinci Resolve", id: 571213070
 mas "Magnet", id: 441258766
