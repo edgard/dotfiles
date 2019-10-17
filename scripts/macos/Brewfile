@@ -13,6 +13,7 @@ brew "kubernetes-cli"
 brew "kubernetes-helm"
 brew "mas"
 brew "maven"
+brew "minikube"
 brew "pyenv"
 brew "pyenv-virtualenv"
 brew "python@2"
@@ -20,6 +21,7 @@ brew "python@3"
 brew "socat"
 brew "telnet"
 brew "tfenv"
+brew "vault"
 brew "watch"
 brew "yq"
 cask "adoptopenjdk"
@@ -29,25 +31,24 @@ cask "browserosaurus"
 cask "displaycal"
 cask "docker"
 cask "firefox"
-cask "franz"
 cask "google-chrome"
 cask "google-cloud-sdk"
 cask "handbrake"
-cask "insync"
 cask "iterm2"
+cask "kaleidoscope"
 cask "keka"
-cask "krita"
-cask "minikube"
-cask "slack"
+cask "paw"
 cask "steermouse"
 cask "transmission"
 cask "tunnelblick"
 cask "visual-studio-code"
 cask "vlc"
-cask "webex-teams"
 mas "Amphetamine", id: 937984704
-mas "DaVinci Resolve", id: 571213070
+mas "iMovie", id: 408981434
+mas "Keynote", id: 409183694
 mas "Magnet", id: 441258766
-mas "Microsoft OneNote", id: 784801555
 mas "Microsoft Remote Desktop", id: 1295203466
-mas "Todoist", id: 585829637
+mas "Numbers", id: 409203825
+mas "Pages", id:409201541
+mas "Pixelmator", id: 407963104
+mas "Proxie", id: 897814548
