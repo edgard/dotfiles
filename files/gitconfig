@@ -4,24 +4,38 @@
 	prune = true
 [push]
 	default = simple
+[rebase]
+	autosquash = true
 [color]
 	ui = auto
 	branch = auto
 	diff = auto
 	interactive = auto
 	status = auto
+[status]
+	showUntrackedFiles = all
+[transfer]
+	fsckobjects = true
 [user]
 	name = Edgard Castro
 	email = edgardcastro@gmail.com
 [alias]
-	co = checkout
-	ci = commit
-	st = status
 	br = branch
-	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --date=short
-	type = cat-file -t
+	ci = commit
+	co = checkout
+	dc = diff --cached
+	df = diff
 	dump = cat-file -p
+	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --date=short
+	lg = log -p
+	pr = pull --rebase
 	review = "!f() { local SHA=${1:-HEAD}; local BRANCH=${2:-master}; if [ $SHA == $BRANCH ]; then SHA=HEAD; fi; git difftool -y -t Kaleidoscope $BRANCH...$SHA; }; f"
+	st = status
+	stash-all = stash save --include-untracked
+	type = cat-file -t
+	undo = reset --soft HEAD^
+[branch "master"]
+	mergeoptions = --ff-only
 [http "https://gopkg.in"]
 	followRedirects = true
 [difftool "Kaleidoscope"]
