@@ -8,9 +8,9 @@ brew "fzf"
 brew "git"
 brew "go"
 brew "goreleaser"
+brew "helm"
 brew "jq"
 brew "kubernetes-cli"
-brew "kubernetes-helm"
 brew "mas"
 brew "maven"
 brew "minikube"
@@ -43,6 +43,7 @@ cask "transmission"
 cask "tunnelblick"
 cask "visual-studio-code"
 cask "vlc"
+cask "webex-teams"
 mas "Amphetamine", id: 937984704
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
@@ -52,3 +53,5 @@ mas "Numbers", id: 409203825
 mas "Pages", id:409201541
 mas "Pixelmator", id: 407963104
 mas "Proxie", id: 897814548
+mas "Slack", id: 803453959
+mas "Telegram Desktop", id: 946399090
