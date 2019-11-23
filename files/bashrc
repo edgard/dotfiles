@@ -115,11 +115,6 @@ if command -v go 1>/dev/null 2>&1; then
     export PATH="${GOPATH}/bin:${PATH}"
 fi
 
-# gcloud
-if command -v gcloud 1>/dev/null 2>&1; then
-    source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"
-fi
-
 # -----------------------------------------------------------------------------
 # additional path manipulation
 # -----------------------------------------------------------------------------
