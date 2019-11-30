@@ -270,13 +270,7 @@ defaults write /Users/"${USER}"/Library/Containers/com.apple.TextEdit/Data/Libra
 echo "Would you like to install brew and apps? (y/n)"
 read -r response
 if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
-    # Install xcode and headers
-    xcode-select --install
-    sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
-
-    # Install brew/cask/mas/bundle
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    brew tap caskroom/cask
     brew tap Homebrew/bundle
     brew install mas
     brew bundle

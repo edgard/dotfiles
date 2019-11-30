@@ -1,4 +1,8 @@
+tap "homebrew/bundle"
 tap "homebrew/cask"
+tap "homebrew/core"
+cask "adoptopenjdk"
+brew "python"
 brew "ansible"
 brew "argyll-cms"
 brew "awscli"
@@ -16,14 +20,12 @@ brew "mas"
 brew "maven"
 brew "minikube"
 brew "python@2"
-brew "python@3"
 brew "socat"
 brew "telnet"
 brew "tfenv"
 brew "vault"
 brew "watch"
 brew "yq"
-cask "adoptopenjdk"
 cask "appcleaner"
 cask "bartender"
 cask "browserosaurus"
@@ -49,7 +51,7 @@ mas "Keynote", id: 409183694
 mas "Magnet", id: 441258766
 mas "Microsoft Remote Desktop", id: 1295203466
 mas "Numbers", id: 409203825
-mas "Pages", id:409201541
+mas "Pages", id: 409201541
 mas "Pixelmator", id: 407963104
 mas "Proxie", id: 897814548
 mas "Slack", id: 803453959
