@@ -78,6 +78,10 @@ function setenv() {
         ;;
     creds)
         export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/.creds/gcp/jenkins.json"
+        export creds_google="$(cat ${GOOGLE_APPLICATION_CREDENTIALS})"
+        export creds_aws="$(cat ${HOME}/.creds/aws/credit.json)"
+        export creds_bluecat="$(cat ${HOME}/.creds/bluecat.b64)"
+
         ;;
     -creds)
         unset GOOGLE_APPLICATION_CREDENTIALS
