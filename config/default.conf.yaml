@@ -15,4 +15,5 @@
     ~/.gitignore_global: files/gitignore_global
     ~/.hushlogin: /dev/null
     ~/.profile: /dev/null
-    ~/.ssh/config: files/ssh_config
+    ~/.creds: /Volumes/Secure/creds
+    ~/.ssh: /Volumes/Secure/ssh

@@ -1,7 +1,0 @@
-# ***REMOVED***
-Host 10.*
-  User ***REMOVED***
-  ProxyCommand socat STDIO PROXY:***REMOVED***:%h:%p,proxyport=3128
-  ServerAliveInterval 10
-  StrictHostKeyChecking no
-  UserKnownHostsFile /dev/null
