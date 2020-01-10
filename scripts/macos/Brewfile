@@ -2,7 +2,6 @@ tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
 cask "adoptopenjdk"
-brew "python"
 brew "ansible"
 brew "argyll-cms"
 brew "awscli"
@@ -21,6 +20,7 @@ brew "maven"
 brew "minikube"
 brew "operator-sdk"
 brew "pipenv"
+brew "python"
 brew "python@2"
 brew "shellcheck"
 brew "shfmt"
@@ -51,6 +51,7 @@ cask "visual-studio-code"
 cask "vlc"
 cask "webex-teams"
 mas "Amphetamine", id: 937984704
+mas "Front and Center", id: 1493996622
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
 mas "Magnet", id: 441258766
