@@ -17,8 +17,8 @@ export LANGUAGE="en_US.UTF-8"
 shopt -s checkwinsize
 shopt -s cmdhist
 shopt -s histappend
-shopt -s direxpand
-shopt -s dirspell
+#shopt -s direxpand
+#shopt -s dirspell
 
 bind 'set colored-completion-prefix on'
 bind 'set colored-stats on'
@@ -41,8 +41,17 @@ HISTSIZE="${HISTFILESIZE}"
 # bash prompt
 PS1='[\u \W]\$ '
 
+# disable osx bash warning
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
 # additional local paths
 export PATH="/usr/local/bin:/usr/local/sbin:${PATH}"
+
+# include user's homebrew bin if it exists
+[[ -d "${HOME}/.brew/bin" ]] && export PATH="${HOME}/.brew/bin:${PATH}"
+
+# includes user's private bin if it exists
+[[ -d "${HOME}/.local/bin" ]] && export PATH="${HOME}/.local/bin:${PATH}"
 
 # pager
 export PAGER="less"
@@ -118,8 +127,5 @@ fi
 # -----------------------------------------------------------------------------
 # additional path manipulation
 # -----------------------------------------------------------------------------
-# includes user's private bin if it exists
-[[ -d "${HOME}/.local/bin" ]] && export PATH="${HOME}/.local/bin:${PATH}"
-
 # remove duplicate path entries
 PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
