@@ -2,18 +2,18 @@
 
 # Ask for the administrator password upfront and run a keep-alive to update
 # existing `sudo` time stamp until script has finished
-sudo -v
-while true; do
-    sudo -n true
-    sleep 60
-    kill -0 "$$" || exit
-done 2>/dev/null &
+# sudo -v
+# while true; do
+#     sudo -n true
+#     sleep 60
+#     kill -0 "$$" || exit
+# done 2>/dev/null &
 
 # Disable GateKeeper
-sudo spctl --master-disable
+#sudo spctl --master-disable
 
 # Enable TimeMachine snapshots
-sudo tmutil enable
+#sudo tmutil enable
 
 ###############################################################################
 # General UI/UX
@@ -26,7 +26,7 @@ defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 #defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
 # Check for software updates daily, not just once per week
-defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+#defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 
 # Disable smart quotes and smart dashes
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
@@ -55,13 +55,13 @@ defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false
 ###############################################################################
 
 # Speeding up wake from sleep to 24 hours from an hour
-sudo pmset -a standbydelay 86400
+#sudo pmset -a standbydelay 86400
 
 # Disable open and close window animations
-defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -boolean false
+#defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -boolean false
 
 # Disable focus ring animation
-defaults write NSGlobalDomain NSUseAnimatedFocusRing -boolean false
+#defaults write NSGlobalDomain NSUseAnimatedFocusRing -boolean false
 
 # Reduce transparency in OS X
 #defaults write com.apple.universalaccess reduceTransparency -boolean true
@@ -88,16 +88,16 @@ defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerTapGesture -bool false
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadTwoFingerDoubleTapGesture -bool false
 
-# Turn off keyboard illumination when computer is not used for 5 minutes
-defaults write com.apple.BezelServices kDimTime -int 300
+# Turn off keyboard illumination when computer is not used for 5 seconds
+defaults write com.apple.BezelServices kDimTime -int 5
 
 ###############################################################################
 # Screen
 ###############################################################################
 
 # Requiring password immediately after sleep or screen saver begins
-defaults write com.apple.screensaver askForPassword -int 1
-defaults write com.apple.screensaver askForPasswordDelay -int 0
+#defaults write com.apple.screensaver askForPassword -int 1
+#defaults write com.apple.screensaver askForPasswordDelay -int 0
 
 # Set screenshot location to ~/Desktop as default
 defaults write com.apple.screencapture location -string "${HOME}/Desktop"
@@ -115,7 +115,7 @@ defaults write NSGlobalDomain AppleFontSmoothing -int 1
 defaults write -g CGFontRenderingFontSmoothingDisabled -bool false
 
 # Disable auto-adjust brightness
-sudo defaults write /Library/Preferences/com.apple.iokit.AmbientLightSensor.plist "Automatic Display Enabled" -bool false
+#sudo defaults write /Library/Preferences/com.apple.iokit.AmbientLightSensor.plist "Automatic Display Enabled" -bool false
 
 ###############################################################################
 # Finder
@@ -157,7 +157,7 @@ defaults write com.apple.finder _FXSortFoldersFirst -bool Yes
 ###############################################################################
 
 # Wipe all (default) app icons from the Dock
-# defaults write com.apple.dock persistent-apps -array
+#defaults write com.apple.dock persistent-apps -array
 
 # Setting the icon size of Dock items to 36 pixels for optimal size/screen-realestate
 defaults write com.apple.dock tilesize -int 36
@@ -198,7 +198,7 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 ###############################################################################
 
 # Turn on local firewall
-sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
+#sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
 
 # Disable Creation of Metadata Files on Network Volumes
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
@@ -218,37 +218,37 @@ defaults write com.google.Chrome DisablePrintPreview -bool true
 ###############################################################################
 
 # Enable Develop menu
-defaults write com.apple.Safari IncludeDevelopMenu -int 1
+#defaults write com.apple.Safari IncludeDevelopMenu -int 1
 
 # Show the full URL in the address bar (note: this still hides the scheme)
-defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
+#defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
 
 # Set Safari’s home page to `about:blank` for faster loading
-defaults write com.apple.Safari HomePage -string "about:blank"
+#defaults write com.apple.Safari HomePage -string "about:blank"
 
 # Prevent Safari from opening ‘safe’ files automatically after downloading
-defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
+#defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
 
 # Show Safari’s bookmarks bar by default
-defaults write com.apple.Safari ShowFavoritesBar -bool true
+#defaults write com.apple.Safari ShowFavoritesBar -bool true
 
 # Show Safari's status bar by default
-defaults write com.apple.Safari ShowOverlayStatusBar -bool true
+#defaults write com.apple.Safari ShowOverlayStatusBar -bool true
 
 # AutoFill
-defaults write com.apple.Safari AutoFillFromAddressBook -bool true
-defaults write com.apple.Safari AutoFillPasswords -bool false
-defaults write com.apple.Safari AutoFillCreditCardData -bool false
-defaults write com.apple.Safari AutoFillMiscellaneousForms -bool true
+#defaults write com.apple.Safari AutoFillFromAddressBook -bool true
+#defaults write com.apple.Safari AutoFillPasswords -bool false
+#defaults write com.apple.Safari AutoFillCreditCardData -bool false
+#defaults write com.apple.Safari AutoFillMiscellaneousForms -bool true
 
 # Enable “Do Not Track”
-defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
+#defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
 
 # Update extensions automatically
-defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
+#defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
 
 # Make Safari’s search banners default to Contains instead of Starts With
-defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
+#defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
 
 ###############################################################################
 # TextEdit
@@ -271,7 +271,5 @@ echo "Would you like to install brew and apps? (y/n)"
 read -r response
 if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    brew tap Homebrew/bundle
-    brew install mas
     brew bundle
 fi

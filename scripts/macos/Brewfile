@@ -1,7 +1,9 @@
 tap "homebrew/bundle"
 tap "homebrew/cask"
+tap "homebrew/cask-drivers"
 tap "homebrew/core"
 cask "adoptopenjdk"
+brew "python@3.8"
 brew "ansible"
 brew "argyll-cms"
 brew "awscli"
@@ -21,7 +23,6 @@ brew "minikube"
 brew "operator-sdk"
 brew "pipenv"
 brew "python"
-brew "python@2"
 brew "shellcheck"
 brew "shfmt"
 brew "skaffold"
@@ -34,32 +35,24 @@ brew "yq"
 cask "appcleaner"
 cask "bartender"
 cask "browserosaurus"
-cask "displaycal"
 cask "docker"
-cask "drawio"
 cask "firefox"
+cask "google-backup-and-sync"
 cask "google-chrome"
 cask "google-cloud-sdk"
 cask "handbrake"
 cask "iterm2"
-cask "kaleidoscope"
-cask "keka"
-cask "steermouse"
+cask "logitech-options"
+cask "slack"
+cask "telegram-desktop"
 cask "transmission"
 cask "tunnelblick"
 cask "visual-studio-code"
 cask "vlc"
 cask "webex-teams"
 mas "Amphetamine", id: 937984704
-mas "Front and Center", id: 1493996622
 mas "iMovie", id: 408981434
-mas "Keynote", id: 409183694
 mas "Magnet", id: 441258766
 mas "Microsoft Remote Desktop", id: 1295203466
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
 mas "Pixelmator", id: 407963104
 mas "Proxie", id: 897814548
-mas "Slack", id: 803453959
-mas "Telegram Desktop", id: 946399090
-mas "Unclutter", id: 577085396
