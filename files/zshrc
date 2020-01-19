@@ -1,0 +1,22 @@
+#!/bin/zsh
+
+# if not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# macos clean and load path
+if [ -x /usr/libexec/path_helper ]; then
+    PATH=''
+    eval `/usr/libexec/path_helper -s`
+fi
+
+# plugins
+source ~/.zsh/plugins.zsh
+
+# config
+source ~/.zsh/env.zsh
+source ~/.zsh/options.zsh
+source ~/.zsh/completion.zsh
+source ~/.zsh/aliases.zsh
+source ~/.zsh/functions.zsh
+source ~/.zsh/keybindings.zsh
+source ~/.zsh/post.zsh
