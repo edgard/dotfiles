@@ -554,8 +554,8 @@
           }
         }
       },
-      "google-backup-and-sync": {
-        "version": "latest",
+      "1password": {
+        "version": "7.4.1",
         "options": {
           "args": {
             "appdir": "~/Applications"
@@ -580,14 +580,6 @@
       },
       "iterm2": {
         "version": "3.3.7",
-        "options": {
-          "args": {
-            "appdir": "~/Applications"
-          }
-        }
-      },
-      "telegram-desktop": {
-        "version": "1.9.4",
         "options": {
           "args": {
             "appdir": "~/Applications"
