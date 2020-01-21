@@ -3,7 +3,12 @@
 # -----------------------------------------------------------------------------
 
 # plugins
-export ZPLUG_HOME=/usr/local/opt/zplug && source $ZPLUG_HOME/init.zsh
+if command -v brew 1>/dev/null 2>&1; then
+  if [[ -d "$(brew --prefix)/opt/zplug" ]]; then
+    export ZPLUG_HOME="$(brew --prefix)/opt/zplug"
+    source "${ZPLUG_HOME}/init.zsh"
+  fi
+fi
 
 # plugin list
 zplug "zsh-users/zsh-completions"

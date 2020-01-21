@@ -15,15 +15,6 @@ SAVEHIST=500000
 # prompt
 PROMPT='[%n:%1~]%(!.#.$) '
 
-# additional local paths
-export PATH="/usr/local/bin:/usr/local/sbin:${PATH}"
-
-# include user's homebrew bin if it exists
-[[ -d "${HOME}/.brew/bin" ]] && export PATH="${HOME}/.brew/bin:${PATH}"
-
-# includes user's private bin if it exists
-[[ -d "${HOME}/.local/bin" ]] && export PATH="${HOME}/.local/bin:${PATH}"
-
 # editor
 export EDITOR="code -w -n"
 export VISUAL="code -w -n"
