@@ -3,6 +3,11 @@
 # if not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+# set locale
+export LC_ALL="en_US.UTF-8"
+export LANG="en_US.UTF-8"
+export LANGUAGE="en_US.UTF-8"
+
 # macos clean and load path
 if [ -x /usr/libexec/path_helper ]; then
     PATH=''
