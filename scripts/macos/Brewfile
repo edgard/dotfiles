@@ -33,6 +33,7 @@ brew "yq"
 brew "zplug"
 cask "appcleaner"
 cask "bartender"
+cask "bitwarden"
 cask "docker"
 cask "fantastical"
 cask "firefox"
@@ -49,6 +50,7 @@ cask "tunnelblick"
 cask "visual-studio-code"
 cask "vlc"
 cask "webex-teams"
+mas "1Blocker", id: 1107421413
 mas "Amphetamine", id: 937984704
 mas "iMovie", id: 408981434
 mas "Magnet", id: 441258766
