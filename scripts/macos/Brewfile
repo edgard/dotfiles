@@ -31,7 +31,6 @@ brew "watch"
 brew "yq"
 brew "zplug"
 cask "appcleaner"
-cask "bartender"
 cask "docker"
 cask "fantastical"
 cask "firefox"
@@ -55,4 +54,3 @@ mas "Magnet", id: 441258766
 mas "Microsoft Remote Desktop", id: 1295203466
 mas "Pixelmator", id: 407963104
 mas "Proxie", id: 897814548
-mas "WireGuard", id: 1451685025
