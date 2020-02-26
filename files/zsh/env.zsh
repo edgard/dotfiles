@@ -40,15 +40,19 @@ if command -v go 1>/dev/null 2>&1; then
     export PATH="${GOPATH}/bin:${PATH}"
 fi
 
+# pyenv
+if command -v pyenv 1>/dev/null 2>&1; then
+    eval "$(pyenv init -)"
+fi
+
+# npm
+if command -v npm 1>/dev/null 2>&1; then
+    NPM_PACKAGES="${HOME}/.npm-packages"
+    export PATH="${PATH}:${NPM_PACKAGES}/bin"
+    export MANPATH="${MANPATH-$(manpath)}:${NPM_PACKAGES}/share/man"
+fi
+
 # gcloud
 if command -v brew 1>/dev/null 2>&1; then
     [[ -d "$(brew --prefix)/Caskroom/google-cloud-sdk" ]] && source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
 fi
-
-# npm
-NPM_PACKAGES="${HOME}/.npm-packages"
-export PATH="$PATH:$NPM_PACKAGES/bin"
-export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
-
-# pyenv
-eval "$(pyenv init -)"
