@@ -26,10 +26,10 @@ bindkey "${terminfo[knp]}" end-of-buffer-or-history
 bindkey "${terminfo[kcbt]}" reverse-menu-complete
 
 if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
-    function zle-line-init () {
+    function zle-line-init() {
         printf '%s' "${terminfo[smkx]}"
     }
-    function zle-line-finish () {
+    function zle-line-finish() {
         printf '%s' "${terminfo[rmkx]}"
     }
     zle -N zle-line-init

@@ -4,8 +4,8 @@
 
 # plugins
 if command -v brew 1>/dev/null 2>&1; then
-  if [[ -d "$(brew --prefix)/opt/zplug" ]]; then
-    export ZPLUG_HOME="$(brew --prefix)/opt/zplug"
+  if [[ -d "/usr/local/opt/zplug" ]]; then
+    export ZPLUG_HOME="/usr/local/opt/zplug"
     source "${ZPLUG_HOME}/init.zsh"
   fi
 fi
@@ -21,9 +21,7 @@ zplug "zsh-users/zsh-history-substring-search", defer:3
 if ! zplug check --verbose; then
   printf "Install? [y/N]: "
   if read -q; then
-      echo; zplug install
-  else
-      echo
+    zplug install
   fi
 fi
 
