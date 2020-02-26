@@ -34,3 +34,10 @@ source ~/.zsh/aliases.zsh
 source ~/.zsh/functions.zsh
 source ~/.zsh/keybindings.zsh
 source ~/.zsh/post.zsh
+
+# completion
+autoload -Uz compinit
+for dump in ~/.zcompdump(N.mh+24); do
+    compinit
+done
+compinit -C
