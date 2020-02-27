@@ -1,5 +1,3 @@
-#!/usr/local/env zsh
-
 # if not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
@@ -37,7 +35,7 @@ source "${HOME}/.zsh/post.zsh"
 
 # completion
 autoload -Uz compinit
-if [[ $(date +'%j') != $(/usr/bin/stat -f '%Sm' -t '%j' ${HOME}/.zcompdump) ]]; then
+if [[ $(date +'%j') != $(stat -f '%Sm' -t '%j' "${HOME}/.zcompdump") ]]; then
     compinit
 else
     compinit -C

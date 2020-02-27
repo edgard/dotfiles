@@ -30,7 +30,7 @@ if command -v fzf 1>/dev/null 2>&1; then
         export FZF_ALT_C_COMMAND="fd -t d . ${HOME}"
     fi
     if command -v brew 1>/dev/null 2>&1; then
-        source "/usr/local/opt/fzf/shell/key-bindings.zsh"
+        source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
     fi
 fi
 
@@ -42,5 +42,5 @@ fi
 
 # gcloud
 if command -v brew 1>/dev/null 2>&1; then
-    [[ -d "/usr/local/Caskroom/google-cloud-sdk" ]] && source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+    [[ -d "$(brew --prefix)/Caskroom/google-cloud-sdk" ]] && source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
 fi

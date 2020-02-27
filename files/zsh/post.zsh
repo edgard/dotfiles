@@ -11,18 +11,15 @@ PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH})
     setopt LOCAL_OPTIONS EXTENDED_GLOB
     autoload -U zrecompile
 
-    # Compile zcompdump, if modified, to increase startup speed.
+    # compile zcompdump, if modified, to increase startup speed.
     zcompdump="${HOME}/.zcompdump"
     if [[ -s "${zcompdump}" && (! -s "${zcompdump}.zwc" || "$zcompdump" -nt "${zcompdump}.zwc") ]]; then
         zrecompile -pq "${zcompdump}"
     fi
     # zcompile .zshrc
     zrecompile -pq ${HOME}/.zshrc
-    zrecompile -pq ${HOME}/.zprofile
-    zrecompile -pq ${HOME}/.zshenv
     # recompile all zsh or sh
-    for f in ${HOME}/.zsh/**/*.*sh
-    do
+    for f in ${HOME}/.zsh/**/*.*sh; do
         zrecompile -pq $f
     done
 ) &!
