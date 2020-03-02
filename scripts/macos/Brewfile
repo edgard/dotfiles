@@ -21,6 +21,7 @@ brew "watch"
 brew "yq"
 brew "zplug"
 cask "appcleaner"
+cask "cleanmymac"
 cask "docker"
 cask "fantastical"
 cask "firefox"
@@ -35,7 +36,7 @@ cask "slack"
 cask "steermouse"
 cask "telegram-desktop"
 cask "transmission"
-cask "tunnelblick"
+cask "viscosity"
 cask "visual-studio-code"
 cask "vlc"
 cask "webex-teams"
@@ -45,4 +46,3 @@ mas "Magnet", id: 441258766
 mas "Microsoft Remote Desktop", id: 1295203466
 mas "Pixelmator", id: 407963104
 mas "Proxie", id: 897814548
-mas "WireGuard", id: 1451685025
