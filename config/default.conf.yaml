@@ -13,3 +13,7 @@
     ~/.hushlogin: /dev/null
     ~/.zsh: files/zsh
     ~/.zshrc: files/zshrc
+    ~/.dir_colors: files/dir_colors
+
+- shell:
+  - [antibody bundle < ~/.zsh/plugins.txt > ~/.zsh/plugins.zsh, Installing zsh plugins]

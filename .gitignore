@@ -1,5 +1,2 @@
-*.pyc
-*.zwc
-*.zwc.old
-tags
 Brewfile*.lock.json
+files/zsh/plugins.zsh

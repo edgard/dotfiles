@@ -7,7 +7,7 @@ export LANG="en_US.UTF-8"
 export LANGUAGE="en_US.UTF-8"
 
 # macos clean and load path
-if [ -x /usr/libexec/path_helper ]; then
+if [[ "$OSTYPE" == "darwin"* && -x /usr/libexec/path_helper ]]; then
     PATH=''
     eval $(/usr/libexec/path_helper -s)
 fi
@@ -16,7 +16,7 @@ fi
 export PATH="/usr/local/bin:/usr/local/sbin:${PATH}"
 
 # include user's homebrew bin if it exists
-[[ -d "${HOME}/.brew/bin" ]] && export PATH="${HOME}/.brew/bin:${PATH}"
+[[ "$OSTYPE" == "darwin"* && -d "${HOME}/.brew/bin" ]] && export PATH="${HOME}/.brew/bin:${PATH}"
 
 # includes user's private bin if it exists
 [[ -d "${HOME}/.local/bin" ]] && export PATH="${HOME}/.local/bin:${PATH}"
@@ -32,11 +32,3 @@ source "${HOME}/.zsh/aliases.zsh"
 source "${HOME}/.zsh/functions.zsh"
 source "${HOME}/.zsh/keybindings.zsh"
 source "${HOME}/.zsh/post.zsh"
-
-# completion
-autoload -Uz compinit
-if [[ $(date +'%j') != $(stat -f '%Sm' -t '%j' "${HOME}/.zcompdump") ]]; then
-    compinit
-else
-    compinit -C
-fi
