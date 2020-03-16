@@ -3,7 +3,7 @@
 # -----------------------------------------------------------------------------
 
 # history
-HISTFILE=${HOME}/.zsh_history
+HISTFILE="${HOME}/.zsh_history"
 HISTSIZE=500000
 SAVEHIST=500000
 
@@ -11,16 +11,16 @@ SAVEHIST=500000
 PROMPT='[%n:%1~]%(!.#.$) '
 
 # editor
-[[ "$OSTYPE" == "darwin"* ]] && export EDITOR="code -w -n"
-[[ "$OSTYPE" == "darwin"* ]] && export VISUAL="code -w -n"
+[[ "${OSTYPE}" == "darwin"* ]] && export EDITOR="code -w -n"
+[[ "${OSTYPE}" == "darwin"* ]] && export VISUAL="code -w -n"
 
 # pager
 export PAGER="less"
 export LESS="FRX"
 
 # ls colors
-[[ "$OSTYPE" == "linux"* && -f "${HOME}/.dir_colors" ]] && eval "$(dircolors -b "${HOME}/.dir_colors")"
-[[ "$OSTYPE" == "darwin"* ]] && export LSCOLORS="ExGxFxdaCxDaDahbadacec"
+[[ "${OSTYPE}" == "linux"* && -f "${HOME}/.dir_colors" ]] && eval "$(dircolors -b "${HOME}/.dir_colors")"
+[[ "${OSTYPE}" == "darwin"* ]] && export LSCOLORS="ExGxFxdaCxDaDahbadacec"
 
 # fzf
 if command -v fzf 1>/dev/null 2>&1; then
@@ -30,8 +30,8 @@ if command -v fzf 1>/dev/null 2>&1; then
         export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
         export FZF_ALT_C_COMMAND="fd -t d . ${HOME}"
     fi
-    [[ "$OSTYPE" == "linux"* ]] && source "/usr/share/fzf/key-bindings.zsh"
-    [[ "$OSTYPE" == "darwin"* ]] && source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
+    [[ "${OSTYPE}" == "linux"* ]] && source "/usr/share/fzf/key-bindings.zsh"
+    [[ "${OSTYPE}" == "darwin"* ]] && source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
 fi
 
 # go
@@ -41,5 +41,5 @@ if command -v go 1>/dev/null 2>&1; then
 fi
 
 # gcloud
-[[ "$OSTYPE" == "linux"* && -d "/opt/google-cloud-sdk/path.zsh.inc" ]] && source "/opt/google-cloud-sdk/path.zsh.inc"
-[[ "$OSTYPE" == "darwin"* && -d "$(brew --prefix)/Caskroom/google-cloud-sdk" ]] && source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+[[ "${OSTYPE}" == "linux"* && -d "/opt/google-cloud-sdk/path.zsh.inc" ]] && source "/opt/google-cloud-sdk/path.zsh.inc"
+[[ "${OSTYPE}" == "darwin"* && -d "$(brew --prefix)/Caskroom/google-cloud-sdk" ]] && source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"

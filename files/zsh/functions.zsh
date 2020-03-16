@@ -2,7 +2,7 @@
 # functions
 # -----------------------------------------------------------------------------
 
-[[ "$OSTYPE" == "darwin"* ]] && function update() {
+[[ "${OSTYPE}" == "darwin"* ]] && function update() {
     brew update
     brew upgrade
     brew cask outdated | xargs brew cask reinstall
@@ -10,7 +10,7 @@
     brew cleanup -s
 }
 
-[[ "$OSTYPE" == "linux"* ]] && function update() {
+[[ "${OSTYPE}" == "linux"* ]] && function update() {
     yay -Syyuu --needed
     yay -Rns "$(yay -Qtdq)"
 }
