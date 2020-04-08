@@ -5,10 +5,7 @@ tap "homebrew/core"
 brew "antibody"
 brew "mas"
 cask "appcleaner"
-cask "fantastical"
-cask "firefox"
 cask "gimp"
-cask "google-backup-and-sync"
 cask "google-chrome"
 cask "handbrake"
 cask "iterm2"
@@ -20,7 +17,9 @@ cask "virtualbox-extension-pack"
 cask "viscosity"
 cask "visual-studio-code"
 cask "vlc"
-cask "webex-meetings"
 mas "Amphetamine", id: 937984704
 mas "Magnet", id: 441258766
 mas "Microsoft Remote Desktop", id: 1295203466
+mas "Pages", id: 409201541
+mas "Numbers", id: 409203825
+mas "Keynote", id: 409183694
