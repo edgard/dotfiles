@@ -43,3 +43,8 @@ fi
 # gcloud
 [[ "${OSTYPE}" == "linux"* && -d "/opt/google-cloud-sdk/path.zsh.inc" ]] && source "/opt/google-cloud-sdk/path.zsh.inc"
 [[ "${OSTYPE}" == "darwin"* && -d "$(brew --prefix)/Caskroom/google-cloud-sdk" ]] && source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+
+# dotnet
+if command -v dotnet 1>/dev/null 2>&1; then
+    export PATH="${HOME}/.dotnet/tools:${PATH}"
+fi
