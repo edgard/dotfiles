@@ -8,8 +8,9 @@ export LANGUAGE="en_US.UTF-8"
 
 # macos clean and load path
 if [[ "${OSTYPE}" == "darwin"* && -x /usr/libexec/path_helper ]]; then
+    # shellcheck disable=SC2123
     PATH=''
-    eval $(/usr/libexec/path_helper -s)
+    eval "$(/usr/libexec/path_helper -s)"
 fi
 
 # additional local paths

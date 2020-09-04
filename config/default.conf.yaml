@@ -5,15 +5,15 @@
       relink: true
       force: true
 
-- clean: ["~", "~/.config", "~/.local"]
+- clean: ["~"]
 
 - link:
+    ~/.dir_colors: files/dir_colors
     ~/.gitconfig: files/gitconfig
     ~/.gitignore_global: files/gitignore_global
     ~/.hushlogin: /dev/null
     ~/.zsh: files/zsh
     ~/.zshrc: files/zshrc
-    ~/.dir_colors: files/dir_colors
 
 - shell:
-  - [antibody bundle < ~/.zsh/plugins.txt > ~/.zsh/plugins.zsh, Installing zsh plugins]
+  - [git submodule update --init --recursive, Installing submodules]

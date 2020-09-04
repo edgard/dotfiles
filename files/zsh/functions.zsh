@@ -8,9 +8,12 @@
     brew cask outdated | xargs brew cask reinstall
     mas upgrade
     brew cleanup -s
+    zplug update
 }
 
 [[ "${OSTYPE}" == "linux"* ]] && function update() {
-    yay -Syyuu --needed
-    yay -Rns "$(yay -Qtdq)"
+    sudo apt update
+    sudo apt dist-upgrade -y
+    sudo apt autoremove --purge -y
+    zplug update
 }

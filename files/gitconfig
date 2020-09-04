@@ -18,7 +18,7 @@
 	fsckobjects = true
 [user]
 	name = Edgard Castro
-	email = edgardcastro@gmail.com
+	email = castro@edgard.org
 [alias]
 	br = branch
 	ci = commit
@@ -29,7 +29,6 @@
 	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --date=short
 	lg = log -p
 	pr = pull --rebase
-	review = "!f() { local SHA=${1:-HEAD}; local BRANCH=${2:-master}; if [ $SHA == $BRANCH ]; then SHA=HEAD; fi; git difftool -y -t Kaleidoscope $BRANCH...$SHA; }; f"
 	st = status
 	stash-all = stash save --include-untracked
 	type = cat-file -t
@@ -38,15 +37,3 @@
 	mergeoptions = --ff-only
 [http "https://gopkg.in"]
 	followRedirects = true
-[difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-[difftool]
-	prompt = false
-[diff]
-	tool = Kaleidoscope
-[mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" \"$REMOTE\"
-[mergetool]
-	prompt = false
-[merge]
-	tool = Kaleidoscope
