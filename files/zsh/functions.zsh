@@ -11,6 +11,6 @@
 }
 
 [[ "${OSTYPE}" == "linux"* ]] && function update() {
-    yay -Syyuu --needed
-    yay -Rns "$(yay -Qtdq)"
+    sudo apt update
+    sudo apt dist-upgrade
 }

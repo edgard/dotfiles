@@ -30,7 +30,7 @@ if command -v fzf 1>/dev/null 2>&1; then
         export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
         export FZF_ALT_C_COMMAND="fd -t d . ${HOME}"
     fi
-    [[ "${OSTYPE}" == "linux"* ]] && source "/usr/share/fzf/key-bindings.zsh"
+    [[ "${OSTYPE}" == "linux"* ]] && source "/usr/share/doc/fzf/examples/key-bindings.zsh"
     [[ "${OSTYPE}" == "darwin"* ]] && source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
 fi
 
