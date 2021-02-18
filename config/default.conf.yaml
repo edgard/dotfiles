@@ -8,10 +8,12 @@
 - clean: ["~", "~/.config", "~/.local"]
 
 - link:
-    ~/.bash_logout: /dev/null
-    ~/.bash_profile: files/bash_profile
-    ~/.bashrc: files/bashrc
+    ~/.zsh: files/zsh
+    ~/.zshrc: files/zshrc
     ~/.dir_colors: files/dir_colors
     ~/.hushlogin: /dev/null
     ~/.gitconfig: files/gitconfig
     ~/.gitignore_global: files/gitignore_global
+
+- shell:
+  - [antibody bundle < ~/.zsh/plugins.txt > ~/.zsh/plugins.zsh, Installing zsh plugins]

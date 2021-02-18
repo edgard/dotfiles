@@ -18,7 +18,7 @@
 	fsckobjects = true
 [user]
 	name = Edgard Castro
-	email = edgardcastro@gmail.com
+	email = castro@edgard.org
 [alias]
 	br = branch
 	ci = commit
