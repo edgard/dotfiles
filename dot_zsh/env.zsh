@@ -12,11 +12,6 @@ AGKOZAK_MULTILINE=0
 AGKOZAK_PROMPT_CHAR=( ❯ ❯ ❮ )
 AGKOZAK_COLORS_PROMPT_CHAR="magenta"
 AGKOZAK_CUSTOM_SYMBOLS=( "⇣⇡" "⇣" "⇡" "+" "x" "!" ">" "?" "S")
-#PROMPT='[%n:%1~]%(!.#.$) '
-
-# editor
-[[ "${OSTYPE}" == "darwin"* ]] && export EDITOR="code -w -n"
-[[ "${OSTYPE}" == "darwin"* ]] && export VISUAL="code -w -n"
 
 # pager
 export PAGER="less"
@@ -25,6 +20,18 @@ export LESS="FRX"
 # ls colors
 [[ "${OSTYPE}" == "linux"* && -f "${HOME}/.dir_colors" ]] && eval "$(dircolors -b "${HOME}/.dir_colors")"
 [[ "${OSTYPE}" == "darwin"* ]] && export LSCOLORS="ExGxFxdaCxDaDahbadacec"
+
+# asdf
+if [[ -d "${HOME}/.asdf" ]]; then
+    export PATH="${HOME}/.asdf/bin:${PATH}"
+    source "${HOME}/.asdf/asdf.sh"
+fi
+
+# vscode
+if command -v code 1>/dev/null 2>&1; then
+    export EDITOR="code -w"
+    export VISUAL="code -w"
+fi
 
 # fzf
 if command -v fzf 1>/dev/null 2>&1; then
@@ -41,12 +48,3 @@ if command -v go 1>/dev/null 2>&1; then
     export GOPATH="${HOME}/.go"
     export PATH="${GOPATH}/bin:${PATH}"
 fi
-
-# dotnet
-if command -v dotnet 1>/dev/null 2>&1; then
-    export PATH="${HOME}/.dotnet/tools:${PATH}"
-fi
-
-# gcloud
-[[ "${OSTYPE}" == "linux"* && -d "/opt/google-cloud-sdk/path.zsh.inc" ]] && source "/opt/google-cloud-sdk/path.zsh.inc"
-[[ "${OSTYPE}" == "darwin"* && -d "$(brew --prefix)/Caskroom/google-cloud-sdk" ]] && source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"

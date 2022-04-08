@@ -28,11 +28,7 @@ zplug "zsh-users/zsh-completions", depth:1
 zplug "zsh-users/zsh-history-substring-search", defer:3
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug "agkozak/agkozak-zsh-prompt"
-
-# add fzf/fd
-zplug "junegunn/fzf", hook-build:"./install --bin && ln -sf $ZPLUG_REPOS/junegunn/fzf/bin/fzf $ZPLUG_BIN", use:"shell/*.zsh"
-[[ "${OSTYPE}" == "linux"* ]] && zplug "sharkdp/fd", from:gh-r, as:command, rename-to:fd, use:"*x86_64*linux-gnu*"
-[[ "${OSTYPE}" == "darwin"* ]] && zplug "sharkdp/fd", from:gh-r, as:command, rename-to:fd, use:"*x86_64*darwin*"
+zplug "junegunn/fzf", use:"shell/*.zsh"
 
 # install plugins if there are plugins that have not been installed
 if ! zplug check; then

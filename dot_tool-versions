@@ -1,0 +1,17 @@
+awscli 2.5.4
+azure-cli 2.35.0
+dotnet-core 6.0.201
+fd 8.3.2
+flux2 0.28.5
+fzf 0.30.0
+gcloud 380.0.0
+golang 1.18
+goreleaser 1.7.0
+helm 3.8.1
+jq 1.6
+kubectl 1.23.5
+kubectx 0.9.4
+kubeseal 0.17.4
+nodejs 17.9.0
+terraform 1.1.8
+yq 4.24.2

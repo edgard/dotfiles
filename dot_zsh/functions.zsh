@@ -9,6 +9,10 @@
     mas upgrade
     brew cleanup -s
     zplug update
+    asdf update
+    asdf plugin update --all
+    asdf reshim
+    chezmoi update
 }
 
 [[ "${OSTYPE}" == "linux"* ]] && function update() {
@@ -16,4 +20,8 @@
     sudo apt dist-upgrade -y
     sudo apt autoremove --purge -y
     zplug update
+    asdf update
+    asdf plugin update --all
+    asdf reshim
+    chezmoi update
 }

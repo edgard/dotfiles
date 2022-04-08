@@ -1,7 +1,4 @@
 # dotfiles
 
 ## Install dotfiles
-
-    git clone https://github.com/edgard/dotfiles.git ~/.dotfiles
-    cd ~/.dotfiles
-    ./install [linux, mac, ...]
+    curl -fsLS chezmoi.io/get | sh -s - -b ~/.local/bin init --apply --verbose --force git@github.com:edgard/dotfiles.git
