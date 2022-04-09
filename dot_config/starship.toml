@@ -1,0 +1,56 @@
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_status\
+$git_state\
+$cmd_duration\
+$character"""
+
+add_newline = false
+
+[username]
+format = '[$user]($style)'
+style_user = "yellow"
+style_root = "red"
+show_always = true
+
+[hostname]
+format = "[@](bright-black)[$hostname]($style)"
+style = "green"
+
+[directory]
+format = "[:](bright-black)[$path]($style)[$read_only]($read_only_style) "
+style = "blue"
+
+[git_branch]
+format = "[$branch]($style)"
+style = "red"
+
+[git_status]
+format = '([\[](bright-black)[$all_status$ahead_behind]($style)[\]](bright-black)) '
+style = "cyan"
+conflicted = "="
+ahead = "⇡"
+behind = "⇣"
+diverged = "⇕"
+up_to_date = ""
+untracked = "?"
+stashed = "$"
+modified = "!"
+staged = "+"
+renamed = ">"
+deleted = "x"
+
+[git_state]
+style = "red"
+
+[cmd_duration]
+format = "[$duration]($style) "
+style = "yellow"
+
+[character]
+success_symbol = "[❯](purple)"
+error_symbol = "[❯](red)"
+vicmd_symbol = "[❮](green)"

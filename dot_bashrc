@@ -1,0 +1,155 @@
+#!/usr/bin/env bash
+
+# -----------------------------------------------------------------------------
+# basic setup
+# -----------------------------------------------------------------------------
+# if not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# set locale
+export LC_ALL="en_US.UTF-8"
+export LANG="en_US.UTF-8"
+export LANGUAGE="en_US.UTF-8"
+
+# -----------------------------------------------------------------------------
+# basic path management
+# -----------------------------------------------------------------------------
+# macos clean and load path
+if [[ "${OSTYPE}" == "darwin"* && -x /usr/libexec/path_helper ]]; then
+    # shellcheck disable=SC2123
+    PATH=""
+    eval "$(/usr/libexec/path_helper -s)"
+fi
+
+# additional local paths
+export PATH="/usr/local/bin:/usr/local/sbin:${PATH}"
+
+# include user's homebrew bin if it exists
+[[ "${OSTYPE}" == "darwin"* && -d "${HOME}/.brew/bin" ]] && export PATH="${HOME}/.brew/bin:${PATH}"
+
+# includes user's private bin if it exists
+[[ -d "${HOME}/.local/bin" ]] && export PATH="${HOME}/.local/bin:${PATH}"
+
+# -----------------------------------------------------------------------------
+# bash options
+# -----------------------------------------------------------------------------
+shopt -s checkwinsize
+shopt -s cmdhist
+shopt -s histappend
+#shopt -s direxpand
+#shopt -s dirspell
+
+bind 'set colored-completion-prefix on'
+bind 'set colored-stats on'
+bind 'set completion-ignore-case on'
+bind 'set completion-query-items 200'
+bind 'set mark-symlinked-directories on'
+bind 'set page-completions off'
+bind 'set show-all-if-ambiguous on'
+bind 'set skip-completed-text on'
+bind 'set visible-stats on'
+bind 'set enable-keypad on'
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+
+HISTCONTROL="erasedups:ignoreboth"
+HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:clear:update"
+HISTFILESIZE="100000"
+HISTSIZE="${HISTFILESIZE}"
+
+# disable osx bash warning
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
+# pager
+export PAGER="less"
+export LESS="FRX"
+
+# ls colors
+[[ "${OSTYPE}" == "linux"* && -f "${HOME}/.dir_colors" ]] && eval "$(dircolors -b "${HOME}/.dir_colors")"
+[[ "${OSTYPE}" == "darwin"* ]] && export LSCOLORS="ExGxFxdaCxDaDahbadacec"
+
+# -----------------------------------------------------------------------------
+# aliases
+# -----------------------------------------------------------------------------
+alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --exclude-dir=.bzr --exclude-dir=CVS --binary-files=without-match"
+[[ "${OSTYPE}" == "darwin"* ]] && alias ls="ls -FGh"
+[[ "${OSTYPE}" == "linux"* ]] && alias ls="ls -FGhN --color=auto"
+
+# kubernetes
+alias k="kubectl"
+alias kn="kubens"
+alias kx="kubectx"
+
+# update functions
+[[ "${OSTYPE}" == "darwin"* ]] && function update() {
+    chezmoi update
+    brew update
+    brew upgrade
+    brew cask outdated | xargs brew cask reinstall
+    mas upgrade
+    brew cleanup -s
+    asdf update
+    asdf plugin update --all
+    asdf install
+    asdf reshim
+}
+
+[[ "${OSTYPE}" == "linux"* ]] && function update() {
+    chezmoi update
+    sudo apt update
+    sudo apt dist-upgrade -y
+    sudo apt autoremove --purge -y
+    asdf update
+    asdf plugin update --all
+    asdf install
+    asdf reshim
+}
+
+# -----------------------------------------------------------------------------
+# tools
+# -----------------------------------------------------------------------------
+# asdf
+if [[ -d "${HOME}/.asdf" ]]; then
+    source "${HOME}/.asdf/asdf.sh"
+fi
+
+# starship
+if command -v starship 1>/dev/null 2>&1; then
+    eval "$(starship init bash)"
+else
+    PS1='\u@\h:\W\$ '
+fi
+
+# fzf
+if command -v fzf 1>/dev/null 2>&1; then
+    export FZF_DEFAULT_OPTS="--inline-info --layout=reverse --height 10 --color=dark --color=fg:#abb2bf,bg:#282c34,hl:#5c6370,fg+:#abb2bf,bg+:#2c323c,hl+:#c678dd,info:#e5c07b,prompt:#c678dd,pointer:#c678dd,marker:#e06c75,spinner:#c678dd,header:#5c6370"
+    if command -v fd 1>/dev/null 2>&1; then
+        export FZF_DEFAULT_COMMAND="fd . ${HOME}"
+        export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+        export FZF_ALT_C_COMMAND="fd -t d . ${HOME}"
+    fi
+
+    FZF_INSTALL_PATH=$(asdf where fzf)
+    source "${FZF_INSTALL_PATH}/shell/completion.bash"
+    source "${FZF_INSTALL_PATH}/shell/key-bindings.bash"
+    bind "$(bind -s | grep '^"\\ec"' | sed 's/\\ec/\\ex/')"
+    bind '"\ec": capitalize-word'
+fi
+
+# vscode
+if command -v code 1>/dev/null 2>&1; then
+    export EDITOR="code -w"
+    export VISUAL="${EDITOR}"
+fi
+
+# go
+if command -v go 1>/dev/null 2>&1; then
+    export GOPATH="${HOME}/.go"
+    export PATH="${GOPATH}/bin:${PATH}"
+fi
+
+# -----------------------------------------------------------------------------
+# additional path manipulation
+# -----------------------------------------------------------------------------
+# remove duplicate path entries
+PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
