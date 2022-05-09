@@ -77,8 +77,12 @@ alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git
 
 # kubernetes
 alias k="kubectl"
-alias kn="kubens"
-alias kx="kubectx"
+alias kg="kubectl get"
+alias kl="kubectl logs"
+alias kd="kubectl describe"
+alias krm="kubectl delete"
+alias kns="kubens"
+alias kctx="kubectx"
 
 # update functions
 [[ "${OSTYPE}" == "darwin"* ]] && function update() {
