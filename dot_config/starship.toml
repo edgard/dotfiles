@@ -1,3 +1,5 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
 format = """
 $username\
 $hostname\
@@ -12,9 +14,9 @@ add_newline = false
 
 [username]
 format = '[$user]($style)'
-style_user = "yellow"
-style_root = "red"
 show_always = true
+style_root = "red"
+style_user = "yellow"
 
 [hostname]
 format = "[@](bright-black)[$hostname]($style)"
@@ -29,19 +31,19 @@ format = "[$branch]($style)"
 style = "red"
 
 [git_status]
-format = '([\[](bright-black)[$all_status$ahead_behind]($style)[\]](bright-black)) '
-style = "cyan"
-conflicted = "="
 ahead = "⇡"
 behind = "⇣"
-diverged = "⇕"
-up_to_date = ""
-untracked = "?"
-stashed = "$"
-modified = "!"
-staged = "+"
-renamed = ">"
+conflicted = "="
 deleted = "x"
+diverged = "⇕"
+format = '([\[](bright-black)[$all_status$ahead_behind]($style)[\]](bright-black)) '
+modified = "!"
+renamed = ">"
+staged = "+"
+stashed = "\\$"
+style = "cyan"
+untracked = "?"
+up_to_date = ""
 
 [git_state]
 style = "red"
@@ -51,6 +53,6 @@ format = "[$duration]($style) "
 style = "yellow"
 
 [character]
-success_symbol = "[❯](purple)"
 error_symbol = "[❯](red)"
+success_symbol = "[❯](purple)"
 vicmd_symbol = "[❮](green)"
