@@ -19,3 +19,4 @@ sops 3.7.3
 starship 1.6.3
 terraform 1.1.9
 yq 4.25.1
+task 3.12.1
