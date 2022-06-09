@@ -14,9 +14,11 @@ jq 1.5
 kubectl 1.24.0
 kubectx 0.9.4
 nodejs 16.15.0
+pre-commit 2.19.0
 ripgrep 13.0.0
 sops 3.7.3
 starship 1.6.3
-terraform 1.1.9
-yq 4.25.1
 task 3.12.1
+terraform 1.1.9
+tflint 0.37.0
+yq 4.25.1
