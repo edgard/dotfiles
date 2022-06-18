@@ -11,6 +11,7 @@ golang 1.18.1
 goreleaser 1.8.3
 helm 3.6.3
 jq 1.5
+k3sup 0.11.3
 kubectl 1.24.0
 kubectx 0.9.4
 nodejs 16.15.0
