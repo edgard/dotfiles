@@ -3,7 +3,7 @@
 # .tool-versions hash: {{ include "dot_tool-versions" | sha256sum }}
 
 if [[ ! -d "${HOME}/.asdf" ]]; then
-    git clone https://github.com/asdf-vm/asdf.git "${HOME}/.asdf" --branch v0.9.0
+    git clone https://github.com/asdf-vm/asdf.git "${HOME}/.asdf" --branch v0.10.2
     source "${HOME}/.asdf/asdf.sh"
 fi
 
