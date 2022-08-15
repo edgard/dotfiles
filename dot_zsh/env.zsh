@@ -13,12 +13,11 @@ export LESS="FRX"
 
 # ls colors
 [[ "${OSTYPE}" == "linux"* && -f "${HOME}/.dir_colors" ]] && eval "$(dircolors -b "${HOME}/.dir_colors")"
-[[ "${OSTYPE}" == "darwin"* ]] && export LSCOLORS="ExGxFxdaCxDaDahbadacec"
+[[ "${OSTYPE}" == "darwin"* ]] && export CLICOLOR=1 LSCOLORS="ExGxFxdaCxDaDahbadacec"
 
-# asdf
-if [[ -d "${HOME}/.asdf" ]]; then
-    source "${HOME}/.asdf/asdf.sh"
-fi
+# brew
+[[ "${OSTYPE}" == "linux"* ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+[[ "${OSTYPE}" == "darwin"* ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # starship
 if command -v starship 1>/dev/null 2>&1; then
@@ -39,7 +38,7 @@ if command -v fzf 1>/dev/null 2>&1; then
         export FZF_ALT_C_COMMAND="fd -t d . ${HOME}"
     fi
 
-    FZF_INSTALL_PATH=$(asdf where fzf)
+    FZF_INSTALL_PATH=$(brew --prefix fzf)
     source "${FZF_INSTALL_PATH}/shell/completion.zsh"
     source "${FZF_INSTALL_PATH}/shell/key-bindings.zsh"
     zle     -N             fzf-cd-widget

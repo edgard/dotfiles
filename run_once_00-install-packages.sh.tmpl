@@ -1,9 +1,5 @@
 {{ if eq .chezmoi.os "linux" -}}
 #!/usr/bin/env bash
 sudo apt update
-sudo apt install -y python2 python3 git curl unzip
-{{ else if eq .chezmoi.os "darwin" -}}
-#!/usr/bin/env bash
-brew update
-brew install git
+sudo apt install -y build-essential python2 python3 curl unzip git
 {{ end -}}

@@ -16,27 +16,16 @@ alias krm="kubectl delete"
 alias kns="kubens"
 alias kctx="kubectx"
 
-# update functions
-[[ "${OSTYPE}" == "darwin"* ]] && function update() {
+# update function
+function update() {
     chezmoi update
     brew update
     brew upgrade
-    brew cask outdated | xargs brew cask reinstall
-    mas upgrade
     brew cleanup -s
-    asdf update
-    asdf plugin update --all
-    asdf install
-    asdf reshim
-}
 
-[[ "${OSTYPE}" == "linux"* ]] && function update() {
-    chezmoi update
-    sudo apt update
-    sudo apt dist-upgrade -y
-    sudo apt autoremove --purge -y
-    asdf update
-    asdf plugin update --all
-    asdf install
-    asdf reshim
+    if [[ "${OSTYPE}" == "linux"* ]]; then
+        sudo apt update
+        sudo apt dist-upgrade -y
+        sudo apt autoremove --purge -y
+    fi
 }
