@@ -39,11 +39,3 @@
 	mergeoptions = --ff-only
 [http "https://gopkg.in"]
 	followRedirects = true
-[diff]
-	tool = vscode
-[difftool "vscode"]
-	cmd = code --wait --diff $LOCAL $REMOTE
-[merge]
-	tool = vscode
-[mergetool "vscode"]
-	cmd = code --wait $MERGED

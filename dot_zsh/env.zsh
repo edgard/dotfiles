@@ -11,6 +11,15 @@ SAVEHIST=${HISTSIZE}
 export PAGER="less"
 export LESS="FRX"
 
+# editor
+export EDITOR="vi"
+if command -v code 1>/dev/null 2>&1; then
+    if [[ -z "$SSH_CONNECTION" ]]; then
+        export EDITOR="code -w"
+    fi
+fi
+export VISUAL="$EDITOR"
+
 # ls colors
 [[ "${OSTYPE}" == "linux"* && -f "${HOME}/.dir_colors" ]] && eval "$(dircolors -b "${HOME}/.dir_colors")"
 [[ "${OSTYPE}" == "darwin"* ]] && export CLICOLOR=1 LSCOLORS="ExGxFxdaCxDaDahbadacec"
@@ -45,12 +54,6 @@ if command -v fzf 1>/dev/null 2>&1; then
     bindkey -M emacs '\ex' fzf-cd-widget
     bindkey -M vicmd '\ex' fzf-cd-widget
     bindkey -M viins '\ex' fzf-cd-widget
-fi
-
-# vscode
-if command -v code 1>/dev/null 2>&1; then
-    export EDITOR="code -w"
-    export VISUAL="${EDITOR}"
 fi
 
 # go
