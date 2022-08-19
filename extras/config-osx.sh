@@ -1,19 +1,13 @@
 #!/usr/bin/env bash
 
+# Close any open System Preferences panes, to prevent them from overriding
+# settings we're about to change
+osascript -e 'tell application "System Preferences" to quit'
+
 # Ask for the administrator password upfront and run a keep-alive to update
 # existing `sudo` time stamp until script has finished
 sudo -v
-while true; do
-    sudo -n true
-    sleep 60
-    kill -0 "$$" || exit
-done 2>/dev/null &
-
-# Disable GateKeeper
-#sudo spctl --master-disable
-
-# Enable TimeMachine snapshots
-#sudo tmutil enable
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 ###############################################################################
 # General UI/UX
@@ -44,18 +38,43 @@ defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
 # Disable the 'Are you sure you want to open this application?' dialog
 defaults write com.apple.LaunchServices LSQuarantine -bool false
 
-# Enable custom languages
-defaults write NSGlobalDomain AppleLanguages -array "en" "pt-BR"
+# Set language and text formats
+defaults write NSGlobalDomain AppleLanguages -array "en-US" "pt-BR"
+defaults write NSGlobalDomain AppleLocale -string "en_PL"
 
 # Disable reopening of windows during login
 defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false
+
+# Disable Resume system-wide
+defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
+
+# Disable automatic termination of inactive apps
+defaults write NSGlobalDomain NSDisableAutomaticTermination -bool true
 
 ###############################################################################
 # General Power and Performance modifications
 ###############################################################################
 
-# Speeding up wake from sleep to 24 hours from an hour
-#sudo pmset -a standbydelay 86400
+# Enable lid wakeup
+sudo pmset -a lidwake 1
+
+# Restart automatically on power loss
+sudo pmset -a autorestart 1
+
+# Sleep the display after 15 minutes while charging
+sudo pmset -c displaysleep 15
+
+# Sleep the display after 5 minutes on battery
+sudo pmset -b displaysleep 5
+
+# Disable machine sleep while charging
+sudo pmset -c sleep 0
+
+# Set machine sleep to 5 minutes on battery
+sudo pmset -b sleep 5
+
+# Set standby delay to 24 hours (default is 1 hour)
+sudo pmset -a standbydelay 86400
 
 # Disable open and close window animations
 #defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -boolean false
@@ -91,13 +110,17 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadTwoFin
 # Turn off keyboard illumination when computer is not used for 5 seconds
 defaults write com.apple.BezelServices kDimTime -int 5
 
+# Speed up key repeat
+defaults write com.apple.Accessibility KeyRepeatDelay -float 0.5
+defaults write com.apple.Accessibility KeyRepeatInterval -float 0.083333333
+
 ###############################################################################
 # Screen
 ###############################################################################
 
 # Requiring password immediately after sleep or screen saver begins
-#defaults write com.apple.screensaver askForPassword -int 1
-#defaults write com.apple.screensaver askForPasswordDelay -int 0
+defaults write com.apple.screensaver askForPassword -int 1
+defaults write com.apple.screensaver askForPasswordDelay -int 0
 
 # Set screenshot location to ~/Desktop as default
 defaults write com.apple.screencapture location -string "${HOME}/Desktop"
@@ -112,10 +135,10 @@ defaults write com.apple.screencapture disable-shadow -bool true
 defaults write NSGlobalDomain AppleFontSmoothing -int 1
 
 # Re-enable subpixel fond rendering
-defaults write -g CGFontRenderingFontSmoothingDisabled -bool false
+defaults write NSGlobalDomain CGFontRenderingFontSmoothingDisabled -bool false
 
 # Disable auto-adjust brightness
-#sudo defaults write /Library/Preferences/com.apple.iokit.AmbientLightSensor.plist "Automatic Display Enabled" -bool false
+# sudo defaults write /Library/Preferences/com.apple.iokit.AmbientLightSensor.plist "Automatic Display Enabled" -bool false
 
 ###############################################################################
 # Finder
@@ -149,27 +172,31 @@ defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 defaults write com.apple.finder _FXSortFoldersFirst -bool Yes
 
 # Expand Save Panel by Default
-#defaults write -g NSNavPanelExpandedStateForSaveMode -bool true
-#defaults write -g NSNavPanelExpandedStateForSaveMode2 -bool true
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+
+# Expand print panel by default
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
 
 ###############################################################################
 # Dock & Mission Control
 ###############################################################################
 
 # Wipe all (default) app icons from the Dock
-#defaults write com.apple.dock persistent-apps -array
+# defaults write com.apple.dock persistent-apps -array
 
-# Setting the icon size of Dock items to 36 pixels for optimal size/screen-realestate
-defaults write com.apple.dock tilesize -int 36
+# Setting the icon size of Dock items to 24 pixels for optimal size/screen-realestate
+defaults write com.apple.dock tilesize -int 24
 
 # Speeding up Mission Control animations and grouping windows by application
 defaults write com.apple.dock expose-animation-duration -float 0.1
 defaults write com.apple.dock "expose-group-apps" -bool true
 
 # Set Dock to auto-hide and remove the auto-hiding delay
-defaults write com.apple.dock autohide -bool true
-defaults write com.apple.dock autohide-delay -float 0
-defaults write com.apple.dock autohide-time-modifier -float 0.15
+# defaults write com.apple.dock autohide -bool true
+# defaults write com.apple.dock autohide-delay -float 0
+# defaults write com.apple.dock autohide-time-modifier -float 0.15
 
 # Set application minimize/maximize effects to scale
 defaults write com.apple.dock mineffect -string scale
@@ -198,7 +225,7 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 ###############################################################################
 
 # Turn on local firewall
-#sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
+# sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
 
 # Disable Creation of Metadata Files on Network Volumes
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
@@ -218,37 +245,37 @@ defaults write com.google.Chrome DisablePrintPreview -bool true
 ###############################################################################
 
 # Enable Develop menu
-defaults write com.apple.Safari IncludeDevelopMenu -int 1
+# defaults write com.apple.Safari IncludeDevelopMenu -int 1
 
 # Show the full URL in the address bar (note: this still hides the scheme)
-defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
+# defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
 
 # Set Safari’s home page to `about:blank` for faster loading
-defaults write com.apple.Safari HomePage -string "about:blank"
+# defaults write com.apple.Safari HomePage -string "about:blank"
 
 # Prevent Safari from opening ‘safe’ files automatically after downloading
-defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
+# defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
 
 # Show Safari’s bookmarks bar by default
-defaults write com.apple.Safari ShowFavoritesBar -bool true
+# defaults write com.apple.Safari ShowFavoritesBar -bool true
 
 # Show Safari's status bar by default
-defaults write com.apple.Safari ShowOverlayStatusBar -bool true
+# defaults write com.apple.Safari ShowOverlayStatusBar -bool true
 
 # AutoFill
-defaults write com.apple.Safari AutoFillFromAddressBook -bool true
-defaults write com.apple.Safari AutoFillPasswords -bool false
-defaults write com.apple.Safari AutoFillCreditCardData -bool false
-defaults write com.apple.Safari AutoFillMiscellaneousForms -bool true
+# defaults write com.apple.Safari AutoFillFromAddressBook -bool true
+# defaults write com.apple.Safari AutoFillPasswords -bool false
+# defaults write com.apple.Safari AutoFillCreditCardData -bool false
+# defaults write com.apple.Safari AutoFillMiscellaneousForms -bool true
 
 # Enable “Do Not Track”
-defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
+# defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
 
 # Update extensions automatically
-defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
+# defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
 
 # Make Safari’s search banners default to Contains instead of Starts With
-defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
+# defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
 
 ###############################################################################
 # TextEdit
