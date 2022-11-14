@@ -39,3 +39,5 @@
 	mergeoptions = --ff-only
 [http "https://gopkg.in"]
 	followRedirects = true
+[safe]
+	directory = /tmp/npe-core-gitops
