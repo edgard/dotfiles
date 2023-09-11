@@ -21,6 +21,9 @@ function update() {
     chezmoi update
     brew update
     brew upgrade
+    if [[ "${OSTYPE}" == "darwin"* ]]; then
+        brew cu -a -y -q --cleanup
+    fi
     brew cleanup -s
 
     if [[ "${OSTYPE}" == "linux"* ]]; then
