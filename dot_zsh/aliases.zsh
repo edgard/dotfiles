@@ -22,7 +22,7 @@ function update() {
     brew update
     brew upgrade
     if [[ "${OSTYPE}" == "darwin"* ]]; then
-        brew cu -a -y -q --cleanup
+        brew cu -y -q --cleanup --no-brew-update
     fi
     brew cleanup -s
 

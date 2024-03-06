@@ -22,7 +22,7 @@ export VISUAL="$EDITOR"
 
 # ls colors
 [[ "${OSTYPE}" == "linux"* && -f "${HOME}/.dir_colors" ]] && eval "$(dircolors -b "${HOME}/.dir_colors")"
-[[ "${OSTYPE}" == "darwin"* ]] && export CLICOLOR=1 LSCOLORS="ExGxFxdaCxDaDahbadacec"
+[[ "${OSTYPE}" == "darwin"* ]] && export CLICOLOR=1 LSCOLORS="ExFxBxDxCxegedabagacad"
 
 # brew
 [[ "${OSTYPE}" == "linux"* ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
