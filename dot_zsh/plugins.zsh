@@ -52,6 +52,8 @@ if [[ -f "${ZIM_HOME}/modules/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; t
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#737994'
     ZSH_AUTOSUGGEST_STRATEGY=(history completion)
     ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+    ZSH_AUTOSUGGEST_USE_ASYNC=1
+    ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 fi
 
 # Configure prompt (eriner)

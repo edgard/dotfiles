@@ -16,11 +16,14 @@ zmodule completion
 # Fzf
 zmodule fzf
 
+# Zoxide
+zmodule kiesman99/zim-zoxide
+
 # Direnv
 zmodule direnv
 
-# Syntax highlighting
-zmodule zsh-users/zsh-syntax-highlighting
-
 # Autosuggestions
 zmodule zsh-users/zsh-autosuggestions
+
+# Syntax highlighting
+zmodule zsh-users/zsh-syntax-highlighting

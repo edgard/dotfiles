@@ -1,18 +1,19 @@
-README.md
-LICENSE
+# Ignore these files when applying dotfiles with chezmoi
+
+# Git files
+.git/
 .gitignore
 
-{{ if ne .chezmoi.os "darwin" }}
-# macOS-specific files (ignored on non-macOS)
-extras/config-osx.sh
-extras/Brewfile.darwin
-{{ end }}
+# Editor-specific files
+.vscode/
+.idea/
+*.swp
+*.swo
 
-{{ if ne .chezmoi.os "linux" }}
-# Linux-specific files (ignored on non-Linux)
-extras/config-linux.sh
-extras/Brewfile.linux
-{{ end }}
+# Documentation
+README.md
+LICENSE
 
-# Ignore extras directory but not its contents
+# Extra files
 extras/
+extras/**

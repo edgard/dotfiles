@@ -26,6 +26,7 @@ brew "tfenv"            # Terraform version manager
 brew "tflint"           # Terraform linter
 brew "watch"            # Execute a program periodically
 brew "yq"               # YAML processor
+brew "zoxide"           # Smarter cd command
 brew "go-task/tap/go-task" # Task runner
 
 # Cloud and Kubernetes tools
