@@ -1,9 +1,7 @@
 #!/usr/bin/env zsh
-# Exit if not interactive
-[[ $- != *i* ]] && return
+[[ $- != *i* ]] && return  # Exit if not interactive
 
-# Set zsh default keymap to emacs
-bindkey -e
+bindkey -e  # Set zsh default keymap to emacs
 
 # Set locale
 export LC_ALL="en_US.UTF-8"

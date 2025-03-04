@@ -6,7 +6,7 @@ if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
   curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
 fi
 
-# Install missing modules and update ${ZIM_HOME}/init.zsh if missing or outdated
+# Install missing modules and update init.zsh if needed
 if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZIM_CONFIG_FILE:-${ZDOTDIR:-${HOME}}/.zimrc} ]]; then
   source ${ZIM_HOME}/zimfw.zsh init
 fi
@@ -16,7 +16,6 @@ source ${ZIM_HOME}/init.zsh
 
 # Configure syntax highlighting
 if [[ -f "${ZIM_HOME}/modules/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
-    # Set highlighting options
     typeset -gA ZSH_HIGHLIGHT_STYLES
 
     # Catppuccin Frappé theme

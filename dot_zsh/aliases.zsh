@@ -1,4 +1,3 @@
-# Basic aliases
 alias history='history 1'
 alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --exclude-dir=.bzr --exclude-dir=CVS --binary-files=without-match"
 [[ "${OSTYPE}" == "darwin"* ]] && alias ls="ls -FGh"
@@ -19,14 +18,12 @@ fi
 function update() {
     local updated=0
 
-    # Chezmoi
     if command -v chezmoi >/dev/null 2>&1; then
         echo "Updating dotfiles with chezmoi..."
         chezmoi update
         updated=1
     fi
 
-    # Homebrew
     if command -v brew >/dev/null 2>&1; then
         echo "Updating Homebrew packages..."
         brew update
@@ -36,7 +33,6 @@ function update() {
         updated=1
     fi
 
-    # Apt (Linux)
     if [[ "${OSTYPE}" == "linux"* ]] && command -v apt >/dev/null 2>&1; then
         echo "Updating system packages..."
         sudo apt update
@@ -69,14 +65,12 @@ if command -v brew >/dev/null 2>&1; then
         # Create combined Brewfile
         touch "${temp_brewfile}"
 
-        # Add common Brewfile contents
         if [[ -f "${common_brewfile}" ]]; then
             cat "${common_brewfile}" >> "${temp_brewfile}"
         else
             echo "Warning: Common Brewfile not found at ${common_brewfile}"
         fi
 
-        # Add OS-specific Brewfile contents
         if [[ -n "${os_brewfile}" && -f "${os_brewfile}" ]]; then
             cat "${os_brewfile}" >> "${temp_brewfile}"
         elif [[ -n "${os_brewfile}" ]]; then
@@ -102,7 +96,6 @@ if command -v brew >/dev/null 2>&1; then
             echo "No packages to remove. All installed packages are in your Brewfiles."
         fi
 
-        # Clean up temporary file
         rm "${temp_brewfile}"
     }
 
@@ -113,18 +106,15 @@ if command -v brew >/dev/null 2>&1; then
         local os_brewfile=""
         local install_success=true
 
-        # Determine OS-specific Brewfile
         if [[ "${OSTYPE}" == "darwin"* ]]; then
             os_brewfile="${brewfiles_dir}/Brewfile.darwin"
         elif [[ "${OSTYPE}" == "linux"* ]]; then
             os_brewfile="${brewfiles_dir}/Brewfile.linux"
         fi
 
-        # Update Homebrew first
         echo "Updating Homebrew..."
         brew update
 
-        # Install from common Brewfile
         if [[ -f "${common_brewfile}" ]]; then
             echo "Installing packages from common Brewfile..."
             if ! brew bundle --file="${common_brewfile}"; then
@@ -136,7 +126,6 @@ if command -v brew >/dev/null 2>&1; then
             install_success=false
         fi
 
-        # Install from OS-specific Brewfile
         if [[ -n "${os_brewfile}" && -f "${os_brewfile}" ]]; then
             echo "Installing packages from OS-specific Brewfile..."
             if ! brew bundle --file="${os_brewfile}"; then

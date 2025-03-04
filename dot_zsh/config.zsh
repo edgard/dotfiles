@@ -44,22 +44,22 @@ if [[ -d "${HOME}/.local/bin" ]]; then
 fi
 
 # Zsh options
-setopt append_history      # Append to history file rather than replacing it
-setopt extended_history    # Save timestamp and duration information with history entries
-setopt hist_expire_dups_first # Remove duplicate commands first when trimming history
-setopt hist_fcntl_lock     # Use system's fcntl call to lock the history file when writing
-setopt hist_ignore_all_dups # Remove older duplicates of a command when it's repeated
-setopt hist_reduce_blanks  # Remove superfluous blanks from commands added to history
-setopt hist_save_no_dups   # Don't write duplicate commands to the history file
-setopt inc_append_history  # Add commands to history file incrementally (as they're executed)
-setopt chase_links         # Resolve symbolic links when changing directories
-setopt pushd_minus         # Make pushd - work like pushd +
-setopt always_to_end       # Move cursor to end of word when completing from middle
-setopt auto_list           # Automatically list choices on ambiguous completion
-setopt complete_in_word    # Complete from both ends when cursor is within a word
-setopt correct             # Try to correct the spelling of commands
-unsetopt beep              # Disable terminal beeping
-unsetopt flow_control      # Disable flow control (Ctrl+S/Ctrl+Q)
+setopt append_history       # Append to history file
+setopt extended_history     # Save timestamp and duration
+setopt hist_expire_dups_first # Remove duplicates first when trimming
+setopt hist_fcntl_lock      # Use fcntl to lock history file
+setopt hist_ignore_all_dups # Remove older duplicates
+setopt hist_reduce_blanks   # Remove superfluous blanks
+setopt hist_save_no_dups    # Don't write duplicate commands
+setopt inc_append_history   # Add commands incrementally
+setopt chase_links          # Resolve symlinks when cd'ing
+setopt pushd_minus          # Make pushd - work like pushd +
+setopt always_to_end        # Move cursor to end on completion
+setopt auto_list            # List choices on ambiguous completion
+setopt complete_in_word     # Complete from both ends
+setopt correct              # Try to correct spelling
+unsetopt beep               # Disable terminal beeping
+unsetopt flow_control       # Disable Ctrl+S/Ctrl+Q flow control
 
 # Remove duplicate path entries
 typeset -U PATH path
