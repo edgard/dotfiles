@@ -22,7 +22,6 @@ brew "pre-commit"       # Framework for managing git pre-commit hooks
 brew "ripgrep"          # Fast grep replacement
 brew "shellcheck"       # Shell script static analysis
 brew "sops"             # Secrets management
-brew "starship"         # Cross-shell prompt
 brew "tfenv"            # Terraform version manager
 brew "tflint"           # Terraform linter
 brew "watch"            # Execute a program periodically

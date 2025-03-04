@@ -25,12 +25,12 @@ clipboard-read = allow
 clipboard-write = allow
 window-save-state = never
 
-# Performance optimizations
+# Performance
 background-opacity = 1.0
 background-blur = false
 unfocused-split-opacity = 0.95
 
-# Shell configuration
+# Shell integration
 shell-integration = zsh
 shell-integration-features = no-cursor
 
@@ -44,7 +44,7 @@ shell-integration-features = no-cursor
 #keybind = ctrl+tab=next_tab
 #keybind = ctrl+shift+tab=previous_tab
 #keybind = ctrl+shift+l=toggle_fullscreen
-##keybind = ctrl+shift+equal=increase_font_size
+#keybind = ctrl+shift+equal=increase_font_size
 #keybind = ctrl+shift+minus=decrease_font_size
 #keybind = ctrl+shift+0=reset_font_size
 

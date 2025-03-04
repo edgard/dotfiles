@@ -9,6 +9,7 @@ tap "nike-inc/nike"
 # macOS-specific CLI tools
 brew "mas"              # Mac App Store CLI
 brew "nike-inc/nike/cerberus-cli" # Nike Cerberus CLI
+brew "coreutils"        # GNU coreutils (for dircolors support)
 
 # macOS applications (Casks)
 cask "appcleaner"       # App uninstaller

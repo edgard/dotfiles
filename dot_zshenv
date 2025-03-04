@@ -1,6 +1,14 @@
 #!/usr/bin/env zsh
+# Sourced for all shells - essential environment variables
+
+# Set locale
+export LC_ALL="en_US.UTF-8"
+export LANG="en_US.UTF-8"
+export LANGUAGE="en_US.UTF-8"
+
+# Zsh configuration
 skip_global_compinit=1  # Skip global compinit
-unsetopt GLOBAL_RCS     # Disable global RCS files
+setopt no_global_rcs    # Disable global RCS files
 stty -ixon 2>/dev/null  # Disable flow control
 
 # Minimal initial PATH

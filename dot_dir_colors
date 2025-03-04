@@ -1,26 +1,12 @@
 # Configuration file for the 256color ls utility
-# This file goes in the /etc directory, and must be world readable.
-# Synchronized with coreutils 8.5 dircolors
-# You can copy this file to .dir_colors in your $HOME directory to override
-# the system defaults.
-# In the case that you are not satisfied with supplied colors, please
-# submit your color configuration or attach your file with colors readable
-# on ALL color background schemas (white,gray,black) to RedHat Bugzilla
-# ticket on https://bugzilla.redhat.com/show_bug.cgi?id=429121 . TIA.
-# Please just keep ls color conventions from 8 color scheme.
 
-# COLOR needs one of these arguments: 'tty' colorizes output to ttys, but not
-# pipes. 'all' adds color characters to all output. 'none' shuts colorization
-# off.
-COLOR tty
+# Color settings
+COLOR tty  # 'tty' colorizes output to ttys, but not pipes
 
-# Extra command line options for ls go here.
-# Basically these ones are:
-#  -F = show '/' for dirs, '*' for executables, etc.
-#  -T 0 = don't trust tab spacing when formatting ls output.
-OPTIONS -F -T 0
+# Extra command line options for ls
+OPTIONS -F -T 0  # -F = show '/' for dirs, '*' for executables; -T 0 = don't trust tab spacing
 
-# Below, there should be one TERM entry for each termtype that is colorizable
+# Terminal types that support color
 TERM putty-256color
 TERM rxvt-256color
 TERM rxvt-unicode-256color
@@ -29,33 +15,24 @@ TERM screen-256color
 TERM xterm-256color
 TERM gnome-256color
 TERM st-256color
+TERM xterm-ghostty
+TERM alacritty
+TERM foot
+TERM kitty
+TERM wezterm
 
-# EIGHTBIT, followed by '1' for on, '0' for off. (8-bit output)
+# 8-bit output (1=on, 0=off)
 EIGHTBIT 1
 
-# Below are the color init strings for the basic file types. A color init
-# string consists of one or more of the following numeric codes:
-# Attribute codes:
+# Color codes reference:
 # 00=none 01=bold 04=underscore 05=blink 07=reverse 08=concealed
-# Text color(8 colors mode) codes:
-# 30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
-# Background color(8 colors mode) codes:
-# 40=black 41=red 42=green 43=yellow 44=blue 45=magenta 46=cyan 47=white
-# Text color(256 colors mode) codes:
-# Valid syntax for text 256color is 38;5;<color number> , where color number
-# is number between 0 and 255.
-# You may find following command useful to search the best one for you:
-# for ((x=0; x<=255; x++));do echo -e "${x}:\033[38;5;${x}mcolor\033[000m";done
-# Background color(256 colors mode) codes:
-# Valid syntax for background 256color is 48;5;<color number> , where
-# color number is number between 0 and 255.
-# You may find following command useful to search the best one for you:
-# for ((x=0; x<=255; x++));do echo -e "${x}:\033[48;5;${x}mcolor\033[000m";done
+# Text: 30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
+# Background: 40=black 41=red 42=green 43=yellow 44=blue 45=magenta 46=cyan 47=white
+# 256 colors: 38;5;<0-255> for text, 48;5;<0-255> for background
 
-#NORMAL 00	# global default, no color code at all
-#FILE 00	# normal file, use no color at all
 RESET 0 # reset to "normal" color
-# Updated to Catppuccin Frappé colors
+
+# Catppuccin Frappé colors
 DIR 38;5;111	# directory (blue)
 LINK 38;5;147	# symbolic link (lavender)
 MULTIHARDLINK 44;38;5;189 # regular file with more than one link (text on blue)
@@ -73,12 +50,11 @@ STICKY_OTHER_WRITABLE 48;5;150;38;5;236 # dir that is sticky and other-writable 
 OTHER_WRITABLE 48;5;150;38;5;111 # dir that is other-writable (blue on green)
 STICKY 48;5;111;38;5;189	# dir with the sticky bit set (text on blue)
 
-# This is for files with execute permission:
+# Files with execute permission
 EXEC 38;5;150  # Executable files (green)
 
-# List any file extensions like '.gz' or '.tar' that you would like ls
-# to colorize below. Put the extension, a space, and the color init string.
-# (and any comments you want to add after a '#')
+# File extensions and their colors
+
 # executables (bright green)
 .cmd 38;5;150
 .exe 38;5;150
@@ -87,6 +63,18 @@ EXEC 38;5;150  # Executable files (green)
 .bat 38;5;150
 .sh  38;5;150
 .csh 38;5;150
+.zsh 38;5;150
+.fish 38;5;150
+.bash 38;5;150
+.ksh 38;5;150
+.tcsh 38;5;150
+.ps1 38;5;150
+.psm1 38;5;150
+.psd1 38;5;150
+.run 38;5;150
+.app 38;5;150
+.msi 38;5;150
+.out 38;5;150
 
 # archives or compressed (peach)
 .tar 38;5;216
@@ -130,6 +118,16 @@ EXEC 38;5;150  # Executable files (green)
 .7z  38;5;216
 .rz  38;5;216
 .cab 38;5;216
+.zst 38;5;216
+.iso 38;5;216
+.dmg 38;5;216
+.pkg 38;5;216
+.apk 38;5;216
+.aab 38;5;216
+.gem 38;5;216
+.whl 38;5;216
+.xpi 38;5;216
+.crx 38;5;216
 
 # image formats (pink)
 .jpg 38;5;218
@@ -177,8 +175,28 @@ EXEC 38;5;150  # Executable files (green)
 .yuv 38;5;218
 .cgm 38;5;218
 .emf 38;5;218
+.webp 38;5;218
+.heic 38;5;218
+.heif 38;5;218
+.avif 38;5;218
+.jxl 38;5;218
+.jp2 38;5;218
+.j2k 38;5;218
+.jpf 38;5;218
+.jpx 38;5;218
+.jpm 38;5;218
+.ico 38;5;218
+.icns 38;5;218
+.psd 38;5;218
+.ai 38;5;218
+.eps 38;5;218
+.raw 38;5;218
+.cr2 38;5;218
+.nef 38;5;218
+.orf 38;5;218
+.sr2 38;5;218
 
-# http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
+# xiph media formats
 .axv 38;5;218
 .anx 38;5;218
 .ogv 38;5;218
@@ -196,14 +214,33 @@ EXEC 38;5;150  # Executable files (green)
 .ogg 38;5;116
 .ra 38;5;116
 .wav 38;5;116
+.m4a 38;5;116
+.opus 38;5;116
+.wma 38;5;116
+.aiff 38;5;116
+.ape 38;5;116
+.wv 38;5;116
+.mpc 38;5;116
+.amr 38;5;116
+.3gp 38;5;116
+.m3u 38;5;116
+.m3u8 38;5;116
+.pls 38;5;116
+.cue 38;5;116
+.alac 38;5;116
+.aif 38;5;116
+.aifc 38;5;116
+.mp2 38;5;116
+.mpga 38;5;116
+.snd 38;5;116
 
-# http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
+# xiph audio formats
 .axa 38;5;116
 .oga 38;5;116
 .spx 38;5;116
 .xspf 38;5;116
 
-# colorize binary documents (rosewater)
+# binary documents (rosewater)
 .pdf 38;5;223
 .ps 38;5;223
 .ps.gz 38;5;223
@@ -221,8 +258,27 @@ EXEC 38;5;150  # Executable files (green)
 .epub 38;5;223
 .abw 38;5;223
 .wpd 38;5;223
+.djvu 38;5;223
+.mobi 38;5;223
+.azw 38;5;223
+.azw3 38;5;223
+.fb2 38;5;223
+.lit 38;5;223
+.chm 38;5;223
+.numbers 38;5;223
+.pages 38;5;223
+.key 38;5;223
+.keynote 38;5;223
+.one 38;5;223
+.md 38;5;223
+.markdown 38;5;223
+.rst 38;5;223
+.adoc 38;5;223
+.asciidoc 38;5;223
+.csv 38;5;223
+.tsv 38;5;223
 
-# colorize text documents (subtext1)
+# text documents (subtext1)
 .txt 38;5;146
 .patch 38;5;146
 .diff 38;5;146
@@ -231,3 +287,673 @@ EXEC 38;5;150  # Executable files (green)
 .html 38;5;146
 .shtml 38;5;146
 .xml 38;5;146
+.xhtml 38;5;146
+.sgml 38;5;146
+.org 38;5;146
+.textile 38;5;146
+.wiki 38;5;146
+.mediawiki 38;5;146
+.pod 38;5;146
+.man 38;5;146
+.me 38;5;146
+.ms 38;5;146
+.roff 38;5;146
+.1 38;5;146
+.2 38;5;146
+.3 38;5;146
+.4 38;5;146
+.5 38;5;146
+.6 38;5;146
+.7 38;5;146
+.8 38;5;146
+.9 38;5;146
+.nfo 38;5;146
+.info 38;5;146
+.rtfd 38;5;146
+
+# programming languages (mauve)
+.c 38;5;183
+.h 38;5;183
+.cc 38;5;183
+.cpp 38;5;183
+.cxx 38;5;183
+.hpp 38;5;183
+.hxx 38;5;183
+.cs 38;5;183
+.java 38;5;183
+.scala 38;5;183
+.kt 38;5;183
+.rs 38;5;183
+.go 38;5;183
+.py 38;5;183
+.pyc 38;5;183
+.pyo 38;5;183
+.pyd 38;5;183
+.rb 38;5;183
+.erb 38;5;183
+.php 38;5;183
+.pl 38;5;183
+.pm 38;5;183
+.t 38;5;183
+.lua 38;5;183
+.swift 38;5;183
+.m 38;5;183
+.mm 38;5;183
+.asm 38;5;183
+.s 38;5;183
+.S 38;5;183
+.f 38;5;183
+.f90 38;5;183
+.f95 38;5;183
+.f03 38;5;183
+.f08 38;5;183
+.for 38;5;183
+.d 38;5;183
+.pas 38;5;183
+.pp 38;5;183
+.inc 38;5;183
+.erl 38;5;183
+.hrl 38;5;183
+.ex 38;5;183
+.exs 38;5;183
+.eex 38;5;183
+.leex 38;5;183
+.hs 38;5;183
+.lhs 38;5;183
+.elm 38;5;183
+.ml 38;5;183
+.mli 38;5;183
+.v 38;5;183
+.vh 38;5;183
+.sv 38;5;183
+.svh 38;5;183
+.vhd 38;5;183
+.vhdl 38;5;183
+.r 38;5;183
+.R 38;5;183
+.jl 38;5;183
+.dart 38;5;183
+.groovy 38;5;183
+.clj 38;5;183
+.cljs 38;5;183
+.cljc 38;5;183
+.nim 38;5;183
+.cr 38;5;183
+.zig 38;5;183
+.v 38;5;183
+.lisp 38;5;183
+.cl 38;5;183
+.scm 38;5;183
+.rkt 38;5;183
+.ss 38;5;183
+.fnl 38;5;183
+.fs 38;5;183
+.fsi 38;5;183
+.fsx 38;5;183
+.fsscript 38;5;183
+.sol 38;5;183
+.hx 38;5;183
+
+# web development (sky)
+.js 38;5;117
+.mjs 38;5;117
+.cjs 38;5;117
+.jsx 38;5;117
+.ts 38;5;117
+.tsx 38;5;117
+.css 38;5;117
+.scss 38;5;117
+.sass 38;5;117
+.less 38;5;117
+.styl 38;5;117
+.json 38;5;117
+.jsonc 38;5;117
+.json5 38;5;117
+.vue 38;5;117
+.svelte 38;5;117
+.astro 38;5;117
+.wasm 38;5;117
+.wat 38;5;117
+.webmanifest 38;5;117
+.htaccess 38;5;117
+.htpasswd 38;5;117
+.xht 38;5;117
+.xhtml 38;5;117
+.coffee 38;5;117
+.litcoffee 38;5;117
+.pug 38;5;117
+.jade 38;5;117
+.haml 38;5;117
+.hbs 38;5;117
+.handlebars 38;5;117
+.mustache 38;5;117
+.twig 38;5;117
+.ejs 38;5;117
+.njk 38;5;117
+.liquid 38;5;117
+.graphql 38;5;117
+.gql 38;5;117
+.php 38;5;117
+.phtml 38;5;117
+.asp 38;5;117
+.aspx 38;5;117
+.cshtml 38;5;117
+.jsp 38;5;117
+.jspx 38;5;117
+
+# data files (sapphire)
+.sql 38;5;110
+.sqlite 38;5;110
+.sqlite3 38;5;110
+.db 38;5;110
+.mdb 38;5;110
+.accdb 38;5;110
+.yaml 38;5;110
+.yml 38;5;110
+.toml 38;5;110
+.ini 38;5;110
+.xml 38;5;110
+.xsd 38;5;110
+.dtd 38;5;110
+.rss 38;5;110
+.atom 38;5;110
+.csv 38;5;110
+.tsv 38;5;110
+.parquet 38;5;110
+.avro 38;5;110
+.orc 38;5;110
+.pb 38;5;110
+.proto 38;5;110
+.capnp 38;5;110
+.fbs 38;5;110
+.thrift 38;5;110
+.hdf5 38;5;110
+.h5 38;5;110
+.nc 38;5;110
+.xls 38;5;110
+.xlsx 38;5;110
+.ods 38;5;110
+.mdf 38;5;110
+.ldf 38;5;110
+.plist 38;5;110
+.bson 38;5;110
+.cbor 38;5;110
+.msgpack 38;5;110
+.pickle 38;5;110
+.pkl 38;5;110
+.joblib 38;5;110
+.feather 38;5;110
+.arrow 38;5;110
+.geojson 38;5;110
+.topojson 38;5;110
+.gpx 38;5;110
+.kml 38;5;110
+.kmz 38;5;110
+
+# configuration files (lavender)
+.conf 38;5;147
+.config 38;5;147
+.cfg 38;5;147
+.rc 38;5;147
+.properties 38;5;147
+.env 38;5;147
+.env.local 38;5;147
+.env.development 38;5;147
+.env.test 38;5;147
+.env.production 38;5;147
+.env.example 38;5;147
+.editorconfig 38;5;147
+.gitignore 38;5;147
+.gitattributes 38;5;147
+.gitmodules 38;5;147
+.hgignore 38;5;147
+.hgrc 38;5;147
+.npmrc 38;5;147
+.yarnrc 38;5;147
+.eslintrc 38;5;147
+.eslintignore 38;5;147
+.prettierrc 38;5;147
+.prettierignore 38;5;147
+.stylelintrc 38;5;147
+.stylelintignore 38;5;147
+.babelrc 38;5;147
+.browserslistrc 38;5;147
+.dockerignore 38;5;147
+.gcloudignore 38;5;147
+.tfvars 38;5;147
+.tfstate 38;5;147
+.tfstate.backup 38;5;147
+.vimrc 38;5;147
+.nvimrc 38;5;147
+.ideavimrc 38;5;147
+.tmux.conf 38;5;147
+.screenrc 38;5;147
+.bashrc 38;5;147
+.bash_profile 38;5;147
+.bash_logout 38;5;147
+.zshrc 38;5;147
+.zshenv 38;5;147
+.zprofile 38;5;147
+.zlogin 38;5;147
+.zlogout 38;5;147
+.zimrc 38;5;147
+.profile 38;5;147
+.xinitrc 38;5;147
+.xsession 38;5;147
+.Xresources 38;5;147
+.Xdefaults 38;5;147
+.dir_colors 38;5;147
+.inputrc 38;5;147
+.curlrc 38;5;147
+.wgetrc 38;5;147
+.gemrc 38;5;147
+.clang-format 38;5;147
+.clang-tidy 38;5;147
+.htoprc 38;5;147
+.condarc 38;5;147
+.terminfo 38;5;147
+.jshintrc 38;5;147
+.jshintignore 38;5;147
+.csslintrc 38;5;147
+.flowconfig 38;5;147
+.jscsrc 38;5;147
+.jsbeautifyrc 38;5;147
+.markdownlintrc 38;5;147
+.yamllint 38;5;147
+.shellcheckrc 38;5;147
+.hadolint.yaml 38;5;147
+.golangci.yml 38;5;147
+.goreleaser.yml 38;5;147
+.pre-commit-config.yaml 38;5;147
+.commitlintrc 38;5;147
+.lintstagedrc 38;5;147
+.czrc 38;5;147
+.renovaterc 38;5;147
+.snyk 38;5;147
+.sentryclirc 38;5;147
+.firebaserc 38;5;147
+.vercelignore 38;5;147
+.netlify.toml 38;5;147
+
+# temporary files (overlay1)
+.tmp 38;5;138
+.temp 38;5;138
+.swp 38;5;138
+.swo 38;5;138
+.swn 38;5;138
+.bak 38;5;138
+.old 38;5;138
+.orig 38;5;138
+.part 38;5;138
+.incomplete 38;5;138
+.crdownload 38;5;138
+.download 38;5;138
+.cache 38;5;138
+.DS_Store 38;5;138
+.localized 38;5;138
+.CFUserTextEncoding 38;5;138
+.Trash 38;5;138
+.Trashes 38;5;138
+._.Trashes 38;5;138
+.fseventsd 38;5;138
+.Spotlight-V100 38;5;138
+.TemporaryItems 38;5;138
+.apdisk 38;5;138
+.nfs* 38;5;138
+.pid 38;5;138
+.state 38;5;138
+.lock 38;5;138
+.hidden 38;5;138
+.exists 38;5;138
+.log.* 38;5;138
+.pid 38;5;138
+.state 38;5;138
+.lock 38;5;138
+.hidden 38;5;138
+.exists 38;5;138
+.log.* 38;5;138
+*~ 38;5;138
+*.stackdump 38;5;138
+*.zwc 38;5;138
+*.pyc 38;5;138
+*.pyo 38;5;138
+.pytest_cache/ 38;5;138
+.coverage 38;5;138
+.coverage.* 38;5;138
+.hypothesis/ 38;5;138
+.mypy_cache/ 38;5;138
+.ruff_cache/ 38;5;138
+.tox/ 38;5;138
+.nox/ 38;5;138
+.eggs/ 38;5;138
+.egg-info/ 38;5;138
+.installed.cfg 38;5;138
+.sass-cache/ 38;5;138
+.pnp/ 38;5;138
+.yarn/ 38;5;138
+.next/ 38;5;138
+.nuxt/ 38;5;138
+.serverless/ 38;5;138
+.fusebox/ 38;5;138
+.dynamodb/ 38;5;138
+.tern-port 38;5;138
+.history/ 38;5;138
+.vscode-test/ 38;5;138
+.vs/ 38;5;138
+.gradle/ 38;5;138
+.dart_tool/ 38;5;138
+.pub-cache/ 38;5;138
+.pub/ 38;5;138
+.vagrant/ 38;5;138
+.bundle/ 38;5;138
+.phpunit.result.cache 38;5;138
+.phpunit.cache/ 38;5;138
+.phpcs-cache 38;5;138
+.php_cs.cache 38;5;138
+.php-cs-fixer.cache 38;5;138
+.phpstan-cache/ 38;5;138
+.eslintcache 38;5;138
+.stylelintcache 38;5;138
+.parcel-cache/ 38;5;138
+.clangd/ 38;5;138
+.ccls-cache/ 38;5;138
+.gdb_history 38;5;138
+.ipynb_checkpoints/ 38;5;138
+.virtual_documents/ 38;5;138
+.Rproj.user/ 38;5;138
+.Rhistory 38;5;138
+.RData 38;5;138
+.Ruserdata 38;5;138
+.Rapp.history 38;5;138
+.httr-oauth 38;5;138
+.rstudio/ 38;5;138
+.quarto/ 38;5;138
+.luarc.json 38;5;138
+.elixir_ls/ 38;5;138
+.elixir-tools/ 38;5;138
+.beam 38;5;138
+.hex/ 38;5;138
+.mix/ 38;5;138
+.rustc_info.json 38;5;138
+.pioenvs/ 38;5;138
+.piolibdeps/ 38;5;138
+.pio/ 38;5;138
+.platformio/ 38;5;138
+.sconsign.dblite 38;5;138
+.svn/ 38;5;138
+.hg/ 38;5;138
+.bzr/ 38;5;138
+.git/ 38;5;138
+.gitkeep 38;5;138
+
+# common directories (overlay1)
+*__pycache__/ 38;5;138
+*node_modules/ 38;5;138
+*build/ 38;5;138
+*dist/ 38;5;138
+*out/ 38;5;138
+*target/ 38;5;138
+*vendor/ 38;5;138
+*_build/ 38;5;138
+*deps/ 38;5;138
+*CVS/ 38;5;138
+*.terraform/ 38;5;138
+*.idea/ 38;5;138
+
+# system files (red)
+.sys 38;5;203
+.dll 38;5;203
+.so 38;5;203
+.so.* 38;5;203
+.dylib 38;5;203
+.a 38;5;203
+.lib 38;5;203
+.o 38;5;203
+.obj 38;5;203
+.ko 38;5;203
+.elf 38;5;203
+.bin 38;5;203
+.hex 38;5;203
+.dmp 38;5;203
+.map 38;5;203
+.pdb 38;5;203
+.dwp 38;5;203
+.sym 38;5;203
+.mod 38;5;203
+.spl 38;5;203
+.ko.cmd 38;5;203
+.mod.c 38;5;203
+.symvers 38;5;203
+.order 38;5;203
+.markers 38;5;203
+.vdso 38;5;203
+.shstrtab 38;5;203
+.interp 38;5;203
+.gnu.version 38;5;203
+.gnu.version_r 38;5;203
+.gnu.hash 38;5;203
+.dynsym 38;5;203
+.dynstr 38;5;203
+.eh_frame 38;5;203
+.eh_frame_hdr 38;5;203
+.fini_array 38;5;203
+.init_array 38;5;203
+.dynamic 38;5;203
+.got 38;5;203
+.got.plt 38;5;203
+.data 38;5;203
+.bss 38;5;203
+.comment 38;5;203
+.debug 38;5;203
+.zdebug 38;5;203
+.note.* 38;5;203
+.stab 38;5;203
+.stabstr 38;5;203
+.rel.* 38;5;203
+.rela.* 38;5;203
+.data.rel.ro 38;5;203
+.data.rel.ro.local 38;5;203
+.gcc_except_table 38;5;203
+.gnu.linkonce.* 38;5;203
+.rodata 38;5;203
+.rodata.* 38;5;203
+.sdata 38;5;203
+.sbss 38;5;203
+.tbss 38;5;203
+.tdata 38;5;203
+.ctors 38;5;203
+.dtors 38;5;203
+.jcr 38;5;203
+.tm_clone_table 38;5;203
+.preinit_array 38;5;203
+.plt 38;5;203
+.plt.got 38;5;203
+.plt.sec 38;5;203
+.text 38;5;203
+.text.* 38;5;203
+.data.* 38;5;203
+.bss.* 38;5;203
+.symtab 38;5;203
+.strtab 38;5;203
+.shstrtab 38;5;203
+.debug_* 38;5;203
+.zdebug_* 38;5;203
+.gdb_index 38;5;203
+.gnu_debuglink 38;5;203
+.gnu_debugaltlink 38;5;203
+.gnu_debugdata 38;5;203
+.build-id 38;5;203
+.note.gnu.build-id 38;5;203
+.note.ABI-tag 38;5;203
+.note.gnu.gold-version 38;5;203
+.ARM.attributes 38;5;203
+.ARM.exidx 38;5;203
+.ARM.extab 38;5;203
+.prgm 38;5;203
+.sys 38;5;203
+.drv 38;5;203
+.service 38;5;203
+.device 38;5;203
+.mount 38;5;203
+.automount 38;5;203
+.swap 38;5;203
+.target 38;5;203
+.path 38;5;203
+.timer 38;5;203
+.snapshot 38;5;203
+.slice 38;5;203
+.socket 38;5;203
+.netdev 38;5;203
+.link 38;5;203
+.network 38;5;203
+
+# font files (flamingo)
+.ttf 38;5;217
+.ttc 38;5;217
+.otf 38;5;217
+.woff 38;5;217
+.woff2 38;5;217
+.eot 38;5;217
+.fon 38;5;217
+.fnt 38;5;217
+.pfb 38;5;217
+.pfm 38;5;217
+.afm 38;5;217
+.bdf 38;5;217
+.pcf 38;5;217
+.snf 38;5;217
+.pfa 38;5;217
+.psf 38;5;217
+.psfu 38;5;217
+.ttx 38;5;217
+.sfd 38;5;217
+.dfont 38;5;217
+.fea 38;5;217
+.cff 38;5;217
+.wasm 38;5;217
+.ufo 38;5;217
+.glyphs 38;5;217
+.fontinfo 38;5;217
+.fontforge 38;5;217
+.gsf 38;5;217
+.spritefont 38;5;217
+
+# 3D model files (maroon)
+.obj 38;5;210
+.mtl 38;5;210
+.fbx 38;5;210
+.dae 38;5;210
+.3ds 38;5;210
+.max 38;5;210
+.blend 38;5;210
+.c4d 38;5;210
+.mb 38;5;210
+.ma 38;5;210
+.lwo 38;5;210
+.lws 38;5;210
+.stl 38;5;210
+.ply 38;5;210
+.wrl 38;5;210
+.x3d 38;5;210
+.gltf 38;5;210
+.glb 38;5;210
+.usd 38;5;210
+.usda 38;5;210
+.usdc 38;5;210
+.abc 38;5;210
+.stp 38;5;210
+.step 38;5;210
+.iges 38;5;210
+.igs 38;5;210
+.skp 38;5;210
+.skb 38;5;210
+.3dm 38;5;210
+.3mf 38;5;210
+.amf 38;5;210
+.off 38;5;210
+.x 38;5;210
+.scn 38;5;210
+.mesh 38;5;210
+.mdl 38;5;210
+.vox 38;5;210
+.vrml 38;5;210
+.xsi 38;5;210
+.ztl 38;5;210
+.zbr 38;5;210
+.zpr 38;5;210
+.egg 38;5;210
+.bam 38;5;210
+.pmd 38;5;210
+.pmx 38;5;210
+.vmd 38;5;210
+.vpd 38;5;210
+.mmd 38;5;210
+.mqo 38;5;210
+.smd 38;5;210
+.vta 38;5;210
+.vmt 38;5;210
+.vtf 38;5;210
+.vmf 38;5;210
+.bsp 38;5;210
+.map 38;5;210
+.mat 38;5;210
+.shader 38;5;210
+.unity 38;5;210
+.unitypackage 38;5;210
+.prefab 38;5;210
+.asset 38;5;210
+.meta 38;5;210
+.controller 38;5;210
+.anim 38;5;210
+.physicMaterial 38;5;210
+.physicsMaterial2D 38;5;210
+.mask 38;5;210
+.flare 38;5;210
+.fontsettings 38;5;210
+.guiskin 38;5;210
+.giparams 38;5;210
+.renderTexture 38;5;210
+.spriteatlas 38;5;210
+.terrainlayer 38;5;210
+.mixer 38;5;210
+.shadervariants 38;5;210
+.shadergraph 38;5;210
+.compute 38;5;210
+.cginc 38;5;210
+.hlsl 38;5;210
+.shadersubgraph 38;5;210
+.md5mesh 38;5;210
+.md5anim 38;5;210
+.pk3 38;5;210
+.pk4 38;5;210
+.vmt 38;5;210
+.vtf 38;5;210
+.vtx 38;5;210
+.vvd 38;5;210
+.mdl 38;5;210
+.phy 38;5;210
+.ani 38;5;210
+.seq 38;5;210
+.smd 38;5;210
+.vta 38;5;210
+.qc 38;5;210
+.qci 38;5;210
+.vcs 38;5;210
+.dmx 38;5;210
+.vmf 38;5;210
+.vmx 38;5;210
+.bsp 38;5;210
+.map 38;5;210
+.res 38;5;210
+.vbsp 38;5;210
+.vdf 38;5;210
+.vpk 38;5;210
+.gcf 38;5;210
+.ncf 38;5;210
+.manifest 38;5;210
+.gma 38;5;210
+.gm 38;5;210
+.dem 38;5;210
+.dem_chunk 38;5;210
+.nav 38;5;210
+.ain 38;5;210

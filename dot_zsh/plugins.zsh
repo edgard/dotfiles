@@ -1,3 +1,5 @@
+# Zim framework and plugin configuration
+
 # Zim Home
 export ZIM_HOME="${HOME}/.zim"
 
@@ -63,4 +65,9 @@ fi
 # Configure fzf
 if [[ -f "${ZIM_HOME}/modules/fzf/init.zsh" ]]; then
     export FZF_DEFAULT_OPTS="--height 10 --layout=reverse --color=bg+:#414559,bg:#303446,spinner:#f2d5cf,hl:#e78284,fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf,marker:#f2d5cf,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284"
+fi
+
+# Configure direnv
+if [[ -f "${ZIM_HOME}/modules/direnv/init.zsh" ]]; then
+    export DIRENV_LOG_FORMAT=""  # Silence direnv loading messages
 fi

@@ -1,23 +1,82 @@
 #!/usr/bin/env zsh
-[[ $- != *i* ]] && return  # Exit if not interactive
+# Sourced for interactive shells
 
+# ZSH CONFIGURATION
 bindkey -e  # Set zsh default keymap to emacs
+HISTFILE="${HOME}/.zsh_history"  # History file
 
-# Set locale
-export LC_ALL="en_US.UTF-8"
-export LANG="en_US.UTF-8"
-export LANGUAGE="en_US.UTF-8"
-
-# Path setup
-if [[ "${OSTYPE}" == "darwin"* && -x /usr/libexec/path_helper ]]; then
-    PATH=""
-    eval "$(/usr/libexec/path_helper -s)"
+# ENVIRONMENT VARIABLES
+export PAGER="less"
+export LESS="FRX"
+export EDITOR="vi"
+if command -v code 1>/dev/null 2>&1; then
+    [[ -z "$SSH_CONNECTION" ]] && export EDITOR="code -w"
 fi
-export PATH="/usr/local/bin:/usr/local/sbin:${PATH}"
-[[ -d "${HOME}/.local/bin" ]] && export PATH="${HOME}/.local/bin:${PATH}"
+export VISUAL="$EDITOR"
 
-# Load config files
-source "${HOME}/.zsh/config.zsh"
-source "${HOME}/.zsh/plugins.zsh"
-source "${HOME}/.zsh/aliases.zsh"
-[[ -f "${HOME}/.zsh/work.zsh" ]] && source "${HOME}/.zsh/work.zsh"
+# Colors for ls
+if [[ "${OSTYPE}" == "linux"* && -f "${HOME}/.dir_colors" ]]; then
+    eval "$(dircolors -b "${HOME}/.dir_colors")"
+elif [[ "${OSTYPE}" == "darwin"* ]]; then
+    if command -v gdircolors >/dev/null 2>&1 && [[ -f "${HOME}/.dir_colors" ]]; then
+        eval "$(gdircolors -b "${HOME}/.dir_colors")"
+    else
+        export CLICOLOR=1 LSCOLORS="ExFxFxGxCxDxDxBxDxExEx"
+    fi
+fi
+
+# Color support for other utils
+export LESS="-R --use-color"
+export MANPAGER="less -R --use-color -Dd+r -Du+b"
+export MANROFFOPT="-c"
+export GCC_COLORS="error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01"
+
+# PATH CONFIGURATION
+# First, handle macOS path_helper if present
+if [[ "${OSTYPE}" == "darwin"* && -x /usr/libexec/path_helper ]]; then
+    eval "$(/usr/libexec/path_helper -s)"
+else
+    # Start with system paths if path_helper isn't available
+    export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin"
+fi
+
+# Homebrew setup
+if [[ "${OSTYPE}" == "darwin"* && -f "/usr/local/bin/brew" ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+elif [[ "${OSTYPE}" == "darwin"* && -f "/opt/homebrew/bin/brew" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ "${OSTYPE}" == "linux"* && -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [[ -f "${HOME}/.linuxbrew/bin/brew" ]]; then
+    eval "$(${HOME}/.linuxbrew/bin/brew shellenv)"
+fi
+
+# Language-specific paths
+if command -v go 1>/dev/null 2>&1; then
+    export GOPATH="${HOME}/.go"
+    PATH="${GOPATH}/bin:${PATH}"
+fi
+
+if [[ -d "${HOME}/.npm-global" ]]; then
+    export NPM_CONFIG_PREFIX="${HOME}/.npm-global"
+    PATH="${NPM_CONFIG_PREFIX}/bin:${PATH}"
+fi
+
+if command -v ruby 1>/dev/null 2>&1 && command -v gem 1>/dev/null 2>&1; then
+    export GEM_HOME="${HOME}/.gem"
+    PATH="${GEM_HOME}/bin:${PATH}"
+fi
+
+# Add user directories to PATH
+[[ -d "${HOME}/.local/bin" ]] && PATH="${HOME}/.local/bin:${PATH}"
+[[ -d "${HOME}/Documents/Projects/dev-utils/bin" ]] && PATH="${PATH}:${HOME}/Documents/Projects/dev-utils/bin"
+
+# Finalize PATH
+export PATH
+typeset -U PATH path  # Remove duplicate path entries
+
+# LOAD MODULAR CONFIGURATION
+source "${HOME}/.zsh/config.zsh"    # Core configuration
+source "${HOME}/.zsh/plugins.zsh"   # Plugins
+source "${HOME}/.zsh/functions.zsh" # Functions
+source "${HOME}/.zsh/aliases.zsh"   # Aliases
