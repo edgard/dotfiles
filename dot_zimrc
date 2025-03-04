@@ -22,6 +22,9 @@ zmodule kiesman99/zim-zoxide
 # Direnv
 zmodule direnv
 
+# Ssh agent
+zmodule ssh
+
 # Autosuggestions
 zmodule zsh-users/zsh-autosuggestions
 
