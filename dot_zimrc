@@ -1,0 +1,26 @@
+# Zim modules configuration
+
+# Core modules
+zmodule environment
+zmodule input
+
+# Prompt
+zmodule prompt-pwd
+zmodule git-info
+zmodule eriner
+
+# Completion
+zmodule zsh-users/zsh-completions --fpath src
+zmodule completion
+
+# Fzf
+zmodule fzf
+
+# Direnv
+zmodule direnv
+
+# Syntax highlighting
+zmodule zsh-users/zsh-syntax-highlighting
+
+# Autosuggestions
+zmodule zsh-users/zsh-autosuggestions

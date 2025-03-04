@@ -1,36 +1,25 @@
-# -----------------------------------------------------------------------------
-# basic setup
-# -----------------------------------------------------------------------------
-# if not running interactively, don't do anything
+#!/usr/bin/env zsh
+# Exit if not interactive
 [[ $- != *i* ]] && return
 
-# set locale
+# Set zsh default keymap to emacs
+bindkey -e
+
+# Set locale
 export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 export LANGUAGE="en_US.UTF-8"
 
-# -----------------------------------------------------------------------------
-# basic path management
-# -----------------------------------------------------------------------------
-# macos clean and load path
+# Path setup
 if [[ "${OSTYPE}" == "darwin"* && -x /usr/libexec/path_helper ]]; then
     PATH=""
     eval "$(/usr/libexec/path_helper -s)"
 fi
-
-# additional local paths
 export PATH="/usr/local/bin:/usr/local/sbin:${PATH}"
-
-# includes user's private bin if it exists
 [[ -d "${HOME}/.local/bin" ]] && export PATH="${HOME}/.local/bin:${PATH}"
 
-# -----------------------------------------------------------------------------
-# zsh config
-# -----------------------------------------------------------------------------
-source "${HOME}/.zsh/env.zsh"
-source "${HOME}/.zsh/options.zsh"
-source "${HOME}/.zsh/completion.zsh"
+# Load config files
+source "${HOME}/.zsh/config.zsh"
+source "${HOME}/.zsh/plugins.zsh"
 source "${HOME}/.zsh/aliases.zsh"
-source "${HOME}/.zsh/keybindings.zsh"
-source "${HOME}/.zsh/work.zsh"
-source "${HOME}/.zsh/post.zsh"
+[[ -f "${HOME}/.zsh/work.zsh" ]] && source "${HOME}/.zsh/work.zsh"

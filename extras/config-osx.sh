@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# Close any open System Preferences panes, to prevent them from overriding
+# Close any open System Settings panes, to prevent them from overriding
 # settings we're about to change
-osascript -e 'tell application "System Preferences" to quit'
+osascript -e 'tell application "System Settings" to quit'
 
 # Ask for the administrator password upfront and run a keep-alive to update
 # existing `sudo` time stamp until script has finished
@@ -111,8 +111,8 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadTwoFin
 defaults write com.apple.BezelServices kDimTime -int 5
 
 # Speed up key repeat
-defaults write com.apple.Accessibility KeyRepeatDelay -float 0.5
-defaults write com.apple.Accessibility KeyRepeatInterval -float 0.083333333
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
 
 ###############################################################################
 # Screen
@@ -134,7 +134,7 @@ defaults write com.apple.screencapture disable-shadow -bool true
 # Enabling subpixel font rendering on non-Apple LCDs
 defaults write NSGlobalDomain AppleFontSmoothing -int 1
 
-# Re-enable subpixel fond rendering
+# Re-enable subpixel font rendering
 defaults write NSGlobalDomain CGFontRenderingFontSmoothingDisabled -bool false
 
 # Disable auto-adjust brightness
@@ -169,7 +169,7 @@ defaults write com.apple.finder WarnOnEmptyTrash -bool false
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
 # Sort Folders First
-defaults write com.apple.finder _FXSortFoldersFirst -bool Yes
+defaults write com.apple.finder _FXSortFoldersFirst -bool true
 
 # Expand Save Panel by Default
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
@@ -191,7 +191,7 @@ defaults write com.apple.dock tilesize -int 24
 
 # Speeding up Mission Control animations and grouping windows by application
 defaults write com.apple.dock expose-animation-duration -float 0.1
-defaults write com.apple.dock "expose-group-apps" -bool true
+defaults write com.apple.dock "expose-group-by-app" -bool true
 
 # Set Dock to auto-hide and remove the auto-hiding delay
 # defaults write com.apple.dock autohide -bool true
@@ -210,8 +210,8 @@ defaults write com.apple.dock mru-spaces -bool false
 # Disable launchpad gesture
 defaults write com.apple.dock showLaunchpadGestureEnabled -bool false
 
-# Disable dashboard
-defaults write com.apple.dashboard dashboard-enabled-state -int 1
+# Disable dashboard (deprecated in newer macOS versions)
+# defaults write com.apple.dashboard dashboard-enabled-state -int 1
 
 ###############################################################################
 # Time Machine
@@ -250,13 +250,13 @@ defaults write com.apple.Safari IncludeDevelopMenu -int 1
 # Show the full URL in the address bar (note: this still hides the scheme)
 defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
 
-# Set Safari’s home page to `about:blank` for faster loading
+# Set Safari's home page to `about:blank` for faster loading
 defaults write com.apple.Safari HomePage -string "about:blank"
 
-# Prevent Safari from opening ‘safe’ files automatically after downloading
+# Prevent Safari from opening 'safe' files automatically after downloading
 defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
 
-# Show Safari’s bookmarks bar by default
+# Show Safari's bookmarks bar by default
 defaults write com.apple.Safari ShowFavoritesBar -bool true
 
 # Show Safari's status bar by default
@@ -268,13 +268,13 @@ defaults write com.apple.Safari AutoFillPasswords -bool false
 defaults write com.apple.Safari AutoFillCreditCardData -bool false
 defaults write com.apple.Safari AutoFillMiscellaneousForms -bool true
 
-# Enable “Do Not Track”
+# Enable "Do Not Track"
 defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
 
 # Update extensions automatically
 defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
 
-# Make Safari’s search banners default to Contains instead of Starts With
+# Make Safari's search banners default to Contains instead of Starts With
 defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
 
 ###############################################################################
@@ -290,13 +290,9 @@ defaults write com.apple.TextEdit NSShowAppCentricOpenPanelInsteadOfUntitledFile
 # Disable auto spelling
 defaults write /Users/"${USER}"/Library/Containers/com.apple.TextEdit/Data/Library/Preferences/com.apple.TextEdit.plist CheckSpellingWhileTyping -bool false
 
-###############################################################################
-# Brew
-###############################################################################
+# Restart affected applications
+for app in "Dock" "Finder" "Safari" "SystemUIServer"; do
+    killall "${app}" &> /dev/null
+done
 
-echo "Would you like to install brew and apps? (y/n)"
-read -r response
-if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    brew bundle
-fi
+echo "macOS configuration complete. Some changes may require a logout/restart to take effect."

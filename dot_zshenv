@@ -1,1 +1,12 @@
+#!/usr/bin/env zsh
+# Skip global compinit
 skip_global_compinit=1
+
+# Disable global RCS files
+unsetopt GLOBAL_RCS
+
+# Disable flow control
+stty -ixon 2>/dev/null
+
+# Minimal initial PATH
+export PATH="/usr/bin:/bin:/usr/sbin:/sbin"

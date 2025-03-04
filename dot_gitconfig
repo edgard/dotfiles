@@ -14,6 +14,33 @@
 	diff = auto
 	interactive = auto
 	status = auto
+[color "branch"]
+	current = 183 bold
+	local = 140
+	remote = 147
+	upstream = 116
+	plain = 189
+[color "diff"]
+	meta = 140
+	frag = 183 bold
+	func = 147
+	old = 203
+	new = 150
+	commit = 216
+	whitespace = 203 reverse
+	context = 189
+[color "status"]
+	header = 189
+	added = 150
+	changed = 216
+	untracked = 147
+	branch = 183 bold
+	nobranch = 203 bold
+[color "interactive"]
+	prompt = 140
+	header = 189
+	help = 147
+	error = 203
 [status]
 	showUntrackedFiles = all
 [transfer]
@@ -28,7 +55,7 @@
 	dc = diff --cached
 	df = diff
 	dump = cat-file -p
-	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --date=short
+	hist = log --pretty=format:"%h %ad | %s%d [%an]" --date=short
 	lg = log -p
 	pr = pull --rebase
 	st = status
