@@ -8,7 +8,7 @@ export LANGUAGE="en_US.UTF-8"
 
 # Zsh configuration
 skip_global_compinit=1  # Skip global compinit
-setopt no_global_rcs    # Disable global RCS files
+unsetopt GLOBAL_RCS    # Disable global RCS files
 stty -ixon 2>/dev/null  # Disable flow control
 
 # Minimal initial PATH
