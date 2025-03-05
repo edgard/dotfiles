@@ -65,13 +65,13 @@ elif [[ "${OSTYPE}" == "darwin"* ]]; then
     if command -v gdircolors >/dev/null 2>&1 && [[ -f "${HOME}/.dir_colors" ]]; then
         eval "$(gdircolors -b "${HOME}/.dir_colors")"
     else
-        export CLICOLOR=1 LSCOLORS="ExFxFxGxCxDxDxBxDxExEx"
+        export CLICOLOR=1 LSCOLORS="exfxhxDxCxegxhxbxDxHx"
     fi
 fi
 
 # Color support for other utils
-export LESS="-R --use-color"
-export MANPAGER="less -R --use-color -Dd+r -Du+b"
+export LESS="--use-color -R -i -j4 -M -X -F"
+export MANPAGER="less --use-color -R -Dd+r -Du+b"
 export MANROFFOPT="-c"
 
 # LOAD MODULAR CONFIGURATION
