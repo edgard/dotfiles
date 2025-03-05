@@ -10,6 +10,3 @@ export LANGUAGE="en_US.UTF-8"
 skip_global_compinit=1  # Skip global compinit
 unsetopt GLOBAL_RCS    # Disable global RCS files
 stty -ixon 2>/dev/null  # Disable flow control
-
-# Minimal initial PATH
-export PATH="/usr/bin:/bin:/usr/sbin:/sbin"

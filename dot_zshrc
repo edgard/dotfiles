@@ -5,9 +5,6 @@
 # First, handle macOS path_helper if present
 if [[ "${OSTYPE}" == "darwin"* && -x /usr/libexec/path_helper ]]; then
     eval "$(/usr/libexec/path_helper -s)"
-else
-    # Start with system paths if path_helper isn't available
-    export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin"
 fi
 
 # Homebrew setup
@@ -42,8 +39,7 @@ fi
 [[ -d "${HOME}/Documents/Projects/dev-utils/bin" ]] && PATH="${PATH}:${HOME}/Documents/Projects/dev-utils/bin"
 
 # Finalize PATH
-export PATH
-typeset -U PATH path  # Remove duplicate path entries
+typeset -U path  # Remove duplicate path entries
 
 # ZSH CONFIGURATION
 bindkey -e  # Set zsh default keymap to emacs
@@ -79,3 +75,4 @@ source "${HOME}/.zsh/config.zsh"    # Core configuration
 source "${HOME}/.zsh/plugins.zsh"   # Plugins
 source "${HOME}/.zsh/functions.zsh" # Functions
 source "${HOME}/.zsh/aliases.zsh"   # Aliases
+source "${HOME}/.zsh/post.zsh"      # Post-load configuration
