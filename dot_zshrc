@@ -1,35 +1,6 @@
 #!/usr/bin/env zsh
 # Sourced for interactive shells
 
-# ZSH CONFIGURATION
-bindkey -e  # Set zsh default keymap to emacs
-HISTFILE="${HOME}/.zsh_history"  # History file
-
-# ENVIRONMENT VARIABLES
-export PAGER="less"
-export LESS="FRX"
-export EDITOR="vi"
-if command -v code 1>/dev/null 2>&1; then
-    [[ -z "$SSH_CONNECTION" ]] && export EDITOR="code -w"
-fi
-export VISUAL="$EDITOR"
-
-# Colors for ls
-if [[ "${OSTYPE}" == "linux"* && -f "${HOME}/.dir_colors" ]]; then
-    eval "$(dircolors -b "${HOME}/.dir_colors")"
-elif [[ "${OSTYPE}" == "darwin"* ]]; then
-    if command -v gdircolors >/dev/null 2>&1 && [[ -f "${HOME}/.dir_colors" ]]; then
-        eval "$(gdircolors -b "${HOME}/.dir_colors")"
-    else
-        export CLICOLOR=1 LSCOLORS="ExFxFxGxCxDxDxBxDxExEx"
-    fi
-fi
-
-# Color support for other utils
-export LESS="-R --use-color"
-export MANPAGER="less -R --use-color -Dd+r -Du+b"
-export MANROFFOPT="-c"
-
 # PATH CONFIGURATION
 # First, handle macOS path_helper if present
 if [[ "${OSTYPE}" == "darwin"* && -x /usr/libexec/path_helper ]]; then
@@ -73,6 +44,35 @@ fi
 # Finalize PATH
 export PATH
 typeset -U PATH path  # Remove duplicate path entries
+
+# ZSH CONFIGURATION
+bindkey -e  # Set zsh default keymap to emacs
+HISTFILE="${HOME}/.zsh_history"  # History file
+
+# ENVIRONMENT VARIABLES
+export PAGER="less"
+export LESS="FRX"
+export EDITOR="vi"
+if command -v code 1>/dev/null 2>&1; then
+    [[ -z "$SSH_CONNECTION" ]] && export EDITOR="code -w"
+fi
+export VISUAL="$EDITOR"
+
+# Colors for ls
+if [[ "${OSTYPE}" == "linux"* && -f "${HOME}/.dir_colors" ]]; then
+    eval "$(dircolors -b "${HOME}/.dir_colors")"
+elif [[ "${OSTYPE}" == "darwin"* ]]; then
+    if command -v gdircolors >/dev/null 2>&1 && [[ -f "${HOME}/.dir_colors" ]]; then
+        eval "$(gdircolors -b "${HOME}/.dir_colors")"
+    else
+        export CLICOLOR=1 LSCOLORS="ExFxFxGxCxDxDxBxDxExEx"
+    fi
+fi
+
+# Color support for other utils
+export LESS="-R --use-color"
+export MANPAGER="less -R --use-color -Dd+r -Du+b"
+export MANROFFOPT="-c"
 
 # LOAD MODULAR CONFIGURATION
 source "${HOME}/.zsh/config.zsh"    # Core configuration
