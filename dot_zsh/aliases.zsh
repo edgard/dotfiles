@@ -2,12 +2,10 @@
 
 # General aliases
 alias history='history 1'
-alias grep="grep --color --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --exclude-dir=.bzr --exclude-dir=CVS --binary-files=without-match"
+alias grep="grep --color=auto --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.git --exclude-dir=.bzr --exclude-dir=CVS --binary-files=without-match"
 alias diff="diff --color=auto"
 alias ip="ip --color=auto"
 alias dmesg="dmesg --color=auto"
-alias gcc="gcc -fdiagnostics-color=auto"
-alias g++="g++ -fdiagnostics-color=auto"
 alias journalctl="journalctl --output=auto-long"
 alias watch="watch --color"
 

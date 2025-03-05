@@ -3,8 +3,14 @@
 # Core modules
 zmodule environment
 zmodule input
+zmodule ssh
 
-# Prompt
+# Tool integrations
+zmodule fzf
+zmodule kiesman99/zim-zoxide
+zmodule direnv
+
+# Prompt modules
 zmodule prompt-pwd
 zmodule git-info
 zmodule eriner
@@ -12,18 +18,6 @@ zmodule eriner
 # Completion
 zmodule zsh-users/zsh-completions --fpath src
 zmodule completion
-
-# Fzf
-zmodule fzf
-
-# Zoxide
-zmodule kiesman99/zim-zoxide
-
-# Direnv
-zmodule direnv
-
-# Ssh agent
-zmodule ssh
 
 # Autosuggestions
 zmodule zsh-users/zsh-autosuggestions
