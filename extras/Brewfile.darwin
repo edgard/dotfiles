@@ -20,7 +20,6 @@ cask "google-chrome"    # Web browser
 cask "kdenlive"         # Video editor
 cask "krita"            # Digital painting
 cask "rectangle"        # Window manager
-cask "shutter-encoder"  # Video converter
 cask "steermouse"       # Mouse customization
 cask "telegram-desktop" # Messaging
 cask "visual-studio-code" # Code editor
