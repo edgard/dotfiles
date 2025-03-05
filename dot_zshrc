@@ -1,17 +1,17 @@
 #!/usr/bin/env zsh
-# Sourced for interactive shells
+# Main zsh configuration file
+# Loads modular configuration files in a specific order
 
-# PATH CONFIGURATION
 # First, handle macOS path_helper if present
 if [[ "${OSTYPE}" == "darwin"* && -x /usr/libexec/path_helper ]]; then
     eval "$(/usr/libexec/path_helper -s)"
 fi
 
 # Homebrew setup
-if [[ "${OSTYPE}" == "darwin"* && -f "/usr/local/bin/brew" ]]; then
-    eval "$(/usr/local/bin/brew shellenv)"
-elif [[ "${OSTYPE}" == "darwin"* && -f "/opt/homebrew/bin/brew" ]]; then
+if [[ "${OSTYPE}" == "darwin"* && -f "/opt/homebrew/bin/brew" ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ "${OSTYPE}" == "darwin"* && -f "/usr/local/bin/brew" ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
 elif [[ "${OSTYPE}" == "linux"* && -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 elif [[ -f "${HOME}/.linuxbrew/bin/brew" ]]; then
@@ -19,7 +19,7 @@ elif [[ -f "${HOME}/.linuxbrew/bin/brew" ]]; then
 fi
 
 # Language-specific paths
-if command -v go 1>/dev/null 2>&1; then
+if command -v go &>/dev/null; then
     export GOPATH="${HOME}/.go"
     PATH="${GOPATH}/bin:${PATH}"
 fi
@@ -29,50 +29,25 @@ if [[ -d "${HOME}/.npm-global" ]]; then
     PATH="${NPM_CONFIG_PREFIX}/bin:${PATH}"
 fi
 
-if command -v ruby 1>/dev/null 2>&1 && command -v gem 1>/dev/null 2>&1; then
+if command -v ruby &>/dev/null && command -v gem &>/dev/null; then
     export GEM_HOME="${HOME}/.gem"
     PATH="${GEM_HOME}/bin:${PATH}"
 fi
 
-# Add user directories to PATH
+# User directories
 [[ -d "${HOME}/.local/bin" ]] && PATH="${HOME}/.local/bin:${PATH}"
 [[ -d "${HOME}/Documents/Projects/dev-utils/bin" ]] && PATH="${PATH}:${HOME}/Documents/Projects/dev-utils/bin"
 
-# Finalize PATH
-typeset -U path  # Remove duplicate path entries
+# Remove duplicate entries from PATH
+typeset -U path
 
-# ZSH CONFIGURATION
-bindkey -e  # Set zsh default keymap to emacs
-HISTFILE="${HOME}/.zsh_history"  # History file
-
-# ENVIRONMENT VARIABLES
-export PAGER="less"
-export LESS="FRX"
-export EDITOR="vi"
-if command -v code 1>/dev/null 2>&1; then
-    [[ -z "$SSH_CONNECTION" ]] && export EDITOR="code -w"
-fi
-export VISUAL="$EDITOR"
-
-# Colors for ls
-if [[ "${OSTYPE}" == "linux"* && -f "${HOME}/.dir_colors" ]]; then
-    eval "$(dircolors -b "${HOME}/.dir_colors")"
-elif [[ "${OSTYPE}" == "darwin"* ]]; then
-    if command -v gdircolors >/dev/null 2>&1 && [[ -f "${HOME}/.dir_colors" ]]; then
-        eval "$(gdircolors -b "${HOME}/.dir_colors")"
-    else
-        export CLICOLOR=1 LSCOLORS="exfxhxDxCxegxhxbxDxHx"
+# Load modular configuration files in order
+# Each file is responsible for a specific aspect of the shell configuration
+for config_file in "${HOME}"/.zsh/[0-9][0-9]-*.zsh; do
+    if [[ -r "$config_file" ]]; then
+        source "$config_file"
     fi
-fi
+done
 
-# Color support for other utils
-export LESS="--use-color -R -i -j4 -M -X -F"
-export MANPAGER="less --use-color -R -Dd+r -Du+b"
-export MANROFFOPT="-c"
-
-# LOAD MODULAR CONFIGURATION
-source "${HOME}/.zsh/config.zsh"    # Core configuration
-source "${HOME}/.zsh/plugins.zsh"   # Plugins
-source "${HOME}/.zsh/functions.zsh" # Functions
-source "${HOME}/.zsh/aliases.zsh"   # Aliases
-source "${HOME}/.zsh/post.zsh"      # Post-load configuration
+# Cleanup
+unset config_file

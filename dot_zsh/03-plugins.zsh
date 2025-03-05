@@ -1,26 +1,34 @@
 # Zim framework and plugin configuration
+# Manages plugin initialization and configuration
 
-# Zim Home
+# Zim Home Directory
 export ZIM_HOME="${HOME}/.zim"
 
-# Download zimfw plugin manager if missing
+# Initialize Zim Framework
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
-  curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+    curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
 fi
 
-# Install missing modules and update init.zsh if needed
+# Install/Update Modules
 if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZIM_CONFIG_FILE:-${ZDOTDIR:-${HOME}}/.zimrc} ]]; then
-  source ${ZIM_HOME}/zimfw.zsh init
+    source ${ZIM_HOME}/zimfw.zsh init
 fi
 
-# Initialize modules
+# Load Zim Framework
 source ${ZIM_HOME}/init.zsh
 
-# Configure syntax highlighting
+# Plugin Configurations
+
+## Syntax Highlighting Configuration
 if [[ -f "${ZIM_HOME}/modules/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+    # Set highlighters
+    ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+    ZSH_HIGHLIGHT_MAXLENGTH=512
+
+    # Define highlighting styles
     typeset -gA ZSH_HIGHLIGHT_STYLES
 
-    # Catppuccin Frappé theme
+    # Catppuccin Frappé Theme Colors
     ZSH_HIGHLIGHT_STYLES[default]='fg=#c6d0f5'
     ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=#e78284'
     ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=#ca9ee6'
@@ -47,7 +55,7 @@ if [[ -f "${ZIM_HOME}/modules/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
     ZSH_HIGHLIGHT_STYLES[variable]='fg=#85c1dc'
 fi
 
-# Configure autosuggestions
+## Autosuggestions Configuration
 if [[ -f "${ZIM_HOME}/modules/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#737994'
     ZSH_AUTOSUGGEST_STRATEGY=(history completion)
@@ -56,20 +64,23 @@ if [[ -f "${ZIM_HOME}/modules/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; t
     ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 fi
 
-# Configure prompt (eriner)
+## Prompt Configuration (eriner theme)
 if [[ -f "${ZIM_HOME}/modules/eriner/eriner.zsh-theme" ]]; then
-    typeset -g STATUS_COLOR='59'  # Base (#303446)
-    typeset -g PWD_COLOR='147'    # Lavender (#babbf1)
-    typeset -g CLEAN_COLOR='183'  # Mauve (#ca9ee6)
-    typeset -g DIRTY_COLOR='110'  # Sapphire/Cyan (#85c1dc)
+    typeset -g STATUS_COLOR='#303446'  # Base
+    typeset -g PWD_COLOR='#babbf1'     # Lavender
+    typeset -g CLEAN_COLOR='#ca9ee6'   # Mauve
+    typeset -g DIRTY_COLOR='#85c1dc'   # Sapphire
 fi
 
-# Configure fzf
+## FZF Configuration
 if [[ -f "${ZIM_HOME}/modules/fzf/init.zsh" ]]; then
-    export FZF_DEFAULT_OPTS="--height 10 --layout=reverse --color=bg+:#414559,bg:#303446,spinner:#f2d5cf,hl:#e78284,fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf,marker:#f2d5cf,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284"
+    export FZF_DEFAULT_OPTS="--height 10 --layout=reverse \
+        --color=bg+:#414559,bg:#303446,spinner:#f2d5cf,hl:#e78284 \
+        --color=fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf \
+        --color=marker:#f2d5cf,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284"
 fi
 
-# Configure direnv
+## Direnv Configuration
 if [[ -f "${ZIM_HOME}/modules/direnv/init.zsh" ]]; then
     export DIRENV_LOG_FORMAT=""  # Silence direnv loading messages
 fi

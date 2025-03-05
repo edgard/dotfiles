@@ -1,8 +1,11 @@
+#!/bin/zsh
 # Zim modules configuration
+# Order matters for these modules!
 
 # Core modules
 zmodule environment
 zmodule input
+zmodule termtitle
 zmodule ssh
 
 # Tool integrations
@@ -10,12 +13,12 @@ zmodule fzf
 zmodule kiesman99/zim-zoxide
 zmodule direnv
 
-# Prompt modules
+# Prompt configuration
 zmodule prompt-pwd
 zmodule git-info
 zmodule eriner
 
-# Completion
+# Completion configuration
 zmodule zsh-users/zsh-completions --fpath src
 zmodule completion
 
