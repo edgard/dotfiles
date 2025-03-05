@@ -1,5 +1,8 @@
 # Ghostty configuration with Catppuccin Frappé theme
 
+# Set terminal type
+term=xterm-256color
+
 # Font configuration
 font-family = Iosevka Custom
 font-size = 16
