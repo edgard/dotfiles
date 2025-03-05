@@ -66,10 +66,10 @@ fi
 
 ## Prompt Configuration (eriner theme)
 if [[ -f "${ZIM_HOME}/modules/eriner/eriner.zsh-theme" ]]; then
-    typeset -g STATUS_COLOR='#303446'  # Base
-    typeset -g PWD_COLOR='#babbf1'     # Lavender
-    typeset -g CLEAN_COLOR='#ca9ee6'   # Mauve
-    typeset -g DIRTY_COLOR='#85c1dc'   # Sapphire
+    typeset -g STATUS_COLOR='0'     # Black (Base)
+    typeset -g PWD_COLOR='147'      # Light purple (Lavender)
+    typeset -g CLEAN_COLOR='183'    # Pink (Mauve)
+    typeset -g DIRTY_COLOR='117'    # Light blue (Sapphire)
 fi
 
 ## FZF Configuration
