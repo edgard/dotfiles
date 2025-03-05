@@ -3,10 +3,6 @@
 # Font configuration
 font-family = Iosevka Custom
 font-size = 16
-font-feature = liga=1
-font-feature = dlig=1
-font-feature = calt=0
-font-feature = ss01=1
 
 # Window configuration
 window-decoration = true
@@ -31,8 +27,8 @@ background-blur = false
 unfocused-split-opacity = 0.95
 
 # Shell integration
-shell-integration = zsh
-shell-integration-features = no-cursor
+shell-integration = none
+shell-integration-features = false
 
 # Keybindings
 #keybind = ctrl+shift+c=copy_to_clipboard
