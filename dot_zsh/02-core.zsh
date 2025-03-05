@@ -10,13 +10,12 @@ SAVEHIST=10000             # Maximum events in history file
 setopt APPEND_HISTORY        # Append to history file
 setopt EXTENDED_HISTORY      # Save timestamp and duration
 setopt HIST_EXPIRE_DUPS_FIRST # Remove duplicates first when trimming
-setopt HIST_FCNTL_LOCK       # Use fcntl to lock history file
 setopt HIST_IGNORE_ALL_DUPS  # Remove older duplicates
 setopt HIST_IGNORE_SPACE     # Don't save commands starting with space
 setopt HIST_REDUCE_BLANKS    # Remove superfluous blanks
 setopt HIST_SAVE_NO_DUPS     # Don't write duplicate commands
 setopt HIST_VERIFY           # Show history expansion before executing
-setopt INC_APPEND_HISTORY_TIME # Add commands to history immediately with timestamp
+setopt INC_APPEND_HISTORY    # Add commands to history immediately
 setopt SHARE_HISTORY         # Share history between sessions
 
 # Directory Navigation
