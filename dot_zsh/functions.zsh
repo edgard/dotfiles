@@ -14,7 +14,7 @@ function update() {
         echo "Updating Homebrew packages..."
         brew update
         brew upgrade
-        [[ "${OSTYPE}" == "darwin"* ]] && command -v brew-cask-upgrade >/dev/null 2>&1 && brew cu -y -q --cleanup --no-brew-update
+        [[ "${OSTYPE}" == "darwin"* ]] && brew cu --help >/dev/null 2>&1 && brew cu -y -q --cleanup --no-brew-update
         brew cleanup -s
         updated=1
     fi
