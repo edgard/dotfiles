@@ -7,10 +7,10 @@ export LESS="--use-color -R -i -j4 -M -X -F"
 export MANPAGER="less --use-color -R -Dd+r -Du+b"
 export MANROFFOPT="-c"
 
-# Editor configuration
-export EDITOR="vi"
-[[ -z "$SSH_CONNECTION" ]] && command -v code >/dev/null 2>&1 && export EDITOR="code -w"
-export VISUAL="$EDITOR"
+# Editor
+export EDITOR=$(command -v nvim || command -v vim || echo vi)
+[[ -n $VSCODE_IPC_HOOK_CLI && $(command -v code) ]] && EDITOR='code -w'
+export VISUAL=$EDITOR
 
 # Color support configuration
 if [[ "${OSTYPE}" == "linux"* && -f "${HOME}/.dir_colors" ]]; then
