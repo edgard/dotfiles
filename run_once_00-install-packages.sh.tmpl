@@ -1,5 +1,86 @@
-{{ if eq .chezmoi.os "linux" -}}
 #!/usr/bin/env bash
-sudo apt update
-sudo apt install -y build-essential python2 python3 curl unzip git
+
+# Install essential system packages using native package managers
+{{ if eq .chezmoi.os "linux" -}}
+echo "Installing essential system packages using native package manager..."
+if command -v apt-get >/dev/null 2>&1; then
+    # Debian/Ubuntu
+    sudo apt update
+    sudo apt install -y build-essential python3 curl unzip git zsh
+elif command -v dnf >/dev/null 2>&1; then
+    # Fedora/RHEL
+    sudo dnf update -y
+    sudo dnf install -y gcc gcc-c++ make python3 curl unzip git zsh
+elif command -v pacman >/dev/null 2>&1; then
+    # Arch Linux
+    sudo pacman -Syu --noconfirm
+    sudo pacman -S --noconfirm base-devel python curl unzip git zsh
+fi
+
+# Run Linux system configuration script if it exists
+if [[ -f "${HOME}/.local/share/chezmoi/extras/config-linux.sh" ]]; then
+    echo "Running Linux system configuration script..."
+    bash "${HOME}/.local/share/chezmoi/extras/config-linux.sh"
+fi
 {{ end -}}
+
+{{ if eq .chezmoi.os "darwin" -}}
+# macOS-specific system setup
+echo "Setting up macOS system..."
+
+# Run macOS configuration script if it exists
+if [[ -f "${HOME}/.local/share/chezmoi/extras/config-osx.sh" ]]; then
+    echo "Running macOS configuration script..."
+    bash "${HOME}/.local/share/chezmoi/extras/config-osx.sh"
+fi
+{{ end -}}
+
+# Install Homebrew for user utilities (cross-platform)
+echo "Setting up Homebrew for user utilities..."
+if ! command -v brew >/dev/null 2>&1; then
+    echo "Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    # Add Homebrew to PATH based on OS and architecture
+    if [[ "${OSTYPE}" == "darwin"* ]]; then
+        if [[ -f "/opt/homebrew/bin/brew" ]]; then
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        elif [[ -f "/usr/local/bin/brew" ]]; then
+            eval "$(/usr/local/bin/brew shellenv)"
+        fi
+    elif [[ "${OSTYPE}" == "linux"* ]]; then
+        if [[ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        fi
+    fi
+fi
+
+# Install common user utilities from Brewfile.common
+if [[ -f "${HOME}/.local/share/chezmoi/extras/Brewfile.common" ]]; then
+    echo "Installing common user utilities from Brewfile.common..."
+    brew bundle --file="${HOME}/.local/share/chezmoi/extras/Brewfile.common"
+fi
+
+# Install OS-specific user utilities
+{{ if eq .chezmoi.os "darwin" -}}
+if [[ -f "${HOME}/.local/share/chezmoi/extras/Brewfile.darwin" ]]; then
+    echo "Installing macOS-specific user utilities from Brewfile.darwin..."
+    brew bundle --file="${HOME}/.local/share/chezmoi/extras/Brewfile.darwin"
+fi
+{{ else if eq .chezmoi.os "linux" -}}
+if [[ -f "${HOME}/.local/share/chezmoi/extras/Brewfile.linux" ]]; then
+    echo "Installing Linux-specific user utilities from Brewfile.linux..."
+    brew bundle --file="${HOME}/.local/share/chezmoi/extras/Brewfile.linux"
+fi
+{{ end -}}
+
+# Cross-platform setup
+echo "Setting up cross-platform configurations..."
+
+# Set zsh as default shell if it's not already
+if [[ "$SHELL" != *"zsh"* ]]; then
+    echo "Setting zsh as default shell..."
+    chsh -s "$(which zsh)"
+fi
+
+echo "Installation complete!"

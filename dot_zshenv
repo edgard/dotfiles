@@ -1,1 +1,13 @@
+#!/usr/bin/env zsh
+
+## SHELL CONFIGURATION ##
+unsetopt GLOBAL_RCS
 skip_global_compinit=1
+
+## LOCALE CONFIGURATION ##
+export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+export LANG="${LANG:-en_US.UTF-8}"
+export LANGUAGE="${LANGUAGE:-en_US.UTF-8}"
+
+## TERMINAL CONFIGURATION ##
+[[ "$-" == *i* ]] && command -v stty >/dev/null 2>&1 && stty -ixon 2>/dev/null

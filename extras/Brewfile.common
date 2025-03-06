@@ -1,0 +1,44 @@
+# Cross-platform Brewfile for user utilities
+# This file contains packages that work on both macOS and Linux
+
+# Taps
+tap "homebrew/bundle"
+tap "go-task/tap"
+tap "fluxcd/tap"
+tap "vmware-tanzu/carvel"
+
+# Cross-platform CLI tools
+brew "age"              # Simple, modern file encryption
+brew "direnv"           # Environment switcher
+brew "fd"               # Simple, fast alternative to find
+brew "fzf"              # Fuzzy finder
+brew "gh"               # GitHub CLI
+brew "go"               # Go programming language
+brew "gofumpt"          # Go formatter
+brew "goreleaser"       # Release automation for Go projects
+brew "jq"               # JSON processor
+brew "node"             # Node.js
+brew "pre-commit"       # Framework for managing git pre-commit hooks
+brew "ripgrep"          # Fast grep replacement
+brew "shellcheck"       # Shell script static analysis
+brew "sops"             # Secrets management
+brew "tfenv"            # Terraform version manager
+brew "tflint"           # Terraform linter
+brew "watch"            # Execute a program periodically
+brew "yq"               # YAML processor
+brew "zoxide"           # Smarter cd command
+brew "go-task/tap/go-task" # Task runner
+
+# Cloud and Kubernetes tools
+brew "awscli"           # AWS CLI
+brew "eksctl"           # EKS Tools
+brew "helm"             # Kubernetes package manager
+brew "gimme-aws-creds"  # AWS Credentials
+brew "k3sup"            # K3s upgrate util
+brew "kind"             # Kubernetes in Docker
+brew "kubernetes-cli"   # Kubernetes CLI
+brew "kubectx"          # Kubernetes context switcher
+brew "kustomize"        # Kubernetes customization
+brew "fluxcd/tap/flux"  # GitOps for Kubernetes
+brew "velero"           # Velero backup utils
+brew "vmware-tanzu/carvel/vendir" # Declarative file fetching

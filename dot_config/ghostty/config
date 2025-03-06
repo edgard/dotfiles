@@ -1,0 +1,72 @@
+# Ghostty configuration with Catppuccin Frappé theme
+
+# Set terminal type
+term=xterm-256color
+
+# Font configuration
+font-family = Iosevka Custom
+font-size = 16
+
+# Window configuration
+window-decoration = true
+window-padding-x = 10
+window-padding-y = 10
+window-theme = dark
+macos-option-as-alt = true
+macos-non-native-fullscreen = true
+confirm-close-surface = false
+cursor-style = block
+cursor-style-blink = false
+mouse-hide-while-typing = true
+scrollback-limit = 5000
+window-inherit-working-directory = true
+clipboard-read = allow
+clipboard-write = allow
+window-save-state = never
+
+# Performance
+background-opacity = 1.0
+background-blur = false
+unfocused-split-opacity = 0.95
+
+# Shell integration
+shell-integration = none
+shell-integration-features = false
+
+# Keybindings
+#keybind = ctrl+shift+c=copy_to_clipboard
+#keybind = ctrl+shift+v=paste_from_clipboard
+#keybind = ctrl+shift+n=new_window
+#keybind = ctrl+shift+t=new_tab
+#keybind = ctrl+shift+w=close_surface
+#keybind = ctrl+shift+q=quit
+#keybind = ctrl+tab=next_tab
+#keybind = ctrl+shift+tab=previous_tab
+#keybind = ctrl+shift+l=toggle_fullscreen
+#keybind = ctrl+shift+equal=increase_font_size
+#keybind = ctrl+shift+minus=decrease_font_size
+#keybind = ctrl+shift+0=reset_font_size
+
+# Catppuccin Frappé Theme
+palette = 0=#51576d
+palette = 1=#e78284
+palette = 2=#a6d189
+palette = 3=#e5c890
+palette = 4=#8caaee
+palette = 5=#f4b8e4
+palette = 6=#81c8be
+palette = 7=#b5bfe2
+palette = 8=#626880
+palette = 9=#e78284
+palette = 10=#a6d189
+palette = 11=#e5c890
+palette = 12=#8caaee
+palette = 13=#f4b8e4
+palette = 14=#81c8be
+palette = 15=#a5adce
+background = 303446
+foreground = c6d0f5
+cursor-color = f2d5cf
+cursor-text = 303446
+selection-background = 44495d
+selection-foreground = c6d0f5

@@ -1,4 +1,19 @@
+# Ignore these files when applying dotfiles with chezmoi
+
+# Git files
+.git/
+.gitignore
+
+# Editor-specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Documentation
 README.md
 LICENSE
-.gitignore
+
+# Extra files
 extras/
+extras/**

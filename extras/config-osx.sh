@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# Close any open System Preferences panes, to prevent them from overriding
-# settings we're about to change
-osascript -e 'tell application "System Preferences" to quit'
+# Close System Settings to prevent overriding changes
+osascript -e 'tell application "System Settings" to quit'
 
-# Ask for the administrator password upfront and run a keep-alive to update
-# existing `sudo` time stamp until script has finished
+# Ask for admin password upfront and keep sudo timestamp alive
 sudo -v
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
@@ -13,290 +11,150 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # General UI/UX
 ###############################################################################
 
-# Automatically quit printer app once the print jobs complete
-defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
-
-# Save to disk, rather than iCloud by default
-defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
-
-# Check for software updates daily, not just once per week
-defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
-
-# Disable smart quotes and smart dashes
-defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
-
-# Disable autocorrect
-defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-
-# Disable capitalize words
-defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
-
-# Disable period on double space
-defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
-
-# Disable the 'Are you sure you want to open this application?' dialog
-defaults write com.apple.LaunchServices LSQuarantine -bool false
-
-# Set language and text formats
-defaults write NSGlobalDomain AppleLanguages -array "en-US" "pt-BR"
-defaults write NSGlobalDomain AppleLocale -string "en_PL"
-
-# Disable reopening of windows during login
-defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false
-
-# Disable Resume system-wide
-defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
-
-# Disable automatic termination of inactive apps
-defaults write NSGlobalDomain NSDisableAutomaticTermination -bool true
+defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true  # Auto-quit printer app
+defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false  # Save to disk by default
+defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1  # Daily software updates
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false  # Disable smart quotes
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false  # Disable smart dashes
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false  # Disable autocorrect
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false  # Disable capitalize words
+defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false  # Disable period on double space
+defaults write com.apple.LaunchServices LSQuarantine -bool false  # Disable app open confirmation dialog
+defaults write NSGlobalDomain AppleLanguages -array "en-US" "pt-BR"  # Set languages
+defaults write NSGlobalDomain AppleLocale -string "en_PL"  # Set locale
+defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false  # Disable window reopening at login
+defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false  # Disable Resume system-wide
+defaults write NSGlobalDomain NSDisableAutomaticTermination -bool true  # Disable auto app termination
 
 ###############################################################################
-# General Power and Performance modifications
+# Power and Performance
 ###############################################################################
 
-# Enable lid wakeup
-sudo pmset -a lidwake 1
+sudo pmset -a lidwake 1  # Enable lid wakeup
+sudo pmset -a autorestart 1  # Restart on power loss
+sudo pmset -c displaysleep 15  # Display sleep after 15 min while charging
+sudo pmset -b displaysleep 5  # Display sleep after 5 min on battery
+sudo pmset -c sleep 0  # Disable sleep while charging
+sudo pmset -b sleep 5  # Sleep after 5 min on battery
+sudo pmset -a standbydelay 86400  # 24 hour standby delay
 
-# Restart automatically on power loss
-sudo pmset -a autorestart 1
-
-# Sleep the display after 15 minutes while charging
-sudo pmset -c displaysleep 15
-
-# Sleep the display after 5 minutes on battery
-sudo pmset -b displaysleep 5
-
-# Disable machine sleep while charging
-sudo pmset -c sleep 0
-
-# Set machine sleep to 5 minutes on battery
-sudo pmset -b sleep 5
-
-# Set standby delay to 24 hours (default is 1 hour)
-sudo pmset -a standbydelay 86400
-
-# Disable open and close window animations
-#defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -boolean false
-
-# Disable focus ring animation
-#defaults write NSGlobalDomain NSUseAnimatedFocusRing -boolean false
-
-# Reduce transparency in OS X
-#defaults write com.apple.universalaccess reduceTransparency -boolean true
-
-################################################################################
+###############################################################################
 # Trackpad, mouse, keyboard
 ###############################################################################
 
-# Disabling press-and-hold for special keys in favor of key repeat
-defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-
-# Use fn-keys as standard function key
-defaults write NSGlobalDomain com.apple.keyboard.fnState -bool true
-
-# Enable trackpad tap to click for this user and for the login screen
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false  # Disable press-and-hold for keys
+defaults write NSGlobalDomain com.apple.keyboard.fnState -bool true  # Use fn-keys as standard function keys
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true  # Enable tap to click
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-
-# Disable natural (Lion-style) scrolling
-defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
-
-# Trackpad gesture configurations
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerTapGesture -bool false
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadTwoFingerDoubleTapGesture -bool false
-
-# Turn off keyboard illumination when computer is not used for 5 seconds
-defaults write com.apple.BezelServices kDimTime -int 5
-
-# Speed up key repeat
-defaults write com.apple.Accessibility KeyRepeatDelay -float 0.5
-defaults write com.apple.Accessibility KeyRepeatInterval -float 0.083333333
+defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false  # Disable natural scrolling
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerTapGesture -bool false  # Disable three finger tap
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadTwoFingerDoubleTapGesture -bool false  # Disable two finger double tap
+defaults write com.apple.BezelServices kDimTime -int 5  # Keyboard backlight off after 5 sec
+defaults write NSGlobalDomain KeyRepeat -int 2  # Fast key repeat
+defaults write NSGlobalDomain InitialKeyRepeat -int 15  # Short delay until repeat
 
 ###############################################################################
 # Screen
 ###############################################################################
 
-# Requiring password immediately after sleep or screen saver begins
-defaults write com.apple.screensaver askForPassword -int 1
-defaults write com.apple.screensaver askForPasswordDelay -int 0
-
-# Set screenshot location to ~/Desktop as default
-defaults write com.apple.screencapture location -string "${HOME}/Desktop"
-
-# Setting screenshot format to PNG
-defaults write com.apple.screencapture type -string "png"
-
-# Disable shadows in screenshots
-defaults write com.apple.screencapture disable-shadow -bool true
-
-# Enabling subpixel font rendering on non-Apple LCDs
-defaults write NSGlobalDomain AppleFontSmoothing -int 1
-
-# Re-enable subpixel fond rendering
-defaults write NSGlobalDomain CGFontRenderingFontSmoothingDisabled -bool false
-
-# Disable auto-adjust brightness
-# sudo defaults write /Library/Preferences/com.apple.iokit.AmbientLightSensor.plist "Automatic Display Enabled" -bool false
+defaults write com.apple.screensaver askForPassword -int 1  # Require password after sleep/screensaver
+defaults write com.apple.screensaver askForPasswordDelay -int 0  # No delay for password prompt
+defaults write com.apple.screencapture location -string "${HOME}/Desktop"  # Screenshots to Desktop
+defaults write com.apple.screencapture type -string "png"  # PNG format for screenshots
+defaults write com.apple.screencapture disable-shadow -bool true  # No shadows in screenshots
+defaults write NSGlobalDomain AppleFontSmoothing -int 1  # Enable subpixel font rendering
+defaults write NSGlobalDomain CGFontRenderingFontSmoothingDisabled -bool false  # Re-enable font smoothing
 
 ###############################################################################
 # Finder
 ###############################################################################
 
-# Icons for hard drives, servers, and removable media on the desktop
+# Desktop icons
 defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false
 defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
 defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
 defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 
-# Disable disk image verification
+# Disk image verification
 defaults write com.apple.frameworks.diskimages skip-verify -bool true
 defaults write com.apple.frameworks.diskimages skip-verify-locked -bool true
 defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true
 
-# When performing a search, search the current folder by default
-defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
-
-# Default file windows opens at user homedir
-defaults write com.apple.finder NewWindowTarget -string "PfLo"
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"  # Search current folder by default
+defaults write com.apple.finder NewWindowTarget -string "PfLo"  # New windows open to home
 defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}"
-
-# Disable the warning before emptying the Trash
-defaults write com.apple.finder WarnOnEmptyTrash -bool false
-
-# Disable the warning when changing a file extension
-defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
-
-# Sort Folders First
-defaults write com.apple.finder _FXSortFoldersFirst -bool Yes
-
-# Expand Save Panel by Default
-defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+defaults write com.apple.finder WarnOnEmptyTrash -bool false  # No warning before emptying trash
+defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false  # No warning when changing extension
+defaults write com.apple.finder _FXSortFoldersFirst -bool true  # Sort folders first
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true  # Expanded save panel
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
-
-# Expand print panel by default
-defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true  # Expanded print panel
 defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
 
 ###############################################################################
 # Dock & Mission Control
 ###############################################################################
 
-# Wipe all (default) app icons from the Dock
-# defaults write com.apple.dock persistent-apps -array
-
-# Setting the icon size of Dock items to 24 pixels for optimal size/screen-realestate
-defaults write com.apple.dock tilesize -int 24
-
-# Speeding up Mission Control animations and grouping windows by application
-defaults write com.apple.dock expose-animation-duration -float 0.1
-defaults write com.apple.dock "expose-group-apps" -bool true
-
-# Set Dock to auto-hide and remove the auto-hiding delay
-# defaults write com.apple.dock autohide -bool true
-# defaults write com.apple.dock autohide-delay -float 0
-# defaults write com.apple.dock autohide-time-modifier -float 0.15
-
-# Set application minimize/maximize effects to scale
-defaults write com.apple.dock mineffect -string scale
-
-# Minimize windows into application icon
-defaults write com.apple.dock minimize-to-application -bool true
-
-# Do not rearrange spaces on most recent use
-defaults write com.apple.dock mru-spaces -bool false
-
-# Disable launchpad gesture
-defaults write com.apple.dock showLaunchpadGestureEnabled -bool false
-
-# Disable dashboard
-defaults write com.apple.dashboard dashboard-enabled-state -int 1
+defaults write com.apple.dock tilesize -int 24  # Smaller dock icons
+defaults write com.apple.dock expose-animation-duration -float 0.1  # Faster Mission Control
+defaults write com.apple.dock "expose-group-by-app" -bool true  # Group windows by app
+defaults write com.apple.dock mineffect -string scale  # Scale minimize effect
+defaults write com.apple.dock minimize-to-application -bool true  # Minimize to app icon
+defaults write com.apple.dock mru-spaces -bool false  # Don't rearrange spaces
+defaults write com.apple.dock showLaunchpadGestureEnabled -bool false  # Disable launchpad gesture
 
 ###############################################################################
 # Time Machine
 ###############################################################################
 
-# Prevent Time Machine from prompting to use new hard drives as backup volume
-defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
+defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true  # Don't prompt for new backup disks
 
 ###############################################################################
 # Misc
 ###############################################################################
 
-# Turn on local firewall
-# sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
-
-# Disable Creation of Metadata Files on Network Volumes
-defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-
-# Disable Creation of Metadata Files on USB Volumes
-defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true  # No .DS_Store on network
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true  # No .DS_Store on USB
 
 ###############################################################################
 # Chrome
 ###############################################################################
 
-# Using the system-native print preview dialog in Chrome
-defaults write com.google.Chrome DisablePrintPreview -bool true
+defaults write com.google.Chrome DisablePrintPreview -bool true  # Use system print dialog
 
 ###############################################################################
 # Safari
 ###############################################################################
 
-# Enable Develop menu
-defaults write com.apple.Safari IncludeDevelopMenu -int 1
+defaults write com.apple.Safari IncludeDevelopMenu -int 1  # Enable Develop menu
+defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true  # Show full URL
+defaults write com.apple.Safari HomePage -string "about:blank"  # Blank homepage
+defaults write com.apple.Safari AutoOpenSafeDownloads -bool false  # Don't auto-open downloads
+defaults write com.apple.Safari ShowFavoritesBar -bool true  # Show bookmarks bar
+defaults write com.apple.Safari ShowOverlayStatusBar -bool true  # Show status bar
 
-# Show the full URL in the address bar (note: this still hides the scheme)
-defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
-
-# Set Safari’s home page to `about:blank` for faster loading
-defaults write com.apple.Safari HomePage -string "about:blank"
-
-# Prevent Safari from opening ‘safe’ files automatically after downloading
-defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
-
-# Show Safari’s bookmarks bar by default
-defaults write com.apple.Safari ShowFavoritesBar -bool true
-
-# Show Safari's status bar by default
-defaults write com.apple.Safari ShowOverlayStatusBar -bool true
-
-# AutoFill
+# AutoFill settings
 defaults write com.apple.Safari AutoFillFromAddressBook -bool true
 defaults write com.apple.Safari AutoFillPasswords -bool false
 defaults write com.apple.Safari AutoFillCreditCardData -bool false
 defaults write com.apple.Safari AutoFillMiscellaneousForms -bool true
 
-# Enable “Do Not Track”
-defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
-
-# Update extensions automatically
-defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
-
-# Make Safari’s search banners default to Contains instead of Starts With
-defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
+defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true  # Enable Do Not Track
+defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true  # Auto-update extensions
+defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false  # Search contains vs starts with
 
 ###############################################################################
 # TextEdit
 ###############################################################################
 
-# Use Plain Text Mode as Default
-defaults write com.apple.TextEdit RichText -int 0
+defaults write com.apple.TextEdit RichText -int 0  # Plain text mode
+defaults write com.apple.TextEdit NSShowAppCentricOpenPanelInsteadOfUntitledFile -bool false  # New document by default
+defaults write /Users/"${USER}"/Library/Containers/com.apple.TextEdit/Data/Library/Preferences/com.apple.TextEdit.plist CheckSpellingWhileTyping -bool false  # Disable spell check
 
-# Open new document instead of file dialog by Default
-defaults write com.apple.TextEdit NSShowAppCentricOpenPanelInsteadOfUntitledFile -bool false
+# Restart affected applications
+for app in "Dock" "Finder" "Safari" "SystemUIServer"; do
+    killall "${app}" &> /dev/null
+done
 
-# Disable auto spelling
-defaults write /Users/"${USER}"/Library/Containers/com.apple.TextEdit/Data/Library/Preferences/com.apple.TextEdit.plist CheckSpellingWhileTyping -bool false
-
-###############################################################################
-# Brew
-###############################################################################
-
-echo "Would you like to install brew and apps? (y/n)"
-read -r response
-if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    brew bundle
-fi
+echo "macOS configuration complete. Some changes may require a logout/restart to take effect."

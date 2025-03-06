@@ -1,233 +1,290 @@
-# Configuration file for the 256color ls utility
-# This file goes in the /etc directory, and must be world readable.
-# Synchronized with coreutils 8.5 dircolors
-# You can copy this file to .dir_colors in your $HOME directory to override
-# the system defaults.
-# In the case that you are not satisfied with supplied colors, please
-# submit your color configuration or attach your file with colors readable
-# on ALL color background schemas (white,gray,black) to RedHat Bugzilla
-# ticket on https://bugzilla.redhat.com/show_bug.cgi?id=429121 . TIA.
-# Please just keep ls color conventions from 8 color scheme.
+# Configuration file for dircolors using Catppuccin Frappé palette with 256 color support
+# https://github.com/catppuccin/catppuccin
 
-# COLOR needs one of these arguments: 'tty' colorizes output to ttys, but not
-# pipes. 'all' adds color characters to all output. 'none' shuts colorization
-# off.
-COLOR tty
+# Catppuccin Frappé Palette (Verified against official palette)
+# Rosewater: 242 #f2d5cf
+# Flamingo:  243 #eebebe
+# Pink:      244 #f4b8e4
+# Mauve:     183 #ca9ee6
+# Red:       210 #e78284
+# Maroon:    209 #ea999c
+# Peach:     216 #ef9f76
+# Yellow:    223 #e5c890
+# Green:     150 #a6d189
+# Teal:      116 #81c8be
+# Sky:       117 #99d1db
+# Sapphire:  110 #85c1dc
+# Blue:      111 #8caaee
+# Lavender:  147 #babbf1
+# Text:      189 #c6d0f5
+# Subtext1:  251 #b5bfe2
+# Subtext0:  252 #a5adce
+# Overlay2:  253 #949cbb
+# Overlay1:  254 #838ba7
+# Overlay0:  255 #737994
+# Surface2:  15  #626880
+# Surface1:  236 #51576d
+# Surface0:  237 #414559
+# Base:      238 #303446
+# Mantle:    239 #292c3c
+# Crust:     240 #232634
 
-# Extra command line options for ls go here.
-# Basically these ones are:
-#  -F = show '/' for dirs, '*' for executables, etc.
-#  -T 0 = don't trust tab spacing when formatting ls output.
-OPTIONS -F -T 0
+# Basic terminal settings
+TERM *color*
+TERM alacritty
+TERM ansi
+TERM con[0-9]*x[0-9]*
+TERM cons[0-9][0-9]
+TERM console
+TERM cygwin
+TERM dtterm
+TERM dvtm*
+TERM Eterm
+TERM eterm*
+TERM foot
+TERM gnome*
+TERM hurd
+TERM jfbterm
+TERM konsole*
+TERM kterm
+TERM linux
+TERM linux-c
+TERM mlterm
+TERM putty*
+TERM rxvt*
+TERM screen*
+TERM st*
+TERM terminator
+TERM tmux*
+TERM vt100
+TERM xterm*
 
-# Below, there should be one TERM entry for each termtype that is colorizable
-TERM putty-256color
-TERM rxvt-256color
-TERM rxvt-unicode-256color
-TERM rxvt-unicode256
-TERM screen-256color
-TERM xterm-256color
-TERM gnome-256color
-TERM st-256color
+# Catppuccin Frappé color codes with 256 colors
+#NORMAL 00                      # Normal (non-filename) text
+FILE 00                        # Regular file
+RESET 0                        # Reset to "normal" color
+DIR 38;5;111                   # Directory (Blue)
+LINK 38;5;147                  # Symbolic link (Lavender)
+MULTIHARDLINK 00               # Regular file with more than one link
+FIFO 48;5;238;38;5;223         # Pipe (Yellow on Base)
+SOCK 38;5;183                  # Socket (Mauve)
+DOOR 38;5;183                  # Door (Mauve)
+BLK 48;5;238;38;5;223          # Block device driver (Yellow on Base)
+CHR 48;5;238;38;5;223          # Character device driver (Yellow on Base)
+ORPHAN 48;5;238;38;5;210       # Symlink to nonexistent file (Red on Base)
+MISSING 48;5;210;38;5;189      # Non-existent file linked to (Text on Red)
+SETUID 48;5;210;38;5;189       # File that is setuid (Text on Red)
+SETGID 48;5;223;38;5;238       # File that is setgid (Base on Yellow)
+CAPABILITY 48;5;210;38;5;223   # File with capability (Yellow on Red)
+STICKY_OTHER_WRITABLE 48;5;150;38;5;238  # Dir that is sticky and other-writable (Base on Green)
+OTHER_WRITABLE 48;5;150;38;5;111         # Dir that is other-writable (Blue on Green)
+STICKY 48;5;111;38;5;189                 # Dir with the sticky bit set (Text on Blue)
+EXEC 38;5;150                            # Executable file (Green)
 
-# EIGHTBIT, followed by '1' for on, '0' for off. (8-bit output)
-EIGHTBIT 1
+# Programming languages and scripts - HIGH CONTRAST
+.py  38;5;111                  # Python (Blue)
+.ipynb 38;5;111                # Jupyter notebook (Blue)
+.rb  38;5;210                  # Ruby (Red)
+.gem 38;5;210                  # Ruby gem (Red)
+.js  38;5;223                  # JavaScript (Yellow)
+.mjs 38;5;223                  # JavaScript module (Yellow)
+.cjs 38;5;223                  # CommonJS module (Yellow)
+.ts  38;5;110                  # TypeScript (Sapphire)
+.tsx 38;5;110                  # TypeScript React (Sapphire)
+.jsx 38;5;110                  # JavaScript React (Sapphire)
+.json 38;5;244                 # JSON (Pink)
+.yml 38;5;147                  # YAML (Lavender)
+.yaml 38;5;147                 # YAML (Lavender)
+.toml 38;5;147                 # TOML (Lavender)
+.xml 38;5;183                  # XML (Mauve)
+.html 38;5;209                 # HTML (Maroon)
+.htm  38;5;209                 # HTML (Maroon)
+.css  38;5;183                 # CSS (Mauve)
+.scss 38;5;183                 # SCSS (Mauve)
+.sass 38;5;183                 # Sass (Mauve)
+.less 38;5;183                 # Less (Mauve)
+.go   38;5;116                 # Go (Teal)
+.rs   38;5;216                 # Rust (Peach)
+.java 38;5;209                 # Java (Maroon)
+.class 38;5;209                # Java class (Maroon)
+.jar  38;5;209                 # Java archive (Maroon)
+.kt   38;5;110                 # Kotlin (Sapphire)
+.sc   38;5;210                 # Scala (Red)
+.swift 38;5;216                # Swift (Peach)
+.c    38;5;117                 # C (Sky)
+.h    38;5;110                 # C header (Sapphire)
+.cc   38;5;117                 # C++ (Sky)
+.cpp  38;5;117                 # C++ (Sky)
+.cxx  38;5;117                 # C++ (Sky)
+.hpp  38;5;110                 # C++ header (Sapphire)
+.hxx  38;5;147                 # C++ header (Lavender)
+.cs   38;5;150                 # C# (Green)
+.fs   38;5;116                 # F# (Teal)
+.php  38;5;147                 # PHP (Lavender)
+.hack 38;5;183                 # Hack (Mauve)
+.lua  38;5;117                 # Lua (Sky)
+.hs   38;5;147                 # Haskell (Lavender)
+.lhs  38;5;147                 # Literate Haskell (Lavender)
+.ml   38;5;183                 # OCaml (Mauve)
+.mli  38;5;183                 # OCaml interface (Mauve)
+.ex   38;5;147                 # Elixir (Lavender)
+.exs  38;5;147                 # Elixir script (Lavender)
+.erl  38;5;210                 # Erlang (Red)
+.hrl  38;5;210                 # Erlang header (Red)
+.clj  38;5;117                 # Clojure (Sky)
+.cljs 38;5;117                 # ClojureScript (Sky)
+.cljc 38;5;117                 # Common Clojure (Sky)
+.dart 38;5;111                 # Dart (Blue)
+.elm  38;5;116                 # Elm (Teal)
+.jl   38;5;183                 # Julia (Mauve)
+.zig  38;5;223                 # Zig (Yellow)
+.v    38;5;116                 # Verilog/V (Teal)
+.nim  38;5;223                 # Nim (Yellow)
 
-# Below are the color init strings for the basic file types. A color init
-# string consists of one or more of the following numeric codes:
-# Attribute codes:
-# 00=none 01=bold 04=underscore 05=blink 07=reverse 08=concealed
-# Text color(8 colors mode) codes:
-# 30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
-# Background color(8 colors mode) codes:
-# 40=black 41=red 42=green 43=yellow 44=blue 45=magenta 46=cyan 47=white
-# Text color(256 colors mode) codes:
-# Valid syntax for text 256color is 38;5;<color number> , where color number
-# is number between 0 and 255.
-# You may find following command useful to search the best one for you:
-# for ((x=0; x<=255; x++));do echo -e "${x}:\033[38;5;${x}mcolor\033[000m";done
-# Background color(256 colors mode) codes:
-# Valid syntax for background 256color is 48;5;<color number> , where
-# color number is number between 0 and 255.
-# You may find following command useful to search the best one for you:
-# for ((x=0; x<=255; x++));do echo -e "${x}:\033[48;5;${x}mcolor\033[000m";done
+# Shell and configuration
+.sh   38;5;150                 # Shell script (Green)
+.bash 38;5;150                 # Bash script (Green)
+.zsh  38;5;150                 # Zsh script (Green)
+.fish 38;5;150                 # Fish script (Green)
+.conf 38;5;242                 # Config file (Rosewater)
+.ini  38;5;242                 # INI file (Rosewater)
+.cfg  38;5;242                 # Config file (Rosewater)
+.rc   38;5;242                 # Runtime config (Rosewater)
+.env  38;5;223                 # Environment file (Yellow)
+.service 38;5;242              # Systemd service (Rosewater)
 
-#NORMAL 00	# global default, no color code at all
-#FILE 00	# normal file, use no color at all
-RESET 0 # reset to "normal" color
-DIR 38;5;27	# directory
-LINK 38;5;51	# symbolic link (If you set this to 'target' instead of a
-		# numerical value, the color is as for the file pointed to.)
-MULTIHARDLINK 44;38;5;15 # regular file with more than one link
-FIFO 40;38;5;11	# pipe
-SOCK 38;5;13	# socket
-DOOR 38;5;5	# door
-BLK 48;5;232;38;5;11	# block device driver
-CHR 48;5;232;38;5;3	# character device driver
-ORPHAN 48;5;232;38;5;9  # symlink to nonexistent file, or non-stat'able file
-MISSING 05;48;5;232;38;5;15 # ... and the files they point to
-SETUID 48;5;196;38;5;15	# file that is setuid (u+s)
-SETGID 48;5;11;38;5;16	# file that is setgid (g+s)
-CAPABILITY 48;5;196;38;5;226	# file with capability
-STICKY_OTHER_WRITABLE 48;5;10;38;5;16 # dir that is sticky and other-writable (+t,o+w)
-OTHER_WRITABLE 48;5;10;38;5;21 # dir that is other-writable (o+w) and not sticky
-STICKY 48;5;21;38;5;15	# dir with the sticky bit set (+t) and not other-writable
+# Compiled executables
+.exe  38;5;150                 # Executable (Green)
+.com  38;5;150                 # Executable (Green)
+.out  38;5;150                 # Output file (Green)
+.app  38;5;150                 # Application (Green)
+.bin  38;5;150                 # Binary (Green)
+.dll  38;5;116                 # DLL (Teal)
+.so   38;5;116                 # Shared object (Teal)
+.a    38;5;116                 # Archive (Teal)
+.o    38;5;252                 # Object file (Subtext0)
+.ko   38;5;252                 # Kernel object (Subtext0)
+.obj  38;5;252                 # Object file (Subtext0)
+.lib  38;5;116                 # Library (Teal)
+.dylib 38;5;116                # Dynamic library (Teal)
 
-# This is for files with execute permission:
-EXEC 38;5;34
+# Archives or compressed - HIGH CONTRAST
+.tar  38;5;216                 # Tar archive (Peach)
+.tgz  38;5;216                 # Gzipped tar (Peach)
+.gz   38;5;216                 # Gzip archive (Peach)
+.zip  38;5;216                 # Zip archive (Peach)
+.rar  38;5;216                 # RAR archive (Peach)
+.7z   38;5;216                 # 7zip archive (Peach)
+.bz2  38;5;216                 # Bzip2 archive (Peach)
+.xz   38;5;216                 # XZ archive (Peach)
+.zst  38;5;216                 # Zstandard archive (Peach)
+.lz4  38;5;216                 # LZ4 archive (Peach)
+.lzma 38;5;216                 # LZMA archive (Peach)
+.deb  38;5;216                 # Debian package (Peach)
+.rpm  38;5;216                 # RPM package (Peach)
+.apk  38;5;216                 # Android package (Peach)
+.dmg  38;5;216                 # Mac disk image (Peach)
+.pkg  38;5;216                 # macOS package (Peach)
 
-# List any file extensions like '.gz' or '.tar' that you would like ls
-# to colorize below. Put the extension, a space, and the color init string.
-# (and any comments you want to add after a '#')
-# executables (bright green)
-#.cmd 38;5;34
-#.exe 38;5;34
-#.com 38;5;34
-#.btm 38;5;34
-#.bat 38;5;34
-#.sh  38;5;34
-#.csh 38;5;34
+# Images - HIGH CONTRAST
+.jpg  38;5;244                 # JPEG image (Pink)
+.jpeg 38;5;244                 # JPEG image (Pink)
+.png  38;5;244                 # PNG image (Pink)
+.gif  38;5;244                 # GIF image (Pink)
+.bmp  38;5;244                 # BMP image (Pink)
+.svg  38;5;244                 # SVG image (Pink)
+.webp 38;5;244                 # WebP image (Pink)
+.ico  38;5;244                 # Icon (Pink)
+.tif  38;5;183                 # TIFF image (Mauve)
+.tiff 38;5;183                 # TIFF image (Mauve)
+.heic 38;5;183                 # HEIC image (Mauve)
+.avif 38;5;183                 # AVIF image (Mauve)
+.psd  38;5;183                 # Photoshop (Mauve)
+.ai   38;5;183                 # Illustrator (Mauve)
+.xcf  38;5;183                 # GIMP image (Mauve)
 
-# archives or compressed (bright red)
-.tar 38;5;9
-.tgz 38;5;9
-.arc 38;5;9
-.arj 38;5;9
-.taz 38;5;9
-.lha 38;5;9
-.lz4 38;5;9
-.lzh 38;5;9
-.lzma 38;5;9
-.tlz 38;5;9
-.txz 38;5;9
-.tzo 38;5;9
-.t7z 38;5;9
-.zip 38;5;9
-.z   38;5;9
-.Z   38;5;9
-.dz  38;5;9
-.gz  38;5;9
-.lrz 38;5;9
-.lz  38;5;9
-.lzo 38;5;9
-.xz  38;5;9
-.bz2 38;5;9
-.bz  38;5;9
-.tbz 38;5;9
-.tbz2 38;5;9
-.tz  38;5;9
-.deb 38;5;9
-.rpm 38;5;9
-.jar 38;5;9
-.war 38;5;9
-.ear 38;5;9
-.sar 38;5;9
-.rar 38;5;9
-.alz 38;5;9
-.ace 38;5;9
-.zoo 38;5;9
-.cpio 38;5;9
-.7z  38;5;9
-.rz  38;5;9
-.cab 38;5;9
+# Videos - HIGH CONTRAST
+.mp4  38;5;117                 # MP4 video (Sky)
+.mkv  38;5;117                 # MKV video (Sky)
+.webm 38;5;117                 # WebM video (Sky)
+.mov  38;5;117                 # QuickTime video (Sky)
+.avi  38;5;117                 # AVI video (Sky)
+.flv  38;5;117                 # Flash video (Sky)
+.wmv  38;5;117                 # Windows Media video (Sky)
+.m4v  38;5;117                 # M4V video (Sky)
+.mpg  38;5;117                 # MPEG video (Sky)
+.mpeg 38;5;117                 # MPEG video (Sky)
+.ts   38;5;117                 # Video TS (Sky)
+.ogv  38;5;117                 # OGG video (Sky)
 
-# image formats (magenta)
-.jpg 38;5;13
-.jpeg 38;5;13
-.gif 38;5;13
-.bmp 38;5;13
-.pbm 38;5;13
-.pgm 38;5;13
-.ppm 38;5;13
-.tga 38;5;13
-.xbm 38;5;13
-.xpm 38;5;13
-.tif 38;5;13
-.tiff 38;5;13
-.png 38;5;13
-.svg 38;5;13
-.svgz 38;5;13
-.mng 38;5;13
-.pcx 38;5;13
-.mov 38;5;13
-.mpg 38;5;13
-.mpeg 38;5;13
-.m2v 38;5;13
-.mkv 38;5;13
-.webm 38;5;13
-.ogm 38;5;13
-.mp4 38;5;13
-.m4v 38;5;13
-.mp4v 38;5;13
-.vob 38;5;13
-.qt  38;5;13
-.nuv 38;5;13
-.wmv 38;5;13
-.asf 38;5;13
-.rm  38;5;13
-.rmvb 38;5;13
-.flc 38;5;13
-.avi 38;5;13
-.fli 38;5;13
-.flv 38;5;13
-.gl 38;5;13
-.dl 38;5;13
-.xcf 38;5;13
-.xwd 38;5;13
-.yuv 38;5;13
-.cgm 38;5;13
-.emf 38;5;13
+# Audio - HIGH CONTRAST
+.mp3  38;5;183                 # MP3 audio (Mauve)
+.flac 38;5;183                 # FLAC audio (Mauve)
+.wav  38;5;183                 # WAV audio (Mauve)
+.ogg  38;5;183                 # OGG audio (Mauve)
+.aac  38;5;183                 # AAC audio (Mauve)
+.m4a  38;5;183                 # M4A audio (Mauve)
+.opus 38;5;116                 # Opus audio (Teal)
+.wma  38;5;116                 # Windows Media audio (Teal)
+.mid  38;5;116                 # MIDI (Teal)
+.midi 38;5;116                 # MIDI (Teal)
 
-# http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
-.axv 38;5;13
-.anx 38;5;13
-.ogv 38;5;13
-.ogx 38;5;13
+# Documents and text - HIGH CONTRAST
+.pdf  38;5;210                 # PDF (Red)
+.epub 38;5;210                 # EPUB (Red)
+.doc  38;5;110                 # Word document (Sapphire)
+.docx 38;5;110                 # Word document (Sapphire)
+.xls  38;5;150                 # Excel spreadsheet (Green)
+.xlsx 38;5;150                 # Excel spreadsheet (Green)
+.ppt  38;5;216                 # PowerPoint (Peach)
+.pptx 38;5;216                 # PowerPoint (Peach)
+.odt  38;5;110                 # OpenDocument text (Sapphire)
+.ods  38;5;150                 # OpenDocument spreadsheet (Green)
+.odp  38;5;216                 # OpenDocument presentation (Peach)
+.txt  38;5;189                 # Plain text (Text)
+.md   38;5;242                 # Markdown (Rosewater)
+.markdown 38;5;242             # Markdown (Rosewater)
+.rst  38;5;189                 # reStructuredText (Text)
+.tex  38;5;209                 # LaTeX (Maroon)
+.rtf  38;5;110                 # Rich Text Format (Sapphire)
 
-# audio formats (cyan)
-.aac 38;5;45
-.au 38;5;45
-.flac 38;5;45
-.mid 38;5;45
-.midi 38;5;45
-.mka 38;5;45
-.mp3 38;5;45
-.mpc 38;5;45
-.ogg 38;5;45
-.ra 38;5;45
-.wav 38;5;45
+# Git and version control
+.git    38;5;147               # Git directory (Lavender)
+.gitignore 38;5;243            # Git ignore file (Flamingo)
+.gitmodules 38;5;243           # Git modules (Flamingo)
+.gitattributes 38;5;243        # Git attributes (Flamingo)
+.hg     38;5;147               # Mercurial directory (Lavender)
+.svn    38;5;147               # Subversion directory (Lavender)
 
-# http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
-.axa 38;5;45
-.oga 38;5;45
-.spx 38;5;45
-.xspf 38;5;45
+# Databases
+.db   38;5;116                 # Database (Teal)
+.sql  38;5;116                 # SQL file (Teal)
+.sqlite 38;5;116               # SQLite database (Teal)
+.dump 38;5;111                 # Database dump (Blue)
 
-# colorize binary documents (brown)
-#.pdf 00;33
-#.ps 00;33
-#.ps.gz 00;33
-#.tex 00;33
-#.xls 00;33
-#.xlsx 00;33
-#.ppt 00;33
-#.pptx 00;33
-#.rtf 00;33
-#.doc 00;33
-#.docx 00;33
-#.odt 00;33
-#.ods 00;33
-#.odp 00;33
-#.epub 00;33
-#.abw 00;33
-#.wpd 00;33
-#
-# colorize text documents (brown)
-#.txt 00;33
-#.patch 00;33
-#.diff 00;33
-#.log 00;33
-#.htm 00;33
-#.html 00;33
-#.shtml 00;33
-#.xml 00;33
+# Misc
+.log  38;5;253                 # Log file (Overlay2)
+.cache 38;5;252                # Cache file (Subtext0)
+.tmp  38;5;252                 # Temporary file (Subtext0)
+.temp 38;5;252                 # Temporary file (Subtext0)
+.lock 38;5;252                 # Lock file (Subtext0)
+.bak  38;5;253                 # Backup file (Overlay2)
+.old  38;5;253                 # Old file (Overlay2)
+.orig 38;5;253                 # Original file (Overlay2)
+.swp  38;5;252                 # Vim swap file (Subtext0)
+.swo  38;5;252                 # Vim swap file (Subtext0)
+.pid  38;5;252                 # Process ID file (Subtext0)
+.diff 38;5;223                 # Diff file (Yellow)
+.patch 38;5;223                # Patch file (Yellow)
+
+# Additional programming file types
+.vue  38;5;116                 # Vue (Teal)
+.svelte 38;5;216               # Svelte (Peach)
+.astro 38;5;183                # Astro (Mauve)
+.wasm 38;5;150                 # WebAssembly (Green)
+.graphql 38;5;244              # GraphQL (Pink)
+.proto 38;5;242                # Protocol Buffers (Rosewater)
+.sol  38;5;223                 # Solidity (Yellow)
+.tf   38;5;147                 # Terraform (Lavender)
+.hcl  38;5;147                 # HCL (Lavender)
+.dockerfile 38;5;111           # Dockerfile (Blue)

@@ -1,36 +1,40 @@
-# -----------------------------------------------------------------------------
-# basic setup
-# -----------------------------------------------------------------------------
-# if not running interactively, don't do anything
-[[ $- != *i* ]] && return
+#!/usr/bin/env zsh
 
-# set locale
-export LC_ALL="en_US.UTF-8"
-export LANG="en_US.UTF-8"
-export LANGUAGE="en_US.UTF-8"
+## TYPE DECLARATIONS ##
+typeset -gU path PATH
+typeset -gUT FPATH fpath
 
-# -----------------------------------------------------------------------------
-# basic path management
-# -----------------------------------------------------------------------------
-# macos clean and load path
-if [[ "${OSTYPE}" == "darwin"* && -x /usr/libexec/path_helper ]]; then
-    PATH=""
-    eval "$(/usr/libexec/path_helper -s)"
+## PATH MANAGEMENT ##
+[[ "$OSTYPE" == darwin* ]] && [[ -x "/usr/libexec/path_helper" ]] && eval "$(/usr/libexec/path_helper -s)"
+
+## PACKAGE MANAGERS ##
+if [[ "$OSTYPE" == darwin* ]]; then
+    if [[ -x "/opt/homebrew/bin/brew" ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ -x "/usr/local/bin/brew" ]]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+    fi
+else
+    if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    elif [[ -x "$HOME/.linuxbrew/bin/brew" ]]; then
+        eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
+    fi
 fi
 
-# additional local paths
-export PATH="/usr/local/bin:/usr/local/sbin:${PATH}"
+## USER PATHS ##
+[[ -d "${HOME}/.go/bin" ]] && path+=("${HOME}/.go/bin")
+[[ -d "${HOME}/.npm-global/bin" ]] && path+=("${HOME}/.npm-global/bin")
+[[ -d "${HOME}/.gem/bin" ]] && path+=("${HOME}/.gem/bin")
+[[ -d "${HOME}/.local/bin" ]] && path=("${HOME}/.local/bin" ${path})
+[[ -d "${HOME}/Documents/Projects/dev-utils/bin" ]] && path=("${HOME}/Documents/Projects/dev-utils/bin" ${path})
 
-# includes user's private bin if it exists
-[[ -d "${HOME}/.local/bin" ]] && export PATH="${HOME}/.local/bin:${PATH}"
+## LANGUAGE PATHS ##
+command -v go >/dev/null 2>&1 && export GOPATH="${HOME}/.go"
+[[ -d "${HOME}/.npm-global" ]] && export NPM_CONFIG_PREFIX="${HOME}/.npm-global"
+command -v gem >/dev/null 2>&1 && export GEM_HOME="${HOME}/.gem"
 
-# -----------------------------------------------------------------------------
-# zsh config
-# -----------------------------------------------------------------------------
-source "${HOME}/.zsh/env.zsh"
-source "${HOME}/.zsh/options.zsh"
-source "${HOME}/.zsh/completion.zsh"
-source "${HOME}/.zsh/aliases.zsh"
-source "${HOME}/.zsh/keybindings.zsh"
-source "${HOME}/.zsh/work.zsh"
-source "${HOME}/.zsh/post.zsh"
+## CONFIGURATION ##
+for config_file in "${HOME}"/.zsh/<->-*.zsh(.N); do
+    source "${config_file}" || printf "Error: Failed to source %s\n" "${config_file##*/}" >&2
+done
