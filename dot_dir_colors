@@ -59,27 +59,31 @@ TERM tmux*
 TERM vt100
 TERM xterm*
 
-# Catppuccin Frappé color codes with 256 colors
-#NORMAL 00                      # Normal (non-filename) text
+# Essential color codes
+NORMAL 00                      # Regular text
 FILE 00                        # Regular file
 RESET 0                        # Reset to "normal" color
 DIR 38;5;111                   # Directory (Blue)
 LINK 38;5;147                  # Symbolic link (Lavender)
-MULTIHARDLINK 00               # Regular file with more than one link
-FIFO 48;5;238;38;5;223         # Pipe (Yellow on Base)
-SOCK 38;5;183                  # Socket (Mauve)
-DOOR 38;5;183                  # Door (Mauve)
-BLK 48;5;238;38;5;223          # Block device driver (Yellow on Base)
-CHR 48;5;238;38;5;223          # Character device driver (Yellow on Base)
-ORPHAN 48;5;238;38;5;210       # Symlink to nonexistent file (Red on Base)
-MISSING 48;5;210;38;5;189      # Non-existent file linked to (Text on Red)
-SETUID 48;5;210;38;5;189       # File that is setuid (Text on Red)
-SETGID 48;5;223;38;5;238       # File that is setgid (Base on Yellow)
-CAPABILITY 48;5;210;38;5;223   # File with capability (Yellow on Red)
-STICKY_OTHER_WRITABLE 48;5;150;38;5;238  # Dir that is sticky and other-writable (Base on Green)
-OTHER_WRITABLE 48;5;150;38;5;111         # Dir that is other-writable (Blue on Green)
-STICKY 48;5;111;38;5;189                 # Dir with the sticky bit set (Text on Blue)
-EXEC 38;5;150                            # Executable file (Green)
+ORPHAN 48;5;238;38;5;210      # Orphaned symbolic link (Red on Base)
+MISSING 48;5;210;38;5;189     # Missing file (Text on Red)
+EXEC 01;38;5;150              # Executable file (Bold Green)
+
+# Special file types
+FIFO 48;5;238;38;5;223        # Named pipe (Yellow on Base)
+SOCK 38;5;183                 # Socket (Mauve)
+DOOR 38;5;183                 # Door (Mauve)
+BLK 48;5;238;38;5;223         # Block device (Yellow on Base)
+CHR 48;5;238;38;5;223         # Character device (Yellow on Base)
+
+# Permission-based colors
+SETUID 48;5;210;38;5;189      # File that is setuid (Text on Red)
+SETGID 48;5;223;38;5;238      # File that is setgid (Base on Yellow)
+CAPABILITY 48;5;210;38;5;223  # File with capability (Yellow on Red)
+STICKY_OTHER_WRITABLE 48;5;150;38;5;238  # Directory that is sticky and other-writable
+OTHER_WRITABLE 48;5;150;38;5;111         # Directory that is other-writable
+STICKY 48;5;111;38;5;189      # Directory with sticky bit
+MULTIHARDLINK 00              # Regular file with more than one link
 
 # Programming languages and scripts - HIGH CONTRAST
 .py  38;5;111                  # Python (Blue)
@@ -90,8 +94,8 @@ EXEC 38;5;150                            # Executable file (Green)
 .mjs 38;5;223                  # JavaScript module (Yellow)
 .cjs 38;5;223                  # CommonJS module (Yellow)
 .ts  38;5;110                  # TypeScript (Sapphire)
-.tsx 38;5;110                  # TypeScript React (Sapphire)
-.jsx 38;5;110                  # JavaScript React (Sapphire)
+.tsx 38;5;117                  # TypeScript React (Sky)
+.jsx 38;5;117                  # JavaScript React (Sky)
 .json 38;5;244                 # JSON (Pink)
 .yml 38;5;147                  # YAML (Lavender)
 .yaml 38;5;147                 # YAML (Lavender)
@@ -135,11 +139,34 @@ EXEC 38;5;150                            # Executable file (Green)
 .cljs 38;5;117                 # ClojureScript (Sky)
 .cljc 38;5;117                 # Common Clojure (Sky)
 .dart 38;5;111                 # Dart (Blue)
-.elm  38;5;116                 # Elm (Teal)
-.jl   38;5;183                 # Julia (Mauve)
-.zig  38;5;223                 # Zig (Yellow)
-.v    38;5;116                 # Verilog/V (Teal)
-.nim  38;5;223                 # Nim (Yellow)
+.flutter 38;5;111              # Flutter (Blue)
+.swift 38;5;216                # Swift (Peach)
+.xcodeproj 38;5;216           # Xcode project (Peach)
+.xcworkspace 38;5;216         # Xcode workspace (Peach)
+.pbxproj 38;5;216             # Xcode project file (Peach)
+.storyboard 38;5;216          # iOS Storyboard (Peach)
+.xib 38;5;216                 # iOS Interface Builder (Peach)
+.deno 38;5;223                # Deno (Yellow)
+.rs 38;5;216                  # Rust (Peach)
+.rlib 38;5;216                # Rust library (Peach)
+.cargo 38;5;216               # Cargo config (Peach)
+.prisma 38;5;147              # Prisma schema (Lavender)
+.next 38;5;111                # Next.js (Blue)
+.nuxt 38;5;116                # Nuxt.js (Teal)
+.remix 38;5;147               # Remix (Lavender)
+.astro 38;5;216               # Astro (Peach)
+.svelte 38;5;216              # Svelte (Peach)
+.nx 38;5;111                  # Nx workspace (Blue)
+.bun 38;5;223                 # Bun runtime (Yellow)
+.turbo 38;5;147               # Turbo repo (Lavender)
+.pnpm 38;5;223                # PNPM (Yellow)
+.swc 38;5;223                 # SWC config (Yellow)
+.vite 38;5;147                # Vite config (Lavender)
+.tauri 38;5;216               # Tauri (Peach)
+.nest 38;5;210                # NestJS (Red)
+.kdl 38;5;147                 # KDL document (Lavender)
+.wasm 38;5;216                # WebAssembly (Peach)
+.wat 38;5;216                 # WebAssembly text (Peach)
 
 # Shell and configuration
 .sh   38;5;150                 # Shell script (Green)
@@ -151,6 +178,9 @@ EXEC 38;5;150                            # Executable file (Green)
 .cfg  38;5;242                 # Config file (Rosewater)
 .rc   38;5;242                 # Runtime config (Rosewater)
 .env  38;5;223                 # Environment file (Yellow)
+.env* 48;5;238;38;5;223        # All env files (Yellow on Base)
+.config 38;5;183               # Config files (Mauve)
+.editorconfig 38;5;183         # Editor config (Mauve)
 .service 38;5;242              # Systemd service (Rosewater)
 
 # Compiled executables
@@ -168,13 +198,13 @@ EXEC 38;5;150                            # Executable file (Green)
 .lib  38;5;116                 # Library (Teal)
 .dylib 38;5;116                # Dynamic library (Teal)
 
-# Archives or compressed - HIGH CONTRAST
-.tar  38;5;216                 # Tar archive (Peach)
-.tgz  38;5;216                 # Gzipped tar (Peach)
-.gz   38;5;216                 # Gzip archive (Peach)
-.zip  38;5;216                 # Zip archive (Peach)
+# Archives or compressed - HIGH CONTRAST WITH BACKGROUNDS
+.tar  48;5;238;38;5;216        # Tar archive (Peach on Base)
+.tgz  48;5;238;38;5;216        # Gzipped tar (Peach on Base)
+.gz   48;5;238;38;5;216        # Gzip archive (Peach on Base)
+.zip  48;5;238;38;5;216        # Zip archive (Peach on Base)
 .rar  38;5;216                 # RAR archive (Peach)
-.7z   38;5;216                 # 7zip archive (Peach)
+.7z   48;5;238;38;5;216        # 7zip archive (Peach on Base)
 .bz2  38;5;216                 # Bzip2 archive (Peach)
 .xz   38;5;216                 # XZ archive (Peach)
 .zst  38;5;216                 # Zstandard archive (Peach)
@@ -281,10 +311,17 @@ EXEC 38;5;150                            # Executable file (Green)
 .vue  38;5;116                 # Vue (Teal)
 .svelte 38;5;216               # Svelte (Peach)
 .astro 38;5;183                # Astro (Mauve)
-.wasm 38;5;150                 # WebAssembly (Green)
+.wasm 38;5;216                 # WebAssembly (Peach)
 .graphql 38;5;244              # GraphQL (Pink)
 .proto 38;5;242                # Protocol Buffers (Rosewater)
 .sol  38;5;223                 # Solidity (Yellow)
 .tf   38;5;147                 # Terraform (Lavender)
 .hcl  38;5;147                 # HCL (Lavender)
 .dockerfile 38;5;111           # Dockerfile (Blue)
+.dockerignore 38;5;252         # Docker ignore (Subtext0)
+
+# Build systems and package managers
+.gradle 38;5;209               # Gradle (Maroon)
+.maven 38;5;209                # Maven (Maroon)
+
+# End of color db

@@ -47,7 +47,7 @@ elif [[ "${OSTYPE}" == darwin* ]]; then
     if command -v gdircolors >/dev/null 2>&1 && [[ -f "${HOME}/.dir_colors" ]]; then
         eval "$(gdircolors -b "${HOME}/.dir_colors")" || printf "Warning: Failed to load gdircolors\n" >&2
     else
-        export CLICOLOR=1 LSCOLORS='exfxdxcxEdhbdEec'
+        export CLICOLOR=1 LSCOLORS='exfxbxdxDxhbxDxecex'
     fi
 fi
 
