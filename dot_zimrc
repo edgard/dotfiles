@@ -2,7 +2,6 @@
 
 ## CORE MODULES ##
 zmodule input
-zmodule environment
 zmodule termtitle
 zmodule utility
 zmodule ssh
