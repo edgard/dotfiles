@@ -4,26 +4,24 @@
 # macOS-specific taps
 tap "homebrew/cask"
 tap "buo/cask-upgrade"
-tap "nike-inc/nike"
 
 # macOS-specific CLI tools
-brew "mas"              # Mac App Store CLI
-brew "nike-inc/nike/cerberus-cli" # Nike Cerberus CLI
-brew "coreutils"        # GNU coreutils (for dircolors support)
+brew "mas"
+brew "coreutils"
 
 # macOS applications (Casks)
-cask "appcleaner"       # App uninstaller
-cask "bruno"            # API client
-cask "docker"           # Docker Desktop
-cask "ghostty"          # Ghostty terminal
-cask "google-chrome"    # Web browser
-cask "kdenlive"         # Video editor
-cask "krita"            # Digital painting
-cask "rectangle"        # Window manager
-cask "steermouse"       # Mouse customization
-cask "telegram-desktop" # Messaging
-cask "visual-studio-code" # Code editor
-cask "vlc"              # Media player
+cask "appcleaner"
+cask "bruno"
+cask "docker"
+cask "ghostty"
+cask "google-chrome"
+cask "kdenlive"
+cask "krita"
+cask "rectangle"
+cask "steermouse"
+cask "telegram-desktop"
+cask "visual-studio-code"
+cask "vlc"
 
 # Mac App Store applications
 mas "Amphetamine", id: 937984704
@@ -32,32 +30,3 @@ mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
-
-# VS Code extensions
-vscode "catppuccin.catppuccin-vsc-icons"
-vscode "catppuccin.catppuccin-vsc"
-vscode "esbenp.prettier-vscode"
-vscode "foxundermoon.shell-format"
-vscode "github.copilot"
-vscode "github.copilot-chat"
-vscode "github.vscode-github-actions"
-vscode "github.vscode-pull-request-github"
-vscode "golang.go"
-vscode "gruntfuggly.todo-tree"
-vscode "hashicorp.terraform"
-vscode "mechatroner.rainbow-csv"
-vscode "ms-azuretools.vscode-docker"
-vscode "ms-kubernetes-tools.vscode-kubernetes-tools"
-vscode "ms-vscode-remote.remote-ssh"
-vscode "ms-vscode-remote.remote-ssh-edit"
-vscode "ms-vscode.makefile-tools"
-vscode "ms-vscode.remote-explorer"
-vscode "pkief.material-icon-theme"
-vscode "redhat.fabric8-analytics"
-vscode "redhat.vscode-xml"
-vscode "redhat.vscode-yaml"
-vscode "timonwong.shellcheck"
-vscode "tombonnike.vscode-status-bar-format-toggle"
-vscode "upboundio.upbound"
-vscode "yzhang.markdown-all-in-one"
-vscode "zhuangtongfa.material-theme"

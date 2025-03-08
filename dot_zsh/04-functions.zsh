@@ -1,175 +1,285 @@
 #!/usr/bin/env zsh
 
-## HELPER FUNCTIONS ##
-get_brewfiles() {
-    local os_suffix="$([[ "${OSTYPE}" == darwin* ]] && echo "darwin" || echo "linux")"
-    local base_dir="$(cd "${1:-$HOME/.local/share/chezmoi/extras}" && pwd)"
-    echo "${base_dir}/Brewfile.common" "${base_dir}/Brewfile.${os_suffix}"
+##############################################################################
+# HELPER FUNCTIONS
+##############################################################################
+
+# Merges multiple Brewfiles into one based on OS
+# Args:
+#   $1 - Optional directory containing Brewfiles (defaults to ~/.local/share/chezmoi/extras)
+# Returns:
+#   Path to the merged temporary Brewfile
+_get_merged_brewfile() {
+    local base_dir="${1:-$HOME/.local/share/chezmoi/extras}"
+    base_dir="${base_dir:A}"  # Resolve to absolute path
+
+    # Determine OS-specific suffix
+    local os_suffix
+    case "$OSTYPE" in
+        darwin*) os_suffix="darwin" ;;
+        linux*)  os_suffix="linux" ;;
+        *)
+            print -P "%F{red}Error: Unsupported OS type: $OSTYPE%f" >&2
+            return 1
+            ;;
+    esac
+
+    # Define input and output files
+    local -a brewfiles=("${base_dir}/Brewfile.common" "${base_dir}/Brewfile.${os_suffix}")
+    local temp_file="${TMPDIR:-/tmp}/brewfile_merged_${(%):-%n}.$$"
+
+    # Create header for merged file
+    {
+        print -P "# Merged Brewfile generated on $(date)"
+        print -P "# Sources:"
+        for file in ${brewfiles}; do
+            [[ -f "${file}" ]] && print -P "#  - ${file:t}"
+        done
+        print ""
+    } > "${temp_file}"
+
+    # Initialize data structures to store directives
+    local -A directives_by_type seen_directives
+    local -a section_types=(tap brew cask mas)
+
+    # First pass: collect and deduplicate directives
+    for brewfile in ${brewfiles}; do
+        [[ -f "${brewfile}" ]] || continue
+
+        local -a file_lines=("${(@f)$(<${brewfile})}")
+
+        for line in "${file_lines[@]}"; do
+            # Skip comments and empty lines
+            [[ "${line}" =~ '^[[:space:]]*(#|$)' ]] && continue
+
+            # Clean and normalize the line
+            local clean_line="${${line%%\#*}##[[:space:]]}"  # Remove comments and leading whitespace
+            clean_line="${clean_line%%[[:space:]]}"          # Trim trailing whitespace
+            [[ -z "${clean_line}" ]] && continue             # Skip if empty after cleaning
+
+            # Skip if already seen (deduplication)
+            (( ${+seen_directives["${clean_line}"]} )) && continue
+            seen_directives["${clean_line}"]=1
+
+            # Categorize directive by type
+            local directive_type=""
+            case "${clean_line}" in
+                (tap[[:space:]]*)    directive_type="tap" ;;
+                (brew[[:space:]]*)   directive_type="brew" ;;
+                (cask[[:space:]]*)   directive_type="cask" ;;
+                (mas[[:space:]]*)    directive_type="mas" ;;
+                (*) continue ;;
+            esac
+
+            # Store directive by its type
+            directives_by_type[$directive_type]+="${clean_line}"$'\n'
+        done
+    done
+
+    # Second pass: write directives by type in preferred order
+    for type in ${section_types}; do
+        [[ -n "${directives_by_type[$type]}" ]] || continue
+
+        # Sort directives alphabetically
+        local -a sorted_directives=("${(@f)directives_by_type[$type]}")
+        sorted_directives=("${(@o)sorted_directives}")
+
+        # Write each directive to output file
+        for directive in ${sorted_directives}; do
+            [[ -n "$directive" ]] && print -r "$directive" >> "${temp_file}"
+        done
+
+        print "" >> "${temp_file}"  # Add empty line between sections
+    done
+
+    # Return path to merged file
+    print "${temp_file}"
 }
 
-## PACKAGE MANAGEMENT FUNCTIONS ##
+##############################################################################
+# PACKAGE MANAGEMENT FUNCTIONS
+##############################################################################
+
+# Clean up unused Homebrew packages
 brew-cleanup() {
     local brewfiles_dir="${HOME}/.local/share/chezmoi/extras"
 
+    # Verify brewfiles directory exists
     if [[ ! -d "${brewfiles_dir}" ]]; then
-        printf "Error: Brewfiles directory not found\n" >&2
+        print -P "%F{red}Error: Brewfiles directory not found%f" >&2
         return 1
     fi
 
-    printf "Analyzing installed packages...\n"
-    local cleanup_output
-    cleanup_output=$(brew bundle cleanup --file=<(cat $(get_brewfiles "${brewfiles_dir}")) --zap 2>&1) || {
-        printf "Error: Failed to analyze packages\n" >&2
-        return 1
-    }
+    print -P "Analyzing installed packages..."
+    local merged_file=$(_get_merged_brewfile "${brewfiles_dir}")
 
-    echo "${cleanup_output}" | grep -v "^Using "
+    print -P "Checking for packages to clean up..."
+    local -a cleanup_lines=("${(@f)$(brew bundle cleanup --file="${merged_file}" --zap 2>&1)}")
 
-    if echo "${cleanup_output}" | grep -q "Would uninstall"; then
-        printf "\nRemove these packages? [y/N] "
-        read answer
+    # Display cleanup results, filtering out diagnostic messages
+    print -P "${(@)cleanup_lines:#Using*}"
 
-        if [[ "$answer" == "y" ]] || [[ "$answer" == "Y" ]]; then
-            if brew bundle cleanup --file=<(cat $(get_brewfiles "${brewfiles_dir}")) --zap --force; then
-                printf "Cleanup completed.\n"
+    # If there are packages to uninstall, prompt for confirmation
+    if (( ${#${(M)cleanup_lines:#*Would uninstall*}} > 0 )); then
+        print -Pn "\nWould you like to remove these packages? [y/N] "
+        read -q "answer"; echo
+
+        if [[ "$answer" == "y" ]]; then
+            print -P "Removing packages..."
+            if brew bundle cleanup --file="${merged_file}" --zap --force; then
+                print -P "Cleanup completed successfully."
             else
-                printf "Error: Cleanup failed\n" >&2
+                print -P "%F{red}Error: Some packages could not be removed.%f" >&2
+                command rm "${merged_file}"
                 return 1
             fi
         else
-            printf "Cleanup cancelled.\n"
+            print -P "Cleanup cancelled. No packages were removed."
         fi
     else
-        printf "No unused packages found.\n"
+        print -P "No unused packages found."
     fi
+
+    command rm "${merged_file}"
+    return 0
 }
 
+# Install packages from Brewfiles
 brew-install() {
     local brewfiles_dir="${HOME}/.local/share/chezmoi/extras"
 
+    # Verify brewfiles directory exists
     if [[ ! -d "${brewfiles_dir}" ]]; then
-        printf "Error: Brewfiles directory not found\n" >&2
+        print -P "%F{red}Error: Brewfiles directory not found%f" >&2
         return 1
     fi
 
-    printf "Updating Homebrew...\n"
-    brew update || { printf "Error: Homebrew update failed\n" >&2; return 1; }
+    print -P "Updating Homebrew..."
+    brew update || {
+        print -P "%F{red}Error: Homebrew update failed%f" >&2
+        return 1
+    }
 
-    local install_status=0
-    for file in $(get_brewfiles "${brewfiles_dir}"); do
-        if [[ -f "${file}" ]]; then
-            printf "Installing from %s...\n" "$(basename "${file}")"
-            brew bundle --file="${file}" || install_status=$((install_status + 1))
-        fi
-    done
+    print -P "Installing packages from merged Brewfile..."
+    local merged_file=$(_get_merged_brewfile "${brewfiles_dir}")
 
-    if [[ "${install_status}" -eq 0 ]]; then
-        printf "All packages installed successfully.\n"
+    if brew bundle --file="${merged_file}"; then
+        print -P "All packages installed successfully."
+        command rm "${merged_file}"
         return 0
     else
-        printf "Some packages failed to install.\n" >&2
+        print -P "%F{red}Some packages failed to install.%f" >&2
+        command rm "${merged_file}"
         return 1
     fi
 }
 
-## SYSTEM UPDATE FUNCTION ##
+##############################################################################
+# SYSTEM UPDATE FUNCTION
+##############################################################################
+
+# Update system components (dotfiles, packages, etc.)
 update() {
-    local errors=0 success=0 available=0 cmd_result=""
-    local cmds_to_run=""
-
     # Check for available package managers
-    command -v chezmoi >/dev/null 2>&1 && cmds_to_run+="chezmoi:Dotfiles "
-    command -v brew >/dev/null 2>&1 && cmds_to_run+="brew:Homebrew "
-    command -v apt >/dev/null 2>&1 && cmds_to_run+="apt:System "
+    local -A managers
+    local -a available_cmds
 
-    if [[ -z "${cmds_to_run}" ]]; then
-        printf "Error: No supported package managers found\n" >&2
+    # Detect available package managers
+    whence -p chezmoi >/dev/null && managers[chezmoi]="Dotfiles"
+    whence -p brew >/dev/null && managers[brew]="Homebrew"
+    whence -p apt >/dev/null && managers[apt]="System"
+
+    available_cmds=(${(k)managers})
+
+    if (( ${#available_cmds} == 0 )); then
+        print -P "%F{red}Error: No supported package managers found%f" >&2
         return 1
     fi
 
-    # Count actual number of package managers
-    available=$(echo "${cmds_to_run}" | tr ' ' '\n' | grep -c ':')
+    # Initialize tracking variables
+    local success=0
+    local total=${#available_cmds}
+    local -a successful_cmds=()
 
-    printf "Starting system update...\n\n"
+    print -P "Starting system update...\n"
 
-    # Process each package manager
-    for pair in ${(z)cmds_to_run}; do
-        [[ -z "${pair}" ]] && continue
-        cmd="${pair%%:*}"
-        msg="${pair#*:}"
-        printf "Updating %s packages...\n" "${msg}"
+    # Process each available package manager
+    for cmd in ${available_cmds}; do
+        local manager_name="${managers[$cmd]}"
+        print -P "Updating %F{cyan}${manager_name}%f packages..."
 
         case "${cmd}" in
-            chezmoi)
+            (chezmoi)
+                # Update dotfiles
                 if "${cmd}" update; then
-                    cmd_result="${cmd_result} ${cmd}"
-                    success=$((success + 1))
+                    successful_cmds+=("${cmd}")
+                    (( success++ ))
                 else
-                    printf "Error: Dotfiles update failed\n" >&2
-                    errors=$((errors + 1))
+                    print -P "%F{red}Error: Dotfiles update failed%f" >&2
                 fi
                 ;;
 
-            brew)
+            (brew)
+                # Update Homebrew and packages
                 if ! "${cmd}" update; then
-                    printf "Error: Homebrew update failed\n" >&2
-                    errors=$((errors + 1))
+                    print -P "%F{red}Error: Homebrew update failed%f" >&2
                     continue
                 fi
 
                 if ! "${cmd}" upgrade; then
-                    printf "Error: Package upgrade failed\n" >&2
-                    errors=$((errors + 1))
+                    print -P "%F{red}Error: Package upgrade failed%f" >&2
                     continue
                 fi
 
-                if [[ "${OSTYPE}" == darwin* ]]; then
+                # Update casks on macOS if brew-cu is available
+                if [[ "$OSTYPE" == darwin* ]]; then
                     if brew commands | grep -q "^cu$"; then
                         brew cu -y -q --cleanup --no-brew-update
                     else
-                        printf "Warning: brew cu subcommand not available, skipping cask updates\n" >&2
+                        print -P "%F{yellow}Warning: brew cu subcommand not available, skipping cask updates%f" >&2
                     fi
                 fi
 
+                # Clean up old versions
                 "${cmd}" cleanup -s
-                cmd_result="${cmd_result} ${cmd}"
-                success=$((success + 1))
+                successful_cmds+=("${cmd}")
+                (( success++ ))
                 ;;
 
-            apt)
-                if [[ "${OSTYPE}" == linux* ]]; then
+            (apt)
+                # Update system packages (Linux only)
+                if [[ "$OSTYPE" == linux* ]]; then
                     if ! sudo "${cmd}" update; then
-                        printf "Error: Package list update failed\n" >&2
-                        errors=$((errors + 1))
+                        print -P "%F{red}Error: Package list update failed%f" >&2
                         continue
                     fi
 
                     if ! sudo "${cmd}" dist-upgrade -y; then
-                        printf "Error: Package upgrade failed\n" >&2
-                        errors=$((errors + 1))
+                        print -P "%F{red}Error: Package upgrade failed%f" >&2
                         continue
                     fi
 
-                    sudo "${cmd}" autoremove --purge -y || printf "Warning: Autoremove failed\n" >&2
-                    cmd_result="${cmd_result} ${cmd}"
-                    success=$((success + 1))
+                    # Clean up unused packages
+                    sudo "${cmd}" autoremove --purge -y ||
+                        print -P "%F{yellow}Warning: Autoremove failed%f" >&2
+
+                    successful_cmds+=("${cmd}")
+                    (( success++ ))
                 fi
                 ;;
         esac
-        printf "\n"
+        print ""  # Add empty line between updates
     done
 
-    # Print summary
-    if [[ "$success" -eq "$available" ]]; then
-        printf "All updates (%d/%d) completed successfully.\n" "$success" "$available"
+    # Print summary of results
+    if (( success == total )); then
+        print -P "%F{green}All updates (${success}/${total}) completed successfully.%f"
         return 0
+    elif (( success > 0 )); then
+        print -P "%F{yellow}Partial success: ${success}/${total} updates completed.%f"
+        return $(( success < total ? 1 : 0 ))
+    else
+        print -P "%F{red}Error: No updates completed successfully.%f"
+        return 1
     fi
-
-    if [[ "$success" -gt 0 ]]; then
-        printf "Partial success: %d/%d updates completed.\n" "$success" "$available"
-        [[ "$errors" -gt 0 ]] && return 1 || return 0
-    fi
-
-    printf "Error: No updates completed successfully.\n"
-    return 1
 }
