@@ -36,7 +36,7 @@ export LESS_COLORS='RsK*w'                  # Raw search highlighting style
 export LESS_HIGHLIGHTCOLOR=$'\e[38;5;213m'  # Search highlight color -> Pink
 export LESS_HIGHLIGHTBGCOLOR=$'\e[48;5;239m' # Search highlight bg -> Surface0
 
-export GREP_COLORS='ms=38;5;213:ln=38;5;149:fn=38;5;110:se=38;5;246'
+export GREP_COLORS='mt=38;5;213:ln=38;5;149:fn=38;5;110:se=38;5;246:sl=:cx=:rv=38;5;238:ms=38;5;213:mc=38;5;213:ne'
 
 ## TERMINAL COLORS ##
 if [[ "${OSTYPE}" == linux* ]]; then
