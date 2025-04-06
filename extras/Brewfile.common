@@ -1,14 +1,20 @@
 # Cross-platform Brewfile for user utilities
-# This file contains packages that work on both macOS and Linux
+# Contains packages compatible with both macOS and Linux
 
+##############################################################################
 # Taps
+##############################################################################
+
 tap "homebrew/bundle"
 tap "fluxcd/tap"
 tap "go-task/tap"
 tap "nike-inc/nike"
 tap "vmware-tanzu/carvel"
 
-# CLI tools
+##############################################################################
+# CLI Tools
+##############################################################################
+
 brew "age"
 brew "direnv"
 brew "fd"
@@ -20,7 +26,10 @@ brew "starship"
 brew "watch"
 brew "zoxide"
 
-# Development tools
+##############################################################################
+# Development Tools
+##############################################################################
+
 brew "gh"
 brew "go"
 brew "gofumpt"
@@ -34,7 +43,10 @@ brew "tfenv"
 brew "tflint"
 brew "yq"
 
-# Cloud and Kubernetes tools
+##############################################################################
+# Cloud and Kubernetes Tools
+##############################################################################
+
 brew "awscli"
 brew "eksctl"
 brew "helm"

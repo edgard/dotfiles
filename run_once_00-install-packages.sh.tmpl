@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
-# Install essential system packages using native package managers
+##############################################################################
+# OS-Specific System Package Installation
+##############################################################################
+
 {{ if eq .chezmoi.os "linux" -}}
-echo "Installing essential system packages using native package manager..."
+echo "Installing essential Linux system packages..."
+
 if command -v apt-get >/dev/null 2>&1; then
     # Debian/Ubuntu
     sudo apt update
@@ -17,7 +21,7 @@ elif command -v pacman >/dev/null 2>&1; then
     sudo pacman -S --noconfirm base-devel python curl unzip git zsh
 fi
 
-# Run Linux system configuration script if it exists
+# Run optional Linux configuration script
 if [[ -f "${HOME}/.local/share/chezmoi/extras/config-linux.sh" ]]; then
     echo "Running Linux system configuration script..."
     bash "${HOME}/.local/share/chezmoi/extras/config-linux.sh"
@@ -25,23 +29,26 @@ fi
 {{ end -}}
 
 {{ if eq .chezmoi.os "darwin" -}}
-# macOS-specific system setup
 echo "Setting up macOS system..."
 
-# Run macOS configuration script if it exists
+# Run optional macOS configuration script
 if [[ -f "${HOME}/.local/share/chezmoi/extras/config-osx.sh" ]]; then
     echo "Running macOS configuration script..."
     bash "${HOME}/.local/share/chezmoi/extras/config-osx.sh"
 fi
 {{ end -}}
 
-# Install Homebrew for user utilities (cross-platform)
-echo "Setting up Homebrew for user utilities..."
+##############################################################################
+# Homebrew Installation (Cross-Platform)
+##############################################################################
+
+echo "Checking Homebrew installation..."
+
 if ! command -v brew >/dev/null 2>&1; then
     echo "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-    # Add Homebrew to PATH based on OS and architecture
+    # Add Homebrew to PATH
     if [[ "${OSTYPE}" == "darwin"* ]]; then
         if [[ -f "/opt/homebrew/bin/brew" ]]; then
             eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -55,32 +62,37 @@ if ! command -v brew >/dev/null 2>&1; then
     fi
 fi
 
-# Install common user utilities from Brewfile.common
+##############################################################################
+# Brewfile Bundle Installs
+##############################################################################
+
+# Common utilities
 if [[ -f "${HOME}/.local/share/chezmoi/extras/Brewfile.common" ]]; then
-    echo "Installing common user utilities from Brewfile.common..."
+    echo "Installing common utilities from Brewfile.common..."
     brew bundle --file="${HOME}/.local/share/chezmoi/extras/Brewfile.common"
 fi
 
-# Install OS-specific user utilities
+# OS-specific utilities
 {{ if eq .chezmoi.os "darwin" -}}
 if [[ -f "${HOME}/.local/share/chezmoi/extras/Brewfile.darwin" ]]; then
-    echo "Installing macOS-specific user utilities from Brewfile.darwin..."
+    echo "Installing macOS-specific utilities from Brewfile.darwin..."
     brew bundle --file="${HOME}/.local/share/chezmoi/extras/Brewfile.darwin"
 fi
 {{ else if eq .chezmoi.os "linux" -}}
 if [[ -f "${HOME}/.local/share/chezmoi/extras/Brewfile.linux" ]]; then
-    echo "Installing Linux-specific user utilities from Brewfile.linux..."
+    echo "Installing Linux-specific utilities from Brewfile.linux..."
     brew bundle --file="${HOME}/.local/share/chezmoi/extras/Brewfile.linux"
 fi
 {{ end -}}
 
-# Cross-platform setup
-echo "Setting up cross-platform configurations..."
+##############################################################################
+# Cross-Platform Finalization
+##############################################################################
 
-# Set zsh as default shell if it's not already
+# Set zsh as default shell if not already
 if [[ "$SHELL" != *"zsh"* ]]; then
     echo "Setting zsh as default shell..."
     chsh -s "$(which zsh)"
 fi
 
-echo "Installation complete!"
+echo "System and user package installation complete."

@@ -1,15 +1,24 @@
 # macOS-specific Brewfile
-# This file contains packages that only work on macOS
+# Contains packages and apps exclusive to macOS
 
-# macOS-specific taps
+##############################################################################
+# Taps
+##############################################################################
+
 tap "homebrew/cask"
 tap "buo/cask-upgrade"
 
-# macOS-specific CLI tools
+##############################################################################
+# CLI Tools
+##############################################################################
+
 brew "mas"
 brew "coreutils"
 
-# macOS applications (Casks)
+##############################################################################
+# macOS Applications (Casks)
+##############################################################################
+
 cask "appcleaner"
 cask "bruno"
 cask "docker"
@@ -23,7 +32,10 @@ cask "telegram-desktop"
 cask "visual-studio-code"
 cask "vlc"
 
-# Mac App Store applications
+##############################################################################
+# Mac App Store Applications
+##############################################################################
+
 mas "Amphetamine", id: 937984704
 mas "GarageBand", id: 682658836
 mas "iMovie", id: 408981434

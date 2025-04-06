@@ -1,13 +1,23 @@
-# Ghostty configuration with Catppuccin Frappé theme
+# Ghostty Terminal Configuration
+# Theme: Catppuccin Frappé
 
-# Set terminal type
-term=xterm-256color
+##############################################################################
+# Terminal Type
+##############################################################################
 
-# Font configuration
+term = xterm-256color
+
+##############################################################################
+# Font
+##############################################################################
+
 font-family = Iosevka Custom
 font-size = 16
 
-# Window configuration
+##############################################################################
+# Window Appearance
+##############################################################################
+
 window-decoration = true
 window-padding-x = 10
 window-padding-y = 10
@@ -24,30 +34,42 @@ clipboard-read = allow
 clipboard-write = allow
 window-save-state = never
 
-# Performance
+##############################################################################
+# Performance and Effects
+##############################################################################
+
 background-opacity = 1.0
 background-blur = false
 unfocused-split-opacity = 0.95
 
-# Shell integration
+##############################################################################
+# Shell Integration
+##############################################################################
+
 shell-integration = none
 shell-integration-features = false
 
-# Keybindings
-#keybind = ctrl+shift+c=copy_to_clipboard
-#keybind = ctrl+shift+v=paste_from_clipboard
-#keybind = ctrl+shift+n=new_window
-#keybind = ctrl+shift+t=new_tab
-#keybind = ctrl+shift+w=close_surface
-#keybind = ctrl+shift+q=quit
-#keybind = ctrl+tab=next_tab
-#keybind = ctrl+shift+tab=previous_tab
-#keybind = ctrl+shift+l=toggle_fullscreen
-#keybind = ctrl+shift+equal=increase_font_size
-#keybind = ctrl+shift+minus=decrease_font_size
-#keybind = ctrl+shift+0=reset_font_size
+##############################################################################
+# Keybindings (Uncomment to enable)
+##############################################################################
 
-# Catppuccin Frappé Theme
+# keybind = ctrl+shift+c=copy_to_clipboard
+# keybind = ctrl+shift+v=paste_from_clipboard
+# keybind = ctrl+shift+n=new_window
+# keybind = ctrl+shift+t=new_tab
+# keybind = ctrl+shift+w=close_surface
+# keybind = ctrl+shift+q=quit
+# keybind = ctrl+tab=next_tab
+# keybind = ctrl+shift+tab=previous_tab
+# keybind = ctrl+shift+l=toggle_fullscreen
+# keybind = ctrl+shift+equal=increase_font_size
+# keybind = ctrl+shift+minus=decrease_font_size
+# keybind = ctrl+shift+0=reset_font_size
+
+##############################################################################
+# Catppuccin Frappé Color Palette
+##############################################################################
+
 palette = 0=#51576d
 palette = 1=#e78284
 palette = 2=#a6d189
@@ -64,6 +86,7 @@ palette = 12=#8caaee
 palette = 13=#f4b8e4
 palette = 14=#81c8be
 palette = 15=#a5adce
+
 background = 303446
 foreground = c6d0f5
 cursor-color = f2d5cf

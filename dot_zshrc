@@ -1,13 +1,24 @@
 #!/usr/bin/env zsh
 
-## TYPE DECLARATIONS ##
+##############################################################################
+# Type Declarations (Unique, Ordered Arrays)
+##############################################################################
+
 typeset -gU path PATH
 typeset -gUT FPATH fpath
 
-## PATH MANAGEMENT ##
-[[ "$OSTYPE" == darwin* ]] && [[ -x "/usr/libexec/path_helper" ]] && eval "$(/usr/libexec/path_helper -s)"
+##############################################################################
+# macOS System Path Setup
+##############################################################################
 
-## PACKAGE MANAGERS ##
+if [[ "$OSTYPE" == darwin* ]] && [[ -x "/usr/libexec/path_helper" ]]; then
+    eval "$(/usr/libexec/path_helper -s)"
+fi
+
+##############################################################################
+# Homebrew Environment Setup
+##############################################################################
+
 if [[ "$OSTYPE" == darwin* ]]; then
     if [[ -x "/opt/homebrew/bin/brew" ]]; then
         eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -22,7 +33,10 @@ else
     fi
 fi
 
-## USER PATHS ##
+##############################################################################
+# User Binaries
+##############################################################################
+
 [[ -d "${HOME}/.go/bin" ]] && path+=("${HOME}/.go/bin")
 [[ -d "${HOME}/.npm-global/bin" ]] && path+=("${HOME}/.npm-global/bin")
 [[ -d "${HOME}/.gem/bin" ]] && path+=("${HOME}/.gem/bin")
@@ -30,13 +44,19 @@ fi
 [[ -d "${HOME}/.local/bin" ]] && path=("${HOME}/.local/bin" ${path})
 [[ -d "${HOME}/Documents/Projects/dev-utils/bin" ]] && path=("${HOME}/Documents/Projects/dev-utils/bin" ${path})
 
-## LANGUAGE PATHS ##
+##############################################################################
+# Language Environment Variables
+##############################################################################
+
 command -v go >/dev/null 2>&1 && export GOPATH="${HOME}/.go"
 [[ -d "${HOME}/.npm-global" ]] && export NPM_CONFIG_PREFIX="${HOME}/.npm-global"
 command -v gem >/dev/null 2>&1 && export GEM_HOME="${HOME}/.gem"
 [[ -f "${HOME}/.cargo/env" ]] && source "${HOME}/.cargo/env"
 
-## CONFIGURATION ##
+##############################################################################
+# Source Modular Zsh Configurations
+##############################################################################
+
 for config_file in "${HOME}"/.zsh/<->-*.zsh(.N); do
     source "${config_file}" || printf "Error: Failed to source %s\n" "${config_file##*/}" >&2
 done

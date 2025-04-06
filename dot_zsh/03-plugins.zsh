@@ -1,22 +1,29 @@
 #!/usr/bin/env zsh
 
-## ZIM CONFIGURATION ##
+##############################################################################
+# Zim Plugin Manager Initialization
+##############################################################################
 
 ZIM_HOME="${HOME}/.zim"
 
+# Bootstrap zimfw if missing
 if [[ ! -e "${ZIM_HOME}/zimfw.zsh" ]]; then
   curl -fsSL --create-dirs -o "${ZIM_HOME}/zimfw.zsh" https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
 fi
 
+# Regenerate init.zsh if outdated
 if [[ ! "${ZIM_HOME}/init.zsh" -nt "${ZIM_CONFIG_FILE:-${ZDOTDIR:-${HOME}}/.zimrc}" ]]; then
   source "${ZIM_HOME}/zimfw.zsh" init
 fi
 
+# Source Zim initialization
 source "${ZIM_HOME}/init.zsh"
 
-## PLUGIN CONFIGURATIONS ##
+##############################################################################
+# Plugin Configurations
+##############################################################################
 
-# Syntax highlighting
+# Fast Syntax Highlighting (Catppuccin-inspired colors)
 if [[ -f "${ZIM_HOME}/modules/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" ]]; then
     FAST_HIGHLIGHT_STYLES[default]='fg=#c6d0f5'
     FAST_HIGHLIGHT_STYLES[unknown-token]='fg=#e78284'
@@ -53,12 +60,15 @@ if [[ -f "${ZIM_HOME}/modules/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; t
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#737994'
 fi
 
-# FZF configuration
-[[ -f "${ZIM_HOME}/modules/fzf/init.zsh" ]] && \
+# FZF Configuration
+if [[ -f "${ZIM_HOME}/modules/fzf/init.zsh" ]]; then
     export FZF_DEFAULT_OPTS="--height 10 --layout=reverse \
-    --color=bg+:#414559,bg:#303446,spinner:#f2d5cf,hl:#e78284 \
-    --color=fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf \
-    --color=marker:#f2d5cf,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284"
+--color=bg+:#414559,bg:#303446,spinner:#f2d5cf,hl:#e78284 \
+--color=fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf \
+--color=marker:#f2d5cf,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284"
+fi
 
-# Direnv configuration
-[[ -f "${ZIM_HOME}/modules/direnv/init.zsh" ]] && DIRENV_LOG_FORMAT=""
+# Direnv Configuration
+if [[ -f "${ZIM_HOME}/modules/direnv/init.zsh" ]]; then
+    DIRENV_LOG_FORMAT=""
+fi

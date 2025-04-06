@@ -1,1 +1,3 @@
+# Ignore Homebrew bundle lock files
+
 extras/Brewfile*.lock.json

@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 ##############################################################################
-# HELPER FUNCTIONS
+# Brewfile Merge Function
 ##############################################################################
 
 # Merges multiple Brewfiles into one based on OS
@@ -97,7 +97,7 @@ _get_merged_brewfile() {
 }
 
 ##############################################################################
-# PACKAGE MANAGEMENT FUNCTIONS
+# Package Management Functions
 ##############################################################################
 
 # Clean up unused Homebrew packages
@@ -175,7 +175,7 @@ brew-install() {
 }
 
 ##############################################################################
-# SYSTEM UPDATE FUNCTION
+# System Update Function
 ##############################################################################
 
 # Update system components (dotfiles, packages, etc.)
@@ -219,7 +219,6 @@ update() {
                     print -P "%F{red}Error: Dotfiles update failed%f" >&2
                 fi
                 ;;
-
             (brew)
                 # Update Homebrew and packages
                 if ! "${cmd}" update; then
@@ -250,7 +249,6 @@ update() {
                 successful_cmds+=("${cmd}")
                 (( success++ ))
                 ;;
-
             (apt)
                 # Update system packages (Linux only)
                 if [[ "$OSTYPE" == linux* ]]; then
@@ -272,7 +270,6 @@ update() {
                     (( success++ ))
                 fi
                 ;;
-
             (zimfw)
                 # Update and clean Zim framework and plugins
                 print -P "\nUpdating Zim framework and plugins..."

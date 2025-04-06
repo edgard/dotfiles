@@ -1,18 +1,27 @@
 #!/usr/bin/env zsh
 
-## CORE MODULES ##
+##############################################################################
+# Core Modules
+##############################################################################
+
 zmodule input
 zmodule termtitle
 zmodule utility
 zmodule ssh
 
-## UTILITY AND TOOLS ##
+##############################################################################
+# Utility and Tools
+##############################################################################
+
 zmodule fzf
 zmodule kiesman99/zim-zoxide
 zmodule direnv
 zmodule joke/zim-starship
 
-## COMPLETION AND SYNTAX ##
+##############################################################################
+# Completion and Syntax
+##############################################################################
+
 zmodule zsh-users/zsh-completions --fpath src
 zmodule completion
 zmodule zsh-users/zsh-autosuggestions

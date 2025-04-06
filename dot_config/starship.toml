@@ -1,5 +1,6 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
+# Minimal, fast, and colorful prompt with essential info
 format = """
 $username\
 $hostname\
@@ -12,6 +13,10 @@ $character"""
 
 add_newline = false
 
+##############################################################################
+# User and Host
+##############################################################################
+
 [username]
 format = '[$user]($style)'
 show_always = true
@@ -22,9 +27,17 @@ style_user = "yellow"
 format = "[@](bright-black)[$hostname]($style)"
 style = "green"
 
+##############################################################################
+# Directory
+##############################################################################
+
 [directory]
 format = "[:](bright-black)[$path]($style)[$read_only]($read_only_style) "
 style = "blue"
+
+##############################################################################
+# Git Information
+##############################################################################
 
 [git_branch]
 format = "[$branch]($style)"
@@ -48,9 +61,17 @@ up_to_date = ""
 [git_state]
 style = "red"
 
+##############################################################################
+# Command Duration
+##############################################################################
+
 [cmd_duration]
 format = "[$duration]($style) "
 style = "yellow"
+
+##############################################################################
+# Prompt Character
+##############################################################################
 
 [character]
 error_symbol = "[❯](red)"
