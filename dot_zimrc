@@ -6,18 +6,14 @@ zmodule termtitle
 zmodule utility
 zmodule ssh
 
-## PROMPT AND GIT ##
-zmodule git-info
-zmodule prompt-pwd
-zmodule eriner
-
 ## UTILITY AND TOOLS ##
 zmodule fzf
 zmodule kiesman99/zim-zoxide
 zmodule direnv
+zmodule joke/zim-starship
 
 ## COMPLETION AND SYNTAX ##
 zmodule zsh-users/zsh-completions --fpath src
 zmodule completion
 zmodule zsh-users/zsh-autosuggestions
-zmodule zsh-users/zsh-syntax-highlighting
+zmodule zdharma-continuum/fast-syntax-highlighting

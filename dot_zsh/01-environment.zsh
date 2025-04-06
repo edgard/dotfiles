@@ -22,25 +22,6 @@ elif command -v vi >/dev/null 2>&1; then
     export EDITOR=vi VISUAL=vi
 fi
 
-## COLOR CONFIGURATION ##
-export LESS_TERMCAP_mb=$'\e[38;5;183m'      # Begin bold (Pink)
-export LESS_TERMCAP_md=$'\e[38;5;110m'      # Begin double-bright (Blue)
-export LESS_TERMCAP_me=$'\e[0m'             # end mode
-export LESS_TERMCAP_so=$'\e[38;5;137m'      # begin standout -> Peach
-export LESS_TERMCAP_se=$'\e[0m'             # end standout
-export LESS_TERMCAP_us=$'\e[38;5;149m'      # begin underline -> Green
-export LESS_TERMCAP_ue=$'\e[0m'             # end underline
-export LESS_TERMCAP_mr=$'\e[38;5;203m'      # Mode change -> Red
-export LESS_TERMCAP_mh=$'\e[38;5;246m'      # Mode change -> Gray
-export LESS_COLORS='RsK*w'                  # Raw search highlighting style
-export LESS_HIGHLIGHTCOLOR=$'\e[38;5;213m'  # Search highlight color -> Pink
-export LESS_HIGHLIGHTBGCOLOR=$'\e[48;5;239m' # Search highlight bg -> Surface0
-
-# GNU grep colors
-export GREP_COLORS='mt=38;5;203:ln=38;5;149:fn=38;5;110:se=38;5;246:sl=:cx=:rv=38;5;242:ms=38;5;203:mc=38;5;203:ne'
-# BSD grep color (for macOS built-in grep)
-export GREP_COLOR='38;5;203'
-
 ## TERMINAL COLORS ##
 if [[ "${OSTYPE}" == linux* ]]; then
     if [[ -f "${HOME}/.dir_colors" ]] && command -v dircolors >/dev/null 2>&1; then

@@ -188,6 +188,7 @@ update() {
     whence -p chezmoi >/dev/null && managers[chezmoi]="Dotfiles"
     whence -p brew >/dev/null && managers[brew]="Homebrew"
     whence -p apt >/dev/null && managers[apt]="System"
+    whence zimfw >/dev/null && managers[zimfw]="Zim"
 
     available_cmds=(${(k)managers})
 
@@ -240,6 +241,10 @@ update() {
                     fi
                 fi
 
+                # Run brew-install and brew-cleanup
+                brew-install
+                brew-cleanup
+
                 # Clean up old versions
                 "${cmd}" cleanup -s
                 successful_cmds+=("${cmd}")
@@ -266,6 +271,27 @@ update() {
                     successful_cmds+=("${cmd}")
                     (( success++ ))
                 fi
+                ;;
+
+            (zimfw)
+                # Update and clean Zim framework and plugins
+                print -P "\nUpdating Zim framework and plugins..."
+                if ! "${cmd}" upgrade; then
+                    print -P "%F{red}Error: Zim framework upgrade failed%f" >&2
+                    continue
+                fi
+
+                if ! "${cmd}" update; then
+                    print -P "%F{red}Error: Zim plugins update failed%f" >&2
+                    continue
+                fi
+
+                # Run zimfw install and zimfw uninstall
+                zimfw install
+                zimfw uninstall
+
+                successful_cmds+=("${cmd}")
+                (( success++ ))
                 ;;
         esac
         print ""  # Add empty line between updates

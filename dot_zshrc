@@ -26,6 +26,7 @@ fi
 [[ -d "${HOME}/.go/bin" ]] && path+=("${HOME}/.go/bin")
 [[ -d "${HOME}/.npm-global/bin" ]] && path+=("${HOME}/.npm-global/bin")
 [[ -d "${HOME}/.gem/bin" ]] && path+=("${HOME}/.gem/bin")
+[[ -d "${HOME}/.cargo/bin" ]] && path+=("${HOME}/.cargo/bin")
 [[ -d "${HOME}/.local/bin" ]] && path=("${HOME}/.local/bin" ${path})
 [[ -d "${HOME}/Documents/Projects/dev-utils/bin" ]] && path=("${HOME}/Documents/Projects/dev-utils/bin" ${path})
 
@@ -33,6 +34,7 @@ fi
 command -v go >/dev/null 2>&1 && export GOPATH="${HOME}/.go"
 [[ -d "${HOME}/.npm-global" ]] && export NPM_CONFIG_PREFIX="${HOME}/.npm-global"
 command -v gem >/dev/null 2>&1 && export GEM_HOME="${HOME}/.gem"
+[[ -f "${HOME}/.cargo/env" ]] && source "${HOME}/.cargo/env"
 
 ## CONFIGURATION ##
 for config_file in "${HOME}"/.zsh/<->-*.zsh(.N); do
