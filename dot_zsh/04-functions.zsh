@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+setopt ERR_EXIT
+
 ##############################################################################
 # Brewfile Merge Function
 ##############################################################################
@@ -19,7 +21,7 @@ _get_merged_brewfile() {
         darwin*) os_suffix="darwin" ;;
         linux*)  os_suffix="linux" ;;
         *)
-            print -P "%F{red}Error: Unsupported OS type: $OSTYPE%f" >&2
+            print -P "%F{$ZSH_COLOR_RED}Error: Unsupported OS type: $OSTYPE%f" >&2
             return 1
             ;;
     esac
@@ -106,7 +108,7 @@ brew-cleanup() {
 
     # Verify brewfiles directory exists
     if [[ ! -d "${brewfiles_dir}" ]]; then
-        print -P "%F{red}Error: Brewfiles directory not found%f" >&2
+        print -P "%F{$ZSH_COLOR_RED}Error: Brewfiles directory not found%f" >&2
         return 1
     fi
 
@@ -129,7 +131,7 @@ brew-cleanup() {
             if brew bundle cleanup --file="${merged_file}" --zap --force; then
                 print -P "Cleanup completed successfully."
             else
-                print -P "%F{red}Error: Some packages could not be removed.%f" >&2
+                print -P "%F{$ZSH_COLOR_RED}Error: Some packages could not be removed.%f" >&2
                 command rm "${merged_file}"
                 return 1
             fi
@@ -150,13 +152,13 @@ brew-install() {
 
     # Verify brewfiles directory exists
     if [[ ! -d "${brewfiles_dir}" ]]; then
-        print -P "%F{red}Error: Brewfiles directory not found%f" >&2
+        print -P "%F{$ZSH_COLOR_RED}Error: Brewfiles directory not found%f" >&2
         return 1
     fi
 
     print -P "Updating Homebrew..."
     brew update || {
-        print -P "%F{red}Error: Homebrew update failed%f" >&2
+        print -P "%F{$ZSH_COLOR_RED}Error: Homebrew update failed%f" >&2
         return 1
     }
 
@@ -168,7 +170,7 @@ brew-install() {
         command rm "${merged_file}"
         return 0
     else
-        print -P "%F{red}Some packages failed to install.%f" >&2
+        print -P "%F{$ZSH_COLOR_RED}Some packages failed to install.%f" >&2
         command rm "${merged_file}"
         return 1
     fi
@@ -193,7 +195,7 @@ update() {
     available_cmds=(${(k)managers})
 
     if (( ${#available_cmds} == 0 )); then
-        print -P "%F{red}Error: No supported package managers found%f" >&2
+        print -P "%F{$ZSH_COLOR_RED}Error: No supported package managers found%f" >&2
         return 1
     fi
 
@@ -207,7 +209,7 @@ update() {
     # Process each available package manager
     for cmd in ${available_cmds}; do
         local manager_name="${managers[$cmd]}"
-        print -P "Updating %F{cyan}${manager_name}%f packages..."
+        print -P "Updating %F{$ZSH_COLOR_SKY}${manager_name}%f packages..."
 
         case "${cmd}" in
             (chezmoi)
@@ -216,18 +218,18 @@ update() {
                     successful_cmds+=("${cmd}")
                     (( success++ ))
                 else
-                    print -P "%F{red}Error: Dotfiles update failed%f" >&2
+                    print -P "%F{$ZSH_COLOR_RED}Error: Dotfiles update failed%f" >&2
                 fi
                 ;;
             (brew)
                 # Update Homebrew and packages
                 if ! "${cmd}" update; then
-                    print -P "%F{red}Error: Homebrew update failed%f" >&2
+                    print -P "%F{$ZSH_COLOR_RED}Error: Homebrew update failed%f" >&2
                     continue
                 fi
 
                 if ! "${cmd}" upgrade; then
-                    print -P "%F{red}Error: Package upgrade failed%f" >&2
+                    print -P "%F{$ZSH_COLOR_RED}Error: Package upgrade failed%f" >&2
                     continue
                 fi
 
@@ -236,7 +238,7 @@ update() {
                     if brew commands | grep -q "^cu$"; then
                         brew cu -y -q --cleanup --no-brew-update
                     else
-                        print -P "%F{yellow}Warning: brew cu subcommand not available, skipping cask updates%f" >&2
+                        print -P "%F{$ZSH_COLOR_YELLOW}Warning: brew cu subcommand not available, skipping cask updates%f" >&2
                     fi
                 fi
 
@@ -253,18 +255,18 @@ update() {
                 # Update system packages (Linux only)
                 if [[ "$OSTYPE" == linux* ]]; then
                     if ! sudo "${cmd}" update; then
-                        print -P "%F{red}Error: Package list update failed%f" >&2
+                        print -P "%F{$ZSH_COLOR_RED}Error: Package list update failed%f" >&2
                         continue
                     fi
 
                     if ! sudo "${cmd}" dist-upgrade -y; then
-                        print -P "%F{red}Error: Package upgrade failed%f" >&2
+                        print -P "%F{$ZSH_COLOR_RED}Error: Package upgrade failed%f" >&2
                         continue
                     fi
 
                     # Clean up unused packages
                     sudo "${cmd}" autoremove --purge -y ||
-                        print -P "%F{yellow}Warning: Autoremove failed%f" >&2
+                        print -P "%F{$ZSH_COLOR_YELLOW}Warning: Autoremove failed%f" >&2
 
                     successful_cmds+=("${cmd}")
                     (( success++ ))
@@ -274,12 +276,12 @@ update() {
                 # Update and clean Zim framework and plugins
                 print -P "\nUpdating Zim framework and plugins..."
                 if ! "${cmd}" upgrade; then
-                    print -P "%F{red}Error: Zim framework upgrade failed%f" >&2
+                    print -P "%F{$ZSH_COLOR_RED}Error: Zim framework upgrade failed%f" >&2
                     continue
                 fi
 
                 if ! "${cmd}" update; then
-                    print -P "%F{red}Error: Zim plugins update failed%f" >&2
+                    print -P "%F{$ZSH_COLOR_RED}Error: Zim plugins update failed%f" >&2
                     continue
                 fi
 
@@ -296,13 +298,13 @@ update() {
 
     # Print summary of results
     if (( success == total )); then
-        print -P "%F{green}All updates (${success}/${total}) completed successfully.%f"
+        print -P "%F{$ZSH_COLOR_GREEN}All updates (${success}/${total}) completed successfully.%f"
         return 0
     elif (( success > 0 )); then
-        print -P "%F{yellow}Partial success: ${success}/${total} updates completed.%f"
+        print -P "%F{$ZSH_COLOR_YELLOW}Partial success: ${success}/${total} updates completed.%f"
         return $(( success < total ? 1 : 0 ))
     else
-        print -P "%F{red}Error: No updates completed successfully.%f"
+        print -P "%F{$ZSH_COLOR_RED}Error: No updates completed successfully.%f"
         return 1
     fi
 }

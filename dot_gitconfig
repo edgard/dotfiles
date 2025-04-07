@@ -76,32 +76,32 @@
     status = auto
 
 [color "branch"]
-    current = 183 bold
-    local = 140
-    remote = 147
-    upstream = 116
-    plain = 189
+    current = 183 bold       # Mauve
+    local = 216              # Peach
+    remote = 147             # Lavender
+    upstream = 116           # Teal
+    plain = 189              # Text
 
 [color "diff"]
-    meta = 140
-    frag = 183 bold
-    func = 147
-    old = 203
-    new = 150
-    commit = 216
-    whitespace = 203 reverse
-    context = 189
+    meta = 147               # Lavender
+    frag = 183 bold          # Mauve
+    func = 147               # Lavender
+    old = 210                # Red
+    new = 150                # Green
+    commit = 216             # Peach
+    whitespace = 210 reverse # Red reverse
+    context = 189            # Text
 
 [color "status"]
-    header = 189
-    added = 150
-    changed = 216
-    untracked = 147
-    branch = 183 bold
-    nobranch = 203 bold
+    header = 189             # Text
+    added = 150              # Green
+    changed = 216            # Peach
+    untracked = 147          # Lavender
+    branch = 183 bold        # Mauve
+    nobranch = 210 bold      # Red
 
 [color "interactive"]
-    prompt = 140
-    header = 189
-    help = 147
-    error = 203
+    prompt = 147             # Lavender
+    header = 189             # Text
+    help = 147               # Lavender
+    error = 210              # Red

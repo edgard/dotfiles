@@ -1,6 +1,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 # Minimal, fast, and colorful prompt with essential info
+
 format = """
 $username\
 $hostname\
@@ -9,6 +10,7 @@ $git_branch\
 $git_status\
 $git_state\
 $cmd_duration\
+$jobs\
 $character"""
 
 add_newline = false
@@ -20,20 +22,20 @@ add_newline = false
 [username]
 format = '[$user]($style)'
 show_always = true
-style_root = "red"
-style_user = "yellow"
+style_root = "#e78284"    # Red
+style_user = "#e5c890"    # Yellow
 
 [hostname]
-format = "[@](bright-black)[$hostname]($style)"
-style = "green"
+format = "[@](#737994)[$hostname]($style)"  # Overlay0
+style = "#a6d189"        # Green
 
 ##############################################################################
 # Directory
 ##############################################################################
 
 [directory]
-format = "[:](bright-black)[$path]($style)[$read_only]($read_only_style) "
-style = "blue"
+format = "[:](#737994)[$path]($style)[$read_only]($read_only_style) "
+style = "#8caaee"        # Blue
 
 ##############################################################################
 # Git Information
@@ -41,7 +43,7 @@ style = "blue"
 
 [git_branch]
 format = "[$branch]($style)"
-style = "red"
+style = "#e78284"        # Red
 
 [git_status]
 ahead = "⇡"
@@ -49,17 +51,17 @@ behind = "⇣"
 conflicted = "="
 deleted = "x"
 diverged = "⇕"
-format = '([\[](bright-black)[$all_status$ahead_behind]($style)[\]](bright-black)) '
+format = '([\[](#737994)[$all_status$ahead_behind]($style)[\]](#737994)) '
 modified = "!"
 renamed = ">"
 staged = "+"
 stashed = "\\$"
-style = "cyan"
+style = "#81c8be"        # Teal
 untracked = "?"
 up_to_date = ""
 
 [git_state]
-style = "red"
+style = "#e78284"        # Red
 
 ##############################################################################
 # Command Duration
@@ -67,13 +69,22 @@ style = "red"
 
 [cmd_duration]
 format = "[$duration]($style) "
-style = "yellow"
+style = "#e5c890"        # Yellow
+
+##############################################################################
+# Jobs Indicator
+##############################################################################
+
+[jobs]
+symbol = "✦"
+style = "#737994"        # Overlay0
+format = "[$symbol$number]($style) "
 
 ##############################################################################
 # Prompt Character
 ##############################################################################
 
 [character]
-error_symbol = "[❯](red)"
-success_symbol = "[❯](purple)"
-vicmd_symbol = "[❮](green)"
+error_symbol = "[❯](#e78284)"       # Red
+success_symbol = "[❯](#ca9ee6)"     # Mauve
+vicmd_symbol = "[❮](#a6d189)"       # Green

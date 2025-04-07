@@ -14,6 +14,7 @@ else
 fi
 export PAGER=less
 export MANROFFOPT='-c'
+export LESSHISTFILE=-
 
 ## Default Editor Selection
 if [[ -n "${VSCODE_INJECTION}" ]] && command -v code >/dev/null 2>&1; then
@@ -45,3 +46,6 @@ if [[ "${TERM}" == *-256color ]]; then
     KEYTIMEOUT=1
     REPORTTIME=5
 fi
+
+## GPG TTY fix
+export GPG_TTY=$(tty)

@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
 
+# Source centralized Catppuccin Frappé theme variables immediately
+source "${HOME}/.zsh/_theme.zsh"
+
 ##############################################################################
 # Type Declarations (Unique, Ordered Arrays)
 ##############################################################################
@@ -20,17 +23,19 @@ fi
 ##############################################################################
 
 if [[ "$OSTYPE" == darwin* ]]; then
-    if [[ -x "/opt/homebrew/bin/brew" ]]; then
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-    elif [[ -x "/usr/local/bin/brew" ]]; then
-        eval "$(/usr/local/bin/brew shellenv)"
-    fi
+    for brew_path in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+        if command -v "$brew_path" >/dev/null 2>&1; then
+            eval "$("$brew_path" shellenv)"
+            break
+        fi
+    done
 else
-    if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    elif [[ -x "$HOME/.linuxbrew/bin/brew" ]]; then
-        eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
-    fi
+    for brew_path in /home/linuxbrew/.linuxbrew/bin/brew "$HOME/.linuxbrew/bin/brew"; do
+        if command -v "$brew_path" >/dev/null 2>&1; then
+            eval "$("$brew_path" shellenv)"
+            break
+        fi
+    done
 fi
 
 ##############################################################################
@@ -54,9 +59,22 @@ command -v gem >/dev/null 2>&1 && export GEM_HOME="${HOME}/.gem"
 [[ -f "${HOME}/.cargo/env" ]] && source "${HOME}/.cargo/env"
 
 ##############################################################################
-# Source Modular Zsh Configurations
+# Deferred Modular Zsh Configurations
 ##############################################################################
 
-for config_file in "${HOME}"/.zsh/<->-*.zsh(.N); do
-    source "${config_file}" || printf "Error: Failed to source %s\n" "${config_file##*/}" >&2
-done
+autoload -Uz add-zsh-hook
+
+_defer_zsh_configs() {
+    for config_file in "${HOME}"/.zsh/<->-*.zsh(.N); do
+        source "${config_file}" || printf "Error: Failed to source %s\n" "${config_file##*/}" >&2
+    done
+    add-zsh-hook -d precmd _defer_zsh_configs
+}
+
+add-zsh-hook precmd _defer_zsh_configs
+
+##############################################################################
+# Cleanup helper variables
+##############################################################################
+
+unset brew_path config_file
