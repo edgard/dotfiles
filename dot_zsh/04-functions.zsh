@@ -233,7 +233,7 @@ update() {
 
                 # Update casks on macOS if brew-cu is available
                 if [[ "$OSTYPE" == darwin* ]]; then
-                    if brew commands | grep -q "^cu$"; then
+                    if brew cu --help >/dev/null 2>&1; then
                         brew cu -y -q --cleanup --no-brew-update
                     else
                         print -P "%F{$ZSH_COLOR_YELLOW}Warning: brew cu subcommand not available, skipping cask updates%f" >&2
