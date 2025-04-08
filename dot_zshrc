@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-# Source centralized Catppuccin Frappé theme variables immediately
+# Source Catppuccin Frappé theme variables
 source "${HOME}/.zsh/_theme.zsh"
 
 ##############################################################################
