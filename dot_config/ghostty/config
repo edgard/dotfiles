@@ -53,26 +53,26 @@ shell-integration-features = false
 # Catppuccin Frappé Color Palette
 ##############################################################################
 
-palette = 0=#414559    # Surface0
-palette = 1=#e78284    # Red
-palette = 2=#a6d189    # Green
-palette = 3=#e5c890    # Yellow
-palette = 4=#8caaee    # Blue
-palette = 5=#ca9ee6    # Mauve
-palette = 6=#81c8be    # Teal
-palette = 7=#c6d0f5    # Text
-palette = 8=#737994    # Overlay0
-palette = 9=#eebebe    # Flamingo
-palette = 10=#f4b8e4   # Pink
-palette = 11=#ea999c   # Maroon
-palette = 12=#ef9f76   # Peach
-palette = 13=#99d1db   # Sky
-palette = 14=#85c1dc   # Sapphire
-palette = 15=#babbf1   # Lavender
+palette = 0=#414559
+palette = 1=#e78284
+palette = 2=#a6d189
+palette = 3=#e5c890
+palette = 4=#8caaee
+palette = 5=#ca9ee6
+palette = 6=#81c8be
+palette = 7=#c6d0f5
+palette = 8=#737994
+palette = 9=#eebebe
+palette = 10=#f4b8e4
+palette = 11=#ea999c
+palette = 12=#ef9f76
+palette = 13=#99d1db
+palette = 14=#85c1dc
+palette = 15=#babbf1
 
-background = 303446    # Base
-foreground = c6d0f5    # Text
-cursor-color = f2d5cf  # Rosewater
-cursor-text = 303446   # Base
-selection-background = 414559  # Surface0
-selection-foreground = c6d0f5  # Text
+background = 303446
+foreground = c6d0f5
+cursor-color = f2d5cf
+cursor-text = 303446
+selection-background = 414559
+selection-foreground = c6d0f5
