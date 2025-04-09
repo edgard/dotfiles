@@ -5,7 +5,6 @@
 # Taps
 ##############################################################################
 
-tap "homebrew/bundle"
 tap "fluxcd/tap"
 tap "go-task/tap"
 tap "nike-inc/nike"

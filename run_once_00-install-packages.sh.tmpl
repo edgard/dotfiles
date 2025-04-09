@@ -31,6 +31,27 @@ fi
 {{ if eq .chezmoi.os "darwin" -}}
 echo "Setting up macOS system..."
 
+# Trigger Command Line Developer Tools installation by attempting to use git
+if ! xcode-select -p &>/dev/null; then
+    echo "Command Line Developer Tools not found. Triggering installation..."
+    git --version
+
+    echo ""
+    echo "⚠️  IMPORTANT: Please complete the Command Line Developer Tools installation prompt."
+    echo "   When the installation is complete, press Enter to continue..."
+    read -r
+
+    # Verify installation completed
+    if ! xcode-select -p &>/dev/null; then
+        echo "Command Line Developer Tools installation appears to have failed."
+        echo "Please install manually with: xcode-select --install"
+        echo "Then run this script again."
+        exit 1
+    else
+        echo "Command Line Developer Tools installation completed successfully."
+    fi
+fi
+
 # Run optional macOS configuration script
 if [[ -f "${HOME}/.local/share/chezmoi/extras/config-osx.sh" ]]; then
     echo "Running macOS configuration script..."
@@ -61,29 +82,6 @@ if ! command -v brew >/dev/null 2>&1; then
         fi
     fi
 fi
-
-##############################################################################
-# Brewfile Bundle Installs
-##############################################################################
-
-# Common utilities
-if [[ -f "${HOME}/.local/share/chezmoi/extras/Brewfile.common" ]]; then
-    echo "Installing common utilities from Brewfile.common..."
-    brew bundle --file="${HOME}/.local/share/chezmoi/extras/Brewfile.common"
-fi
-
-# OS-specific utilities
-{{ if eq .chezmoi.os "darwin" -}}
-if [[ -f "${HOME}/.local/share/chezmoi/extras/Brewfile.darwin" ]]; then
-    echo "Installing macOS-specific utilities from Brewfile.darwin..."
-    brew bundle --file="${HOME}/.local/share/chezmoi/extras/Brewfile.darwin"
-fi
-{{ else if eq .chezmoi.os "linux" -}}
-if [[ -f "${HOME}/.local/share/chezmoi/extras/Brewfile.linux" ]]; then
-    echo "Installing Linux-specific utilities from Brewfile.linux..."
-    brew bundle --file="${HOME}/.local/share/chezmoi/extras/Brewfile.linux"
-fi
-{{ end -}}
 
 ##############################################################################
 # Cross-Platform Finalization
