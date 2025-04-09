@@ -49,17 +49,6 @@ fi
 [[ -d "${HOME}/.local/bin" ]] && path=("${HOME}/.local/bin" ${path})
 [[ -d "${HOME}/Documents/Projects/dev-utils/bin" ]] && path=("${HOME}/Documents/Projects/dev-utils/bin" ${path})
 
-
-##############################################################################
-# VSCode Shell Integration
-##############################################################################
-
-if [[ "$TERM_PROGRAM" == "vscode" ]] && command -v code >/dev/null 2>&1; then
-    source "$(code --locate-shell-integration-path zsh)"
-elif [[ "$TERM_PROGRAM" == "vscode-insiders" ]] && command -v code-insiders >/dev/null 2>&1; then
-    source "$(code-insiders --locate-shell-integration-path zsh)"
-fi
-
 ##############################################################################
 # Language Environment Variables
 ##############################################################################

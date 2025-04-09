@@ -40,12 +40,3 @@ elif [[ "${OSTYPE}" == darwin* ]]; then
         export LSCOLORS='exfxbxdxDxhbxDxecex'
     fi
 fi
-
-## Terminal Optimizations
-if [[ "${TERM}" == *-256color ]]; then
-    KEYTIMEOUT=1
-    REPORTTIME=5
-fi
-
-## GPG TTY fix
-export GPG_TTY=$(tty)

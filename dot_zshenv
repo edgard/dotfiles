@@ -4,8 +4,8 @@
 # Shell Configuration
 ##############################################################################
 
-unsetopt GLOBAL_RCS            # Do not source global zsh config files
-skip_global_compinit=1         # Skip global compinit
+unsetopt GLOBAL_RCS    # Do not source global zsh config files
+skip_global_compinit=1 # Skip global compinit
 
 ##############################################################################
 # Locale Configuration
@@ -14,10 +14,3 @@ skip_global_compinit=1         # Skip global compinit
 export LC_ALL="${LC_ALL:-en_US.UTF-8}"
 export LANG="${LANG:-en_US.UTF-8}"
 export LANGUAGE="${LANGUAGE:-en_US.UTF-8}"
-
-##############################################################################
-# Terminal Configuration
-##############################################################################
-
-# Disable XON/XOFF flow control in interactive shells
-[[ "$-" == *i* ]] && command -v stty >/dev/null 2>&1 && stty -ixon 2>/dev/null
