@@ -20,16 +20,10 @@ elif command -v pacman >/dev/null 2>&1; then
     sudo pacman -Syu --noconfirm
     sudo pacman -S --noconfirm base-devel python curl unzip git zsh
 fi
-
-# Run optional Linux configuration script
-if [[ -f "${HOME}/.local/share/chezmoi/extras/config-linux.sh" ]]; then
-    echo "Running Linux system configuration script..."
-    bash "${HOME}/.local/share/chezmoi/extras/config-linux.sh"
-fi
 {{ end -}}
 
 {{ if eq .chezmoi.os "darwin" -}}
-echo "Setting up macOS system..."
+echo "Installing essential macOS system packages..."
 
 # Trigger Command Line Developer Tools installation by attempting to use git
 if ! xcode-select -p &>/dev/null; then
@@ -50,12 +44,6 @@ if ! xcode-select -p &>/dev/null; then
     else
         echo "Command Line Developer Tools installation completed successfully."
     fi
-fi
-
-# Run optional macOS configuration script
-if [[ -f "${HOME}/.local/share/chezmoi/extras/config-osx.sh" ]]; then
-    echo "Running macOS configuration script..."
-    bash "${HOME}/.local/share/chezmoi/extras/config-osx.sh"
 fi
 {{ end -}}
 
