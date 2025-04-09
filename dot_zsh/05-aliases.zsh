@@ -12,15 +12,6 @@ command -v journalctl >/dev/null 2>&1 && alias journalctl="journalctl --output=a
 command -v watch >/dev/null 2>&1 && alias watch="watch --color"
 
 ##############################################################################
-# Safer File Management Aliases
-##############################################################################
-
-alias cp='cp -iv'       # interactive, verbose copy
-alias mv='mv -iv'       # interactive, verbose move
-alias rm='rm -iv'       # interactive, verbose remove
-alias mkdir='mkdir -pv' # create parent dirs, verbose
-
-##############################################################################
 # History
 ##############################################################################
 

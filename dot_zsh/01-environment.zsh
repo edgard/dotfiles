@@ -17,7 +17,7 @@ export MANROFFOPT='-c'
 export LESSHISTFILE=-
 
 ## Default Editor Selection
-if [[ -n "${VSCODE_INJECTION}" ]] && command -v code >/dev/null 2>&1; then
+if [[ "${TERM_PROGRAM}" == "vscode" ]] && command -v code >/dev/null 2>&1; then
     export EDITOR='code -w' VISUAL='code -w'
 elif command -v nvim >/dev/null 2>&1; then
     export EDITOR=nvim VISUAL=nvim
