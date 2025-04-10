@@ -22,52 +22,60 @@ fi
 # Homebrew Environment Setup
 ##############################################################################
 
-if [[ "$OSTYPE" == darwin* ]]; then
-    for brew_path in /opt/homebrew/bin/brew /usr/local/bin/brew; do
-        if command -v "$brew_path" >/dev/null 2>&1; then
-            eval "$("$brew_path" shellenv)"
-            break
-        fi
-    done
-else
-    for brew_path in /home/linuxbrew/.linuxbrew/bin/brew "$HOME/.linuxbrew/bin/brew"; do
-        if command -v "$brew_path" >/dev/null 2>&1; then
-            eval "$("$brew_path" shellenv)"
-            break
-        fi
-    done
-fi
+function load_homebrew() {
+    local brew_path=""
+
+    if [[ "$OSTYPE" == darwin* ]]; then
+        for bp in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+            [[ -x "$bp" ]] && { brew_path="$bp"; break; }
+        done
+    else
+        for bp in /home/linuxbrew/.linuxbrew/bin/brew "$HOME/.linuxbrew/bin/brew"; do
+            [[ -x "$bp" ]] && { brew_path="$bp"; break; }
+        done
+    fi
+
+    [[ -n "$brew_path" ]] && eval "$("$brew_path" shellenv)"
+}
+
+load_homebrew
+unset -f load_homebrew
 
 ##############################################################################
 # User Binaries
 ##############################################################################
 
-[[ -d "${HOME}/.go/bin" ]] && path+=("${HOME}/.go/bin")
-[[ -d "${HOME}/.npm-global/bin" ]] && path+=("${HOME}/.npm-global/bin")
-[[ -d "${HOME}/.gem/bin" ]] && path+=("${HOME}/.gem/bin")
-[[ -d "${HOME}/.cargo/bin" ]] && path+=("${HOME}/.cargo/bin")
-[[ -d "${HOME}/.local/bin" ]] && path=("${HOME}/.local/bin" ${path})
-[[ -d "${HOME}/Documents/Projects/dev-utils/bin" ]] && path=("${HOME}/Documents/Projects/dev-utils/bin" ${path})
+typeset -aU user_paths=(
+    "${HOME}/.go/bin"
+    "${HOME}/.cargo/bin"
+    "${HOME}/.npm-global/bin"
+    "${HOME}/.gem/bin"
+    "${HOME}/.local/bin"
+    "${HOME}/Documents/Projects/dev-utils/bin"
+)
+
+for user_path in "${user_paths[@]}"; do
+    [[ -d "$user_path" ]] && path=("$user_path" $path)
+done
+
+unset user_paths user_path
 
 ##############################################################################
 # Language Environment Variables
 ##############################################################################
 
 command -v go >/dev/null 2>&1 && export GOPATH="${HOME}/.go"
-[[ -d "${HOME}/.npm-global" ]] && export NPM_CONFIG_PREFIX="${HOME}/.npm-global"
 command -v gem >/dev/null 2>&1 && export GEM_HOME="${HOME}/.gem"
 [[ -f "${HOME}/.cargo/env" ]] && source "${HOME}/.cargo/env"
+[[ -d "${HOME}/.npm-global" ]] && export NPM_CONFIG_PREFIX="${HOME}/.npm-global"
 
 ##############################################################################
 # Modular Zsh Configurations
 ##############################################################################
 
-for config_file in "${HOME}"/.zsh/<->-*.zsh(.N); do
+typeset -a config_files=("${HOME}"/.zsh/<->-*.zsh(.N))
+for config_file in "${config_files[@]}"; do
     source "${config_file}" || printf "Error: Failed to source %s\n" "${config_file##*/}" >&2
 done
 
-##############################################################################
-# Cleanup helper variables
-##############################################################################
-
-unset brew_path config_file
+unset config_files config_file

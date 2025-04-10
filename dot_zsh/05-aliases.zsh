@@ -44,6 +44,10 @@ if command -v kubectl >/dev/null 2>&1; then
     alias kd='kubectl describe'
     alias krm='kubectl delete'
 
+    if [[ -z "${ZSH_DISABLE_COMPFIX}" ]]; then
+        source <(kubectl completion zsh 2>/dev/null)
+    fi
+
     command -v kubens >/dev/null 2>&1 && alias kns='kubens'
     command -v kubectx >/dev/null 2>&1 && alias kctx='kubectx'
 fi

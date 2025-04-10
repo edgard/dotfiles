@@ -13,10 +13,10 @@ fi
 
 # Regenerate init.zsh if outdated
 if [[ ! "${ZIM_HOME}/init.zsh" -nt "${ZIM_CONFIG_FILE:-${ZDOTDIR:-${HOME}}/.zimrc}" ]]; then
-  source "${ZIM_HOME}/zimfw.zsh" init
+  source "${ZIM_HOME}/zimfw.zsh" init -q
 fi
 
-# Source Zim initialization synchronously
+# Source Zim initialization
 source "${ZIM_HOME}/init.zsh"
 
 ##############################################################################
@@ -25,6 +25,9 @@ source "${ZIM_HOME}/init.zsh"
 
 # Fast Syntax Highlighting (Catppuccin-inspired colors)
 if [[ -f "${ZIM_HOME}/modules/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" ]]; then
+  FAST_HIGHLIGHT[use_brackets]=1
+  FAST_HIGHLIGHT[use_pattern_buffer]=1
+
   FAST_HIGHLIGHT_STYLES[default]="fg=${COLOR_TEXT}"
   FAST_HIGHLIGHT_STYLES[unknown-token]="fg=${COLOR_RED}"
   FAST_HIGHLIGHT_STYLES[reserved-word]="fg=${COLOR_MAUVE}"
@@ -54,6 +57,11 @@ fi
 # Autosuggestions
 if [[ -f "${ZIM_HOME}/modules/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
   ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=${COLOR_OVERLAY}"
+  ZSH_AUTOSUGGEST_STRATEGY=(history)
+  ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=15
+  ZSH_AUTOSUGGEST_USE_ASYNC=1
+  ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+  ZSH_AUTOSUGGEST_HISTORY_IGNORE_DUPS=1
 fi
 
 # FZF Configuration
