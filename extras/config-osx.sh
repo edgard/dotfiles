@@ -47,7 +47,7 @@ defaults write NSGlobalDomain com.apple.keyboard.fnState -bool true # Use F1, F2
 # Trackpad and Mouse
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true # Enable tap to click
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1         # Enable tap to click for current user
-defaults write NSGlobalDomain swipescrolldirection -bool false                        # Use traditional scrolling direction
+defaults write com.apple.swipescrolldirection -bool false                             # Use traditional scrolling direction
 
 ###############################################################################
 # Display and Screen
@@ -96,6 +96,7 @@ defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true # S
 defaults write com.apple.dock tilesize -int 24                   # Set Dock icon size to 24 pixels
 defaults write com.apple.dock mineffect -string "scale"          # Use scale effect when minimizing windows
 defaults write com.apple.dock minimize-to-application -bool true # Minimize windows into their application icon
+defaults write com.apple.dock show-process-indicators -bool true # Show indicator lights for open applications
 
 # Mission Control
 defaults write com.apple.dock "expose-group-apps" -bool true # Group windows by application in Mission Control
