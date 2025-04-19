@@ -1,26 +1,24 @@
 #!/usr/bin/env zsh
 
-# Source Catppuccin Frappé theme variables
-source "${HOME}/.zsh/_theme.zsh"
-
-##############################################################################
-# Type Declarations (Unique, Ordered Arrays)
-##############################################################################
+#---------------------------------------
+# Type Declarations
+#---------------------------------------
 
 typeset -gU path PATH
 typeset -gUT FPATH fpath
 
-##############################################################################
+#---------------------------------------
 # macOS System Path Setup
-##############################################################################
+#---------------------------------------
 
+# Load macOS paths if available
 if [[ "$OSTYPE" == darwin* ]] && [[ -x "/usr/libexec/path_helper" ]]; then
     eval "$(/usr/libexec/path_helper -s)"
 fi
 
-##############################################################################
+#---------------------------------------
 # Homebrew Environment Setup
-##############################################################################
+#---------------------------------------
 
 function load_homebrew() {
     local brew_path=""
@@ -41,43 +39,70 @@ function load_homebrew() {
 load_homebrew
 unset -f load_homebrew
 
-##############################################################################
-# Language Environment Variables and Paths
-##############################################################################
+#---------------------------------------
+#Language Environment Variables and Paths
+#---------------------------------------
 
-# Set paths and variables for language environments
 local brew_prefix
 
-# Go environment
+# Go
 if brew_prefix=$(brew --prefix go 2>/dev/null); then
     export GOPATH="${HOME}/.go"
     path=("${GOPATH}/bin" $path)
 fi
 
-# Rust environment
+# Rust
 if brew_prefix=$(brew --prefix rustup 2>/dev/null); then
     path=("${brew_prefix}/bin" $path)
 fi
 
-# Node.js environment
+# Node.js
 if brew_prefix=$(brew --prefix node 2>/dev/null); then
     export NPM_CONFIG_PREFIX="${HOME}/.npm-global"
     path=("${NPM_CONFIG_PREFIX}/bin" $path)
 fi
 
-# Non-language specific user paths
+# User paths
 for user_path in "${HOME}/.local/bin" "${HOME}/Documents/Projects/dev-utils/bin"; do
     [[ -d "$user_path" ]] && path=("$user_path" $path)
 done
 unset user_path brew_prefix
 
-##############################################################################
-# Modular Zsh Configurations
-##############################################################################
+#---------------------------------------
+# Oh My Zsh Configuration
+#---------------------------------------
 
-typeset -a config_files=("${HOME}"/.zsh/<->-*.zsh(.N))
-for config_file in "${config_files[@]}"; do
-    source "${config_file}" || printf "Error: Failed to source %s\n" "${config_file##*/}" >&2
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="edgard"
+
+# Core plugins
+plugins=(
+  git
+  fzf
+  direnv
+)
+
+# Load Oh My Zsh
+source "$ZSH/oh-my-zsh.sh"
+
+#---------------------------------------
+# Custom Configurations
+#---------------------------------------
+
+# Load modular config files
+typeset -a custom_config_files
+custom_config_files=(
+  "${HOME}/.zsh/01-environment.zsh"
+  "${HOME}/.zsh/02-core-settings.zsh"
+  "${HOME}/.zsh/03-custom-functions.zsh"
+  "${HOME}/.zsh/04-custom-aliases.zsh"
+  "${HOME}/.zsh/05-omz-plugins-config.zsh"
+  "${HOME}/.zsh/99-post-load.zsh"
+)
+
+for config_file in "${custom_config_files[@]}"; do
+    if [[ -f "${config_file}" ]]; then
+        source "${config_file}" || printf "Error: Failed to source %s\n" "${config_file##*/}" >&2
+    fi
 done
-
-unset config_files config_file
+unset custom_config_files config_file

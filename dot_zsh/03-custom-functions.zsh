@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
 
-##############################################################################
+#---------------------------------------
 # Brewfile Merge Function
-##############################################################################
+#---------------------------------------
 
 # Merges multiple Brewfiles into one based on OS
 # Args:
@@ -96,9 +96,9 @@ _get_merged_brewfile() {
     print "${temp_file}"
 }
 
-##############################################################################
+#---------------------------------------
 # Package Management Functions
-##############################################################################
+#---------------------------------------
 
 # Clean up unused Homebrew packages
 brew-cleanup() {
@@ -174,9 +174,9 @@ brew-install() {
     fi
 }
 
-##############################################################################
+#---------------------------------------
 # System Update Function
-##############################################################################
+#---------------------------------------
 
 # Update system components (dotfiles, packages, etc.)
 update() {
@@ -188,7 +188,7 @@ update() {
     whence -p chezmoi >/dev/null && managers[chezmoi]="Dotfiles"
     whence -p brew >/dev/null && managers[brew]="Homebrew"
     whence -p apt >/dev/null && managers[apt]="System"
-    whence zimfw >/dev/null && managers[zimfw]="Zim"
+    [[ -d "${ZSH}" ]] && managers[omz]="Oh My Zsh"
 
     available_cmds=(${(k)managers})
 
@@ -270,25 +270,18 @@ update() {
                     (( success++ ))
                 fi
                 ;;
-            (zimfw)
-                # Update and clean Zim framework and plugins
-                print -P "\nUpdating Zim framework and plugins..."
-                if ! "${cmd}" upgrade; then
-                    print -P "%F{$ZSH_COLOR_RED}Error: Zim framework upgrade failed%f" >&2
-                    continue
+            (omz)
+                # Update Oh My Zsh core only (not custom plugins or themes)
+                if [[ -d "${ZSH}" ]]; then
+                    if "${ZSH}/tools/upgrade.sh"; then
+                        successful_cmds+=("${cmd}")
+                        (( success++ ))
+                    else
+                        print -P "%F{$ZSH_COLOR_RED}Error: Oh My Zsh update failed%f" >&2
+                    fi
+                else
+                    print -P "%F{$ZSH_COLOR_RED}Error: Oh My Zsh directory not found%f" >&2
                 fi
-
-                if ! "${cmd}" update; then
-                    print -P "%F{$ZSH_COLOR_RED}Error: Zim plugins update failed%f" >&2
-                    continue
-                fi
-
-                # Run zimfw install and zimfw uninstall
-                zimfw install
-                zimfw uninstall
-
-                successful_cmds+=("${cmd}")
-                (( success++ ))
                 ;;
         esac
         print ""  # Add empty line between updates
