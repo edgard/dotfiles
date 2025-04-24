@@ -14,18 +14,3 @@ skip_global_compinit=1 # Skip global compinit
 export LC_ALL="${LC_ALL:-en_US.UTF-8}"
 export LANG="${LANG:-en_US.UTF-8}"
 export LANGUAGE="${LANGUAGE:-en_US.UTF-8}"
-
-#---------------------------------------
-# WSL2 Runtime Directory Fix
-#---------------------------------------
-
-if [[ "$OSTYPE" == linux* ]]; then
-    if grep -qi microsoft /proc/version; then
-        export XDG_RUNTIME_DIR=/run/user/$(id -u)
-        if [ ! -d "$XDG_RUNTIME_DIR" ]; then
-            sudo mkdir -p $XDG_RUNTIME_DIR
-            sudo chmod 700 $XDG_RUNTIME_DIR
-            sudo chown $(id -u):$(id -g) $XDG_RUNTIME_DIR
-        fi
-    fi
-fi
