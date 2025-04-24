@@ -19,15 +19,13 @@ export LANGUAGE="${LANGUAGE:-en_US.UTF-8}"
 # WSL2 Runtime Directory Fix
 #---------------------------------------
 
-# Fix "/run/user/1000/: permission denied" errors in WSL2
-if grep -qi microsoft /proc/version; then
-    # Set XDG runtime directory
-    export XDG_RUNTIME_DIR=/run/user/$(id -u)
-
-    # Create the runtime directory if it doesn't exist
-    if [ ! -d "$XDG_RUNTIME_DIR" ]; then
-        sudo mkdir -p $XDG_RUNTIME_DIR
-        sudo chmod 700 $XDG_RUNTIME_DIR
-        sudo chown $(id -u):$(id -g) $XDG_RUNTIME_DIR
+if [[ "$OSTYPE" == linux* ]]; then
+    if grep -qi microsoft /proc/version; then
+        export XDG_RUNTIME_DIR=/run/user/$(id -u)
+        if [ ! -d "$XDG_RUNTIME_DIR" ]; then
+            sudo mkdir -p $XDG_RUNTIME_DIR
+            sudo chmod 700 $XDG_RUNTIME_DIR
+            sudo chown $(id -u):$(id -g) $XDG_RUNTIME_DIR
+        fi
     fi
 fi

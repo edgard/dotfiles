@@ -21,6 +21,7 @@ brew "fzf"
 brew "go-task/tap/go-task"
 brew "ripgrep"
 brew "sops"
+brew "starship"
 brew "watch"
 brew "zoxide"
 
