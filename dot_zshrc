@@ -1,16 +1,12 @@
 #!/usr/bin/env zsh
+# shellcheck disable=all
+
 # --- Zsh Runtime Configuration ---
 # This file is sourced for interactive shells.
 # It sets up shell behavior, history, completion, key bindings, and sources custom configurations.
 
 # --- Core ZSH Setup ---
 
-# Define essential Zsh directories and files.
-export ZDOTDIR="${ZDOTDIR:-$HOME}/.zsh"
-export ZSH="${ZDOTDIR:-$HOME}/.zsh"
-export ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.zcompdump-${ZSH_VERSION}" # Completion cache file
-
-# Load Zsh modules for improved performance and features.
 zmodload zsh/zutil     # Core utilities
 zmodload zsh/complist  # Enhanced completion list display
 zmodload zsh/parameter # Faster parameter handling (used by history)
@@ -35,9 +31,9 @@ setopt NO_WARN_CREATE_GLOBAL # Suppress warnings when creating global variables
 
 # --- History Configuration ---
 
-HISTFILE="${ZDOTDIR:-$HOME}/.zsh_history" # Path to the history file
-HISTSIZE=1000000                         # Max history entries in memory
-SAVEHIST=1000000                         # Max history entries saved to file
+HISTFILE="${HOME}/.zsh_history" # History file location
+HISTSIZE=1000000                # Max history entries in memory
+SAVEHIST=1000000                # Max history entries saved to file
 
 # History Behavior Options
 setopt SHARE_HISTORY          # Share history instantly across all running shells
@@ -65,20 +61,10 @@ setopt NO_AUTO_CD        # Disable implicit cd when typing a directory name
 
 # Initialize the completion system
 autoload -Uz compinit
-
-# Regenerate completion cache only if older than 24 hours for faster startup.
-if [[ -n ${ZSH_COMPDUMP}(#qN.mh+24) ]]; then
-  compinit -d ${ZSH_COMPDUMP} # Initialize, creating dump file if needed
-  # Asynchronously compile the completion dump for faster loading next time.
-  { zcompile ${ZSH_COMPDUMP} } &!
-else
-  # Load completions quickly from existing cache.
-  compinit -C -d ${ZSH_COMPDUMP}
-fi
+compinit
 
 # Completion Styling and Behavior
 zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path "${ZSH_COMPDUMP}.cache"
 zstyle ':completion:*' menu select # Enable menu selection for completions
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # Case-insensitive matching
 
@@ -122,12 +108,7 @@ KEYTIMEOUT=1
 
 # --- Custom Configurations ---
 
-# Source all .zsh files from the ZDOTDIR.
-# Use a loop to source files individually and report errors.
-for config_file in "${ZDOTDIR:-$HOME}/"*.zsh; do
-    # Check if the file exists and is readable before sourcing
-    if [[ -f "$config_file" && -r "$config_file" ]]; then
-        source "$config_file" || print -P "%F{red}Error sourcing ${config_file}%f" >&2
-    fi
-done
-unset config_file # Clean up the loop variable
+source "${HOME}/.zsh/01-path.zsh"
+source "${HOME}/.zsh/02-env.zsh"
+source "${HOME}/.zsh/03-aliases.zsh"
+source "${HOME}/.zsh/99-post.zsh"

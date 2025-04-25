@@ -1,4 +1,6 @@
 #!/usr/bin/env zsh
+# shellcheck disable=all
+
 # --- Command Aliases ---
 # Defines various command aliases for convenience and consistency.
 

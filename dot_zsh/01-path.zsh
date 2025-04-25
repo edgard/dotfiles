@@ -1,4 +1,6 @@
 #!/usr/bin/env zsh
+# shellcheck disable=all
+
 # --- PATH and FPATH Configuration ---
 # This file manages the shell's command search path (PATH)
 # and function search path (FPATH).

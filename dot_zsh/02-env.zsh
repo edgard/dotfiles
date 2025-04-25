@@ -1,4 +1,6 @@
 #!/usr/bin/env zsh
+# shellcheck disable=all
+
 # --- Environment Variables and Utility Initialization ---
 # Sets various environment variables and initializes common shell utilities.
 

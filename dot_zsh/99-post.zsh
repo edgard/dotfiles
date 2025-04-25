@@ -1,4 +1,6 @@
 #!/usr/bin/env zsh
+# shellcheck disable=all
+
 # --- Post-Initialization Script ---
 # This file is sourced last and contains setup or fixes that might depend
 # on previously loaded configurations or environment variables.
