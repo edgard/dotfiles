@@ -1,0 +1,218 @@
+#!/usr/bin/env python3
+"""
+Brewfile and system update manager.
+
+Usage:
+  update             # Update system (default)
+  update cleanup     # Clean up unused packages
+  update install     # Install packages from Brewfiles
+"""
+import os
+import platform
+import shutil
+import subprocess
+import sys
+import tempfile
+from argparse import ArgumentParser
+from datetime import datetime
+from pathlib import Path
+from typing import Optional, List, Dict
+
+# Default directory for additional Brewfiles
+EXTRAS_DIR = Path.home() / '.local' / 'share' / 'chezmoi' / 'extras'
+# Order of sections in merged Brewfile
+SECTION_ORDER = ('tap', 'brew', 'cask', 'mas')
+
+
+def get_merged_brewfile(base_dir: Optional[Path] = None) -> Path:
+    base = Path(base_dir or EXTRAS_DIR).expanduser().resolve()
+    os_type = platform.system().lower()
+    if os_type.startswith('darwin'):
+        suffix = 'darwin'
+    elif os_type.startswith('linux'):
+        suffix = 'linux'
+    else:
+        sys.stderr.write(f"Error: Unsupported OS: {os_type}\n")
+        sys.exit(1)
+
+    brewfiles = [base / 'Brewfile.common', base / f'Brewfile.{suffix}']
+    temp_path = Path(tempfile.gettempdir()) / f'brewfile_merged_{os.getpid()}.brew'
+
+    # Header
+    header = [
+        f"# Merged Brewfile generated on {datetime.now()}",
+        "# Sources:",
+        *[f"#  - {bf.name}" for bf in brewfiles if bf.exists()],
+        "",
+    ]
+
+    # Collect directives
+    directives: Dict[str, set] = {sec: set() for sec in SECTION_ORDER}
+    for bf in brewfiles:
+        if bf.is_file():
+            for raw in bf.read_text().splitlines():
+                line = raw.split('#', 1)[0].strip()
+                if not line:
+                    continue
+                key = line.split(maxsplit=1)[0]
+                if key in directives:
+                    directives[key].add(line)
+
+    # Write merged contents
+    with temp_path.open('w') as f:
+        f.write("\n".join(header) + "\n")
+        for sec in SECTION_ORDER:
+            lines = sorted(directives[sec])
+            if lines:
+                f.write("\n".join(lines) + "\n\n")
+
+    return temp_path
+
+
+def brew_cleanup(brewfiles_dir: Optional[Path] = None) -> None:
+    extras = Path(brewfiles_dir or EXTRAS_DIR)
+    if not extras.is_dir():
+        sys.stderr.write(f"Error: Brewfiles directory not found: {extras}\n")
+        sys.exit(1)
+
+    print("Analyzing installed packages...")
+    merged = get_merged_brewfile(extras)
+    try:
+        print("Checking for packages to clean up...")
+        proc = subprocess.run(
+            ["brew", "bundle", "cleanup", "--file", str(merged), "--zap"],
+            capture_output=True, text=True
+        )
+        output = proc.stdout.splitlines() + proc.stderr.splitlines()
+        lines = [l for l in output if not l.startswith("Using ")]
+        if lines:
+            print("\n".join(lines))
+        # Detect removable packages (lines starting with 'Would ')
+        to_remove = [l for l in lines if l.startswith("Would ")]
+        if to_remove:
+            if input("\nRemove these packages? [y/N] ").strip().lower().startswith('y'):
+                try:
+                    subprocess.run(
+                        ["brew", "bundle", "cleanup", "--file", str(merged), "--zap", "--force"],
+                        check=True
+                    )
+                    print("Cleanup completed.")
+                except subprocess.CalledProcessError:
+                    sys.stderr.write("Error: Cleanup failed.\n")
+                    sys.exit(1)
+            else:
+                print("Cleanup canceled.")
+        else:
+            print("No unused packages found.")
+    finally:
+        try:
+            merged.unlink()
+        except FileNotFoundError:
+            pass
+
+
+def brew_install(brewfiles_dir: Optional[Path] = None) -> None:
+    extras = Path(brewfiles_dir or EXTRAS_DIR)
+    if not extras.is_dir():
+        sys.stderr.write(f"Error: Brewfiles directory not found: {extras}\n")
+        sys.exit(1)
+
+    print("Updating Homebrew...")
+    try:
+        subprocess.run(["brew", "update"], check=True)
+    except subprocess.CalledProcessError:
+        sys.stderr.write("Error: Homebrew update failed.\n")
+        sys.exit(1)
+
+    print("Installing packages...")
+    merged = get_merged_brewfile(extras)
+    try:
+        subprocess.run(["brew", "bundle", "--file", str(merged)], check=True)
+        print("All packages installed.")
+    except subprocess.CalledProcessError:
+        sys.stderr.write("Error: Some packages failed to install.\n")
+        sys.exit(1)
+    finally:
+        try:
+            merged.unlink()
+        except FileNotFoundError:
+            pass
+
+
+def update_system() -> None:
+    managers = {
+        "chezmoi": shutil.which("chezmoi") and "Dotfiles",
+        "brew":    shutil.which("brew") and "Homebrew",
+        "apt":     shutil.which("apt") and "System",
+    }
+    managers = {cmd: name for cmd, name in managers.items() if name}
+    if not managers:
+        sys.stderr.write("Error: No supported package managers found.\n")
+        sys.exit(1)
+
+    print("Starting system update...\n")
+    results: List[bool] = []
+    for cmd, name in managers.items():
+        print(f"Updating {name}...")
+        success = True
+        try:
+            if cmd == "chezmoi":
+                subprocess.run(["chezmoi", "update"], check=True)
+            elif cmd == "brew":
+                subprocess.run(["brew", "update"], check=True)
+                subprocess.run(["brew", "upgrade"], check=True)
+                if shutil.which("brew-cu"):
+                    subprocess.run([
+                        "brew", "cu", "-y", "-q", "--cleanup", "--no-brew-update"
+                    ], check=True)
+                brew_install()
+                brew_cleanup()
+                subprocess.run(["brew", "cleanup", "-s"], check=True)
+            elif cmd == "apt":
+                subprocess.run(["sudo", "apt", "update"], check=True)
+                subprocess.run(["sudo", "apt", "dist-upgrade", "-y"], check=True)
+                subprocess.run([
+                    "sudo", "apt", "autoremove", "--purge", "-y"
+                ], check=False)
+        except Exception:
+            sys.stderr.write(f"Error updating {name}.\n")
+            success = False
+        print()
+        results.append(success)
+
+    total, success_count = len(results), sum(results)
+    if success_count == total:
+        print(f"All updates ({success_count}/{total}) successful.")
+    elif success_count:
+        sys.stderr.write(
+            f"Partial success: {success_count}/{total} updates completed.\n"
+        )
+        sys.exit(1)
+    else:
+        sys.stderr.write("Error: No updates succeeded.\n")
+        sys.exit(1)
+
+
+def main():
+    parser = ArgumentParser(
+        description="Manage Brewfiles and system updates"
+    )
+    sub = parser.add_subparsers(dest="command")
+    sub.add_parser(
+        "cleanup", help="Clean up unused Homebrew packages"
+    )
+    sub.add_parser(
+        "install", help="Install packages from Brewfiles"
+    )
+    args = parser.parse_args()
+
+    if args.command == "cleanup":
+        brew_cleanup()
+    elif args.command == "install":
+        brew_install()
+    else:
+        update_system()
+
+
+if __name__ == "__main__":
+    main()

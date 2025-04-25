@@ -1,15 +1,16 @@
 #!/usr/bin/env zsh
+# --- Zsh Environment Configuration ---
+# This file is sourced on every shell startup, including non-interactive ones.
+# It should contain environment variable settings and essential shell options
+# that need to be available globally. Avoid commands that produce output here.
 
-#---------------------------------------
-# Shell Configuration
-#---------------------------------------
+# --- Shell Options ---
 
-unsetopt GLOBAL_RCS    # Do not source global zsh config files
-skip_global_compinit=1 # Skip global compinit
+unsetopt GLOBAL_RCS    # Prevent sourcing of global Zsh config files (e.g., /etc/zshrc)
+skip_global_compinit=1 # Prevent global compinit from running
 
-#---------------------------------------
-# Locale Configuration
-#---------------------------------------
+# --- Locale Configuration ---
+# Set default locale settings if not already defined.
 
 export LC_ALL="${LC_ALL:-en_US.UTF-8}"
 export LANG="${LANG:-en_US.UTF-8}"

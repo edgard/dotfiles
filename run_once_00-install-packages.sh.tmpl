@@ -72,27 +72,6 @@ if ! command -v brew >/dev/null 2>&1; then
 fi
 
 ##############################################################################
-# Oh My Zsh Installation (Cross-Platform)
-##############################################################################
-
-if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
-    echo "Installing Oh My Zsh..."
-    # Use --unattended to install without interaction
-    # It will NOT change the default shell automatically in unattended mode
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended"
-    # Check if the installation directory exists now
-    if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
-        echo "Oh My Zsh installation failed."
-        # Optionally exit if OMZ is critical
-        # exit 1
-    else
-        echo "Oh My Zsh installed successfully."
-    fi
-else
-    echo "Oh My Zsh is already installed."
-fi
-
-##############################################################################
 # Cross-Platform Finalization
 ##############################################################################
 
