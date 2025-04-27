@@ -50,15 +50,6 @@ if (( $+commands[brew] )) && brew_prefix=$(brew --prefix go 2>/dev/null); then
     path+=("${GOPATH}/bin") # Add Go binary path
 fi
 
-# Rust (via rustup)
-# Cargo bin directory is typically added automatically by rustup installation
-# If rustup was installed via brew, ensure its shims are in PATH
-if (( $+commands[brew] )) && brew_prefix=$(brew --prefix rustup-init 2>/dev/null); then
-    path+=("${brew_prefix}/bin")
-fi
-# Standard cargo path
-path+=("${HOME}/.cargo/bin")
-
 # Node.js (via brew)
 if (( $+commands[brew] )) && brew_prefix=$(brew --prefix node 2>/dev/null); then
     # Configure npm global install location
