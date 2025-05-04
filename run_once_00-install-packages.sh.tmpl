@@ -10,15 +10,15 @@ echo "Installing essential Linux system packages..."
 if command -v apt-get >/dev/null 2>&1; then
     # Debian/Ubuntu
     sudo apt update
-    sudo apt install -y build-essential python3 curl unzip git zsh
+    sudo apt install -y build-essential python3 curl unzip git
 elif command -v dnf >/dev/null 2>&1; then
     # Fedora/RHEL
     sudo dnf update -y
-    sudo dnf install -y gcc gcc-c++ make python3 curl unzip git zsh
+    sudo dnf install -y gcc gcc-c++ make python3 curl unzip git
 elif command -v pacman >/dev/null 2>&1; then
     # Arch Linux
     sudo pacman -Syu --noconfirm
-    sudo pacman -S --noconfirm base-devel python curl unzip git zsh
+    sudo pacman -S --noconfirm base-devel python curl unzip git
 fi
 {{ end -}}
 
@@ -74,11 +74,5 @@ fi
 ##############################################################################
 # Cross-Platform Finalization
 ##############################################################################
-
-# Set zsh as default shell if not already
-if [[ "$SHELL" != *"zsh"* ]]; then
-    echo "Setting zsh as default shell..."
-    chsh -s "$(which zsh)"
-fi
 
 echo "System and user package installation complete."

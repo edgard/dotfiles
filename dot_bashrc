@@ -1,0 +1,247 @@
+#!/usr/bin/env bash
+
+# If not running interactively, don't do anything
+# We only set history size here to avoid truncating in non-interactive shells
+export HISTSIZE=$((0x7FFF7FFF))
+export HISTFILESIZE=$((0x7FFF7FFF))
+[[ ${-} != *i* ]] && return
+
+# --- Locale Configuration ---
+export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+export LANG="${LANG:-en_US.UTF-8}"
+export LANGUAGE="${LANGUAGE:-en_US.UTF-8}"
+
+# --- History Configuration ---
+shopt -s cmdhist                                       # Save multi-line commands as one history entry
+shopt -s histappend                                    # Append to history, don't overwrite
+shopt -s histverify                                    # Verify history entries before executing
+shopt -s histreedit                                    # Allow re-editing failed history substitutions
+shopt -s lithist                                       # Save multi-line commands with newlines, not semicolons
+export HISTCONTROL='ignoreboth:erasedups'              # Ignore duplicates and blank lines
+export HISTSIZE=100000                                 # Number of commands to remember in history
+export HISTFILESIZE=100000                             # Number of lines in history file
+export HISTIGNORE='ls:cd:pwd:exit:bg:fg:clear:history' # Commands to not save in history
+
+# --- Shell Behavior Options ---
+shopt -s checkwinsize            # Update window size after each command
+shopt -s dirspell                # Correct minor spelling errors in directory names
+shopt -s cdspell                 # Correct minor spelling errors in cd
+shopt -s no_empty_cmd_completion # Don't tab complete on an empty line
+
+# --- Prompt Configuration ---
+# Basic Input Behavior
+bind 'set editing-mode emacs'          # Use Emacs key bindings
+bind 'set bell-style none'             # Disable audible/visual bell
+bind 'set echo-control-characters off' # Hide "^C" when pressing Ctrl+C
+bind 'set enable-bracketed-paste on'   # Better paste handling (avoids autoexecuting)
+bind 'set revert-all-at-newline on'    # History editing doesn't change original
+
+# Completion Behavior & Matching
+bind 'set completion-ignore-case on'     # Ignore case during completion
+bind 'set completion-map-case on'        # Treat - and _ as identical
+bind 'set mark-symlinked-directories on' # Add / to symlinked directories
+bind 'set skip-completed-text on'        # Skip text matching next character
+
+# Completion Display & Appearance
+bind 'set show-all-if-ambiguous on'        # Show completions on ambiguous Tab
+bind 'set show-all-if-unmodified on'       # Show completions even if no change
+bind 'set colored-completion-prefix on'    # Color the common prefix in completions
+bind 'set colored-stats on'                # Color file‑type indicators
+bind 'set visible-stats on'                # Show file‑type colors in listings
+bind 'set menu-complete-display-prefix on' # Show the common prefix in menu-complete
+
+# Navigation Controls
+bind 'TAB:menu-complete'               # Cycle through completions with Tab
+bind '"\e[Z": menu-complete-backward'  # Shift+Tab to go backwards
+bind '"\e[A": history-search-backward' # Up‑arrow: search history backwards
+bind '"\e[B": history-search-forward'  # Down‑arrow: search history forwards
+
+# --- PATH Configuration ---
+# macOS path_helper
+[[ "${OSTYPE}" == darwin* && -x "/usr/libexec/path_helper" ]] && eval "$(/usr/libexec/path_helper -s)"
+
+# Homebrew setup
+if command -v brew &>/dev/null; then
+    eval "$(brew shellenv)"
+else
+    brew_paths=(
+        "/opt/homebrew/bin/brew"              # Apple Silicon
+        "/usr/local/bin/brew"                 # Intel Mac
+        "/home/linuxbrew/.linuxbrew/bin/brew" # System-wide Linux install
+        "${HOME}/.linuxbrew/bin/brew"         # User-specific Linux install
+    )
+
+    for brew_path in "${brew_paths[@]}"; do
+        if [[ -x "${brew_path}" ]]; then
+            eval "$("${brew_path}" shellenv)"
+            break
+        fi
+    done
+    unset brew_path brew_paths
+fi
+
+# Go environment
+if command -v go &>/dev/null; then
+    export GOPATH="${HOME}/.go"
+    export PATH="${PATH}:${GOPATH}/bin"
+fi
+
+# Node.js environment
+if command -v node &>/dev/null; then
+    export NPM_CONFIG_PREFIX="${HOME}/.npm-global"
+    export PATH="${PATH}:${NPM_CONFIG_PREFIX}/bin"
+fi
+
+# User Custom Paths
+user_paths=(
+    "${HOME}/.local/bin"
+    "${HOME}/Documents/Projects/dev-utils/bin"
+)
+for user_path in "${user_paths[@]}"; do
+    [[ -d "${user_path}" ]] && export PATH="${PATH}:${user_path}"
+done
+unset user_path user_paths
+
+# --- Environment Variables and Utility Initialization ---
+# Pager and less configuration
+export PAGER='less'
+export LESSHISTFILE='-'
+if command -v less &>/dev/null; then
+    if less --help 2>&1 | grep -q -- '--use-color'; then
+        export LESS='--use-color -R -i -j4 -M -X -F'
+        export MANPAGER='less --use-color -R -Dd+r -Du+b'
+    else
+        export LESS='-R -i -j4 -M -X -F'
+        export MANPAGER='less -R -Dd+r -Du+b'
+    fi
+fi
+export MANROFFOPT='-c'
+
+# Editor configuration
+if [[ "${TERM_PROGRAM}" == "vscode" ]] && command -v code &>/dev/null; then
+    export EDITOR='code -w'
+    export VISUAL='code -w'
+elif command -v nvim &>/dev/null; then
+    export EDITOR='nvim'
+    export VISUAL='nvim'
+elif command -v vim &>/dev/null; then
+    export EDITOR='vim'
+    export VISUAL='vim'
+elif command -v vi &>/dev/null; then
+    export EDITOR='vi'
+    export VISUAL='vi'
+fi
+
+# Dircolors for ls
+if [[ "${OSTYPE}" == linux* ]]; then
+    if [[ -f "${HOME}/.dir_colors" ]] && command -v dircolors &>/dev/null; then
+        eval "$(dircolors -b "${HOME}/.dir_colors")" 2>/dev/null || echo "Warning: Failed to eval dircolors" >&2
+    fi
+elif [[ "${OSTYPE}" == darwin* ]]; then
+    if command -v gdircolors &>/dev/null && [[ -f "${HOME}/.dir_colors" ]]; then
+        eval "$(gdircolors -b "${HOME}/.dir_colors")" 2>/dev/null || echo "Warning: Failed to eval gdircolors" >&2
+    else
+        export CLICOLOR=1
+        export LSCOLORS='exfxbxdxDxhbxDxecex'
+    fi
+fi
+
+# --- Aliases ---
+command -v grep &>/dev/null && alias grep='grep --color=auto --exclude-dir={.git,.hg,.svn} --binary-files=without-match'
+command -v diff &>/dev/null && alias diff='diff --color=auto'
+command -v ip &>/dev/null && alias ip='ip --color=auto'
+command -v dmesg &>/dev/null && alias dmesg='dmesg --color=auto'
+command -v journalctl &>/dev/null && alias journalctl='journalctl --output=short-precise --catalog --no-pager'
+command -v watch &>/dev/null && alias watch='watch --color'
+
+if [[ "${OSTYPE}" == darwin* ]]; then
+    if command -v gls &>/dev/null; then
+        # shellcheck disable=SC2262
+        alias ls='gls -F --color=auto --group-directories-first'
+    else
+        alias ls='ls -F -G'
+    fi
+else
+    if ls --color=auto &>/dev/null 2>&1; then
+        alias ls='ls -F --color=auto --group-directories-first'
+    else
+        alias ls='ls -F'
+    fi
+fi
+
+if command -v kubectl &>/dev/null; then
+    alias k='kubectl'
+    alias kg='kubectl get'
+    alias kl='kubectl logs'
+    alias kd='kubectl describe'
+    alias krm='kubectl delete'
+    command -v kubens &>/dev/null && alias kns='kubens'
+    command -v kubectx &>/dev/null && alias kctx='kubectx'
+fi
+
+# --- Post-Initialization Tasks ---
+# WSL2 runtime dir fix
+if [[ "${OSTYPE}" == linux* ]] && grep -qi microsoft /proc/version 2>/dev/null; then
+    expected_runtime_dir="/run/user/$(id -u)"
+    if [[ -z "${XDG_RUNTIME_DIR}" || "${XDG_RUNTIME_DIR}" != "${expected_runtime_dir}" ]]; then
+        export XDG_RUNTIME_DIR="${expected_runtime_dir}"
+    fi
+    if [[ ! -d "${XDG_RUNTIME_DIR}" ]]; then
+        sudo mkdir -p "${XDG_RUNTIME_DIR}" &&
+            sudo chmod 700 "${XDG_RUNTIME_DIR}" &&
+            sudo chown "$(id -u):$(id -g)" "${XDG_RUNTIME_DIR}"
+    fi
+    unset expected_runtime_dir
+fi
+
+# VS Code shell integration
+# shellcheck disable=SC1090
+if [[ "${TERM_PROGRAM}" == "vscode" ]] && command -v code &>/dev/null; then
+    vscode_integration_path="$(code --locate-shell-integration-path bash 2>/dev/null)"
+    if [[ -n "${vscode_integration_path}" && -r "${vscode_integration_path}" ]]; then
+        source "${vscode_integration_path}"
+    fi
+    unset vscode_integration_path
+fi
+
+# --- Utility Hooks ---
+if command -v fzf &>/dev/null; then
+    export FZF_DEFAULT_OPTS='--height 10 --layout=reverse --color=bg+:#414559,bg:#303446,spinner:#f2d5cf,hl:#e78284 --color=fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf --color=marker:#f2d5cf,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284'
+    if command -v fd &>/dev/null; then
+        export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+        export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+        export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+    fi
+    eval "$(fzf --bash)" 2>/dev/null || echo "Warning: Failed to initialize fzf" >&2
+fi
+if command -v direnv &>/dev/null; then
+    export DIRENV_LOG_FORMAT=""
+    eval "$(direnv hook bash)" 2>/dev/null || echo "Warning: Failed to initialize direnv" >&2
+fi
+
+if command -v starship &>/dev/null; then
+    eval "$(starship init bash)" 2>/dev/null || echo "Warning: Failed to initialize starship" >&2
+fi
+
+if command -v zoxide &>/dev/null; then
+    eval "$(zoxide init bash)" 2>/dev/null || echo "Warning: Failed to initialize zoxide" >&2
+fi
+
+# --- Path Sanitization ---
+if [[ -n "${PATH}" ]]; then
+    declare -A seen_paths=()
+    new_path=""
+    IFS=":" read -r -a path_array <<<"${PATH}"
+    for dir in "${path_array[@]}"; do
+        [[ -z "${dir}" ]] && continue
+        if [[ -d "${dir}" ]] && [[ -z "${seen_paths["$dir"]}" ]]; then
+            seen_paths["$dir"]=1
+            new_path+="${dir}:"
+        fi
+    done
+    unset IFS
+    if [[ -n "${new_path}" ]]; then
+        export PATH="${new_path%:}"
+    fi
+    unset new_path seen_paths path_array dir
+fi

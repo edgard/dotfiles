@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# --- Bash Profile Configuration ---
+# This file is sourced for login shells.
+# It primarily sources .bashrc for consistency between login and non-login shells.
+
+# shellcheck disable=SC1091
+if [ -f "${HOME}/.bashrc" ]; then
+    source "${HOME}/.bashrc"
+fi
