@@ -11,8 +11,10 @@ tap "buo/cask-upgrade"
 # CLI Tools
 ##############################################################################
 
-brew "mas"
+brew "bash"
 brew "coreutils"
+brew "mas"
+brew "watch"
 
 ##############################################################################
 # macOS Applications (Casks)
