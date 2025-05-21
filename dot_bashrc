@@ -102,6 +102,25 @@ for user_path in "${user_paths[@]}"; do
 done
 unset user_path user_paths
 
+# --- Path Sanitization ---
+if [[ -n "${PATH}" ]]; then
+    declare -A seen_paths=()
+    new_path=""
+    IFS=":" read -r -a path_array <<<"${PATH}"
+    for dir in "${path_array[@]}"; do
+        [[ -z "${dir}" ]] && continue
+        if [[ -d "${dir}" ]] && [[ -z "${seen_paths["$dir"]}" ]]; then
+            seen_paths["$dir"]=1
+            new_path+="${dir}:"
+        fi
+    done
+    unset IFS
+    if [[ -n "${new_path}" ]]; then
+        export PATH="${new_path%:}"
+    fi
+    unset new_path seen_paths path_array dir
+fi
+
 # --- Environment Variables and Utility Initialization ---
 # Pager and less configuration
 export PAGER='less'
@@ -225,23 +244,4 @@ fi
 
 if command -v zoxide &>/dev/null; then
     eval "$(zoxide init bash)" 2>/dev/null || echo "Warning: Failed to initialize zoxide" >&2
-fi
-
-# --- Path Sanitization ---
-if [[ -n "${PATH}" ]]; then
-    declare -A seen_paths=()
-    new_path=""
-    IFS=":" read -r -a path_array <<<"${PATH}"
-    for dir in "${path_array[@]}"; do
-        [[ -z "${dir}" ]] && continue
-        if [[ -d "${dir}" ]] && [[ -z "${seen_paths["$dir"]}" ]]; then
-            seen_paths["$dir"]=1
-            new_path+="${dir}:"
-        fi
-    done
-    unset IFS
-    if [[ -n "${new_path}" ]]; then
-        export PATH="${new_path%:}"
-    fi
-    unset new_path seen_paths path_array dir
 fi
