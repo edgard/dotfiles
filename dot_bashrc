@@ -2,8 +2,8 @@
 
 # If not running interactively, don't do anything
 # We only set history size here to avoid truncating in non-interactive shells
-export HISTSIZE=$((0x7FFF7FFF))
-export HISTFILESIZE=$((0x7FFF7FFF))
+export HISTSIZE=100000
+export HISTFILESIZE=100000
 [[ ${-} != *i* ]] && return
 
 # --- Locale Configuration ---
@@ -18,8 +18,6 @@ shopt -s histverify                                    # Verify history entries 
 shopt -s histreedit                                    # Allow re-editing failed history substitutions
 shopt -s lithist                                       # Save multi-line commands with newlines, not semicolons
 export HISTCONTROL='ignoreboth:erasedups'              # Ignore duplicates and blank lines
-export HISTSIZE=100000                                 # Number of commands to remember in history
-export HISTFILESIZE=100000                             # Number of lines in history file
 export HISTIGNORE='ls:cd:pwd:exit:bg:fg:clear:history' # Commands to not save in history
 
 # --- Shell Behavior Options ---
@@ -56,12 +54,22 @@ bind '"\e[Z": menu-complete-backward'  # Shift+Tab to go backwards
 bind '"\e[A": history-search-backward' # Up‑arrow: search history backwards
 bind '"\e[B": history-search-forward'  # Down‑arrow: search history forwards
 
+# --- Command Availability Cache ---
+# Cache command existence checks to avoid repeated lookups
+declare -A _cmd_cache=()
+_has_cmd() {
+    local cmd="$1"
+    [[ -z "$cmd" ]] && return 1
+    [[ -z "${_cmd_cache[$cmd]}" ]] && _cmd_cache[$cmd]=$(command -v "$cmd" &>/dev/null && echo 1 || echo 0)
+    [[ "${_cmd_cache[$cmd]}" == "1" ]]
+}
+
 # --- PATH Configuration ---
 # macOS path_helper
 [[ "${OSTYPE}" == darwin* && -x "/usr/libexec/path_helper" ]] && eval "$(/usr/libexec/path_helper -s)"
 
 # Homebrew setup
-if command -v brew &>/dev/null; then
+if _has_cmd brew; then
     eval "$(brew shellenv)"
 else
     brew_paths=(
@@ -81,13 +89,13 @@ else
 fi
 
 # Go environment
-if command -v go &>/dev/null; then
+if _has_cmd go; then
     export GOPATH="${HOME}/.go"
     export PATH="${PATH}:${GOPATH}/bin"
 fi
 
 # Node.js environment
-if command -v node &>/dev/null; then
+if _has_cmd node; then
     export NPM_CONFIG_PREFIX="${HOME}/.npm-global"
     export PATH="${PATH}:${NPM_CONFIG_PREFIX}/bin"
 fi
@@ -109,8 +117,9 @@ if [[ -n "${PATH}" ]]; then
     IFS=":" read -r -a path_array <<<"${PATH}"
     for dir in "${path_array[@]}"; do
         [[ -z "${dir}" ]] && continue
-        if [[ -d "${dir}" ]] && [[ -z "${seen_paths["$dir"]}" ]]; then
-            seen_paths["$dir"]=1
+        real_dir=$(realpath "$dir" 2>/dev/null) || real_dir="$dir"
+        if [[ -d "$real_dir" ]] && [[ -z "${seen_paths["$real_dir"]}" ]]; then
+            seen_paths["$real_dir"]=1
             new_path+="${dir}:"
         fi
     done
@@ -118,14 +127,14 @@ if [[ -n "${PATH}" ]]; then
     if [[ -n "${new_path}" ]]; then
         export PATH="${new_path%:}"
     fi
-    unset new_path seen_paths path_array dir
+    unset new_path seen_paths path_array dir real_dir
 fi
 
 # --- Environment Variables and Utility Initialization ---
 # Pager and less configuration
 export PAGER='less'
 export LESSHISTFILE='-'
-if command -v less &>/dev/null; then
+if _has_cmd less; then
     if less --help 2>&1 | grep -q -- '--use-color'; then
         export LESS='--use-color -R -i -j4 -M -X -F'
         export MANPAGER='less --use-color -R -Dd+r -Du+b'
@@ -137,27 +146,27 @@ fi
 export MANROFFOPT='-c'
 
 # Editor configuration
-if [[ "${TERM_PROGRAM}" == "vscode" ]] && command -v code &>/dev/null; then
+if [[ "${TERM_PROGRAM}" == "vscode" ]] && _has_cmd code; then
     export EDITOR='code -w'
     export VISUAL='code -w'
-elif command -v nvim &>/dev/null; then
+elif _has_cmd nvim; then
     export EDITOR='nvim'
     export VISUAL='nvim'
-elif command -v vim &>/dev/null; then
+elif _has_cmd vim; then
     export EDITOR='vim'
     export VISUAL='vim'
-elif command -v vi &>/dev/null; then
+elif _has_cmd vi; then
     export EDITOR='vi'
     export VISUAL='vi'
 fi
 
 # Dircolors for ls
 if [[ "${OSTYPE}" == linux* ]]; then
-    if [[ -f "${HOME}/.dir_colors" ]] && command -v dircolors &>/dev/null; then
+    if [[ -f "${HOME}/.dir_colors" ]] && _has_cmd dircolors; then
         eval "$(dircolors -b "${HOME}/.dir_colors")" 2>/dev/null || echo "Warning: Failed to eval dircolors" >&2
     fi
 elif [[ "${OSTYPE}" == darwin* ]]; then
-    if command -v gdircolors &>/dev/null && [[ -f "${HOME}/.dir_colors" ]]; then
+    if _has_cmd gdircolors && [[ -f "${HOME}/.dir_colors" ]]; then
         eval "$(gdircolors -b "${HOME}/.dir_colors")" 2>/dev/null || echo "Warning: Failed to eval gdircolors" >&2
     else
         export CLICOLOR=1
@@ -166,15 +175,15 @@ elif [[ "${OSTYPE}" == darwin* ]]; then
 fi
 
 # --- Aliases ---
-command -v grep &>/dev/null && alias grep='grep --color=auto --exclude-dir={.git,.hg,.svn} --binary-files=without-match'
-command -v diff &>/dev/null && alias diff='diff --color=auto'
-command -v ip &>/dev/null && alias ip='ip --color=auto'
-command -v dmesg &>/dev/null && alias dmesg='dmesg --color=auto'
-command -v journalctl &>/dev/null && alias journalctl='journalctl --output=short-precise --catalog --no-pager'
-command -v watch &>/dev/null && alias watch='watch --color'
+_has_cmd grep && alias grep='grep --color=auto --exclude-dir={.git,.hg,.svn} --binary-files=without-match'
+_has_cmd diff && alias diff='diff --color=auto'
+_has_cmd ip && alias ip='ip --color=auto'
+_has_cmd dmesg && alias dmesg='dmesg --color=auto'
+_has_cmd journalctl && alias journalctl='journalctl --output=short-precise --catalog --no-pager'
+_has_cmd watch && alias watch='watch --color'
 
 if [[ "${OSTYPE}" == darwin* ]]; then
-    if command -v gls &>/dev/null; then
+    if _has_cmd gls; then
         # shellcheck disable=SC2262
         alias ls='gls -F --color=auto --group-directories-first'
     else
@@ -188,14 +197,14 @@ else
     fi
 fi
 
-if command -v kubectl &>/dev/null; then
+if _has_cmd kubectl; then
     alias k='kubectl'
     alias kg='kubectl get'
     alias kl='kubectl logs'
     alias kd='kubectl describe'
     alias krm='kubectl delete'
-    command -v kubens &>/dev/null && alias kns='kubens'
-    command -v kubectx &>/dev/null && alias kctx='kubectx'
+    _has_cmd kubens && alias kns='kubens'
+    _has_cmd kubectx && alias kctx='kubectx'
 fi
 
 # --- Post-Initialization Tasks ---
@@ -206,42 +215,48 @@ if [[ "${OSTYPE}" == linux* ]] && grep -qi microsoft /proc/version 2>/dev/null; 
         export XDG_RUNTIME_DIR="${expected_runtime_dir}"
     fi
     if [[ ! -d "${XDG_RUNTIME_DIR}" ]]; then
-        sudo mkdir -p "${XDG_RUNTIME_DIR}" &&
-            sudo chmod 700 "${XDG_RUNTIME_DIR}" &&
-            sudo chown "$(id -u):$(id -g)" "${XDG_RUNTIME_DIR}"
+        if command -v sudo >/dev/null 2>&1; then
+            sudo mkdir -p "${XDG_RUNTIME_DIR}" 2>/dev/null &&
+                sudo chmod 700 "${XDG_RUNTIME_DIR}" 2>/dev/null &&
+                sudo chown "$(id -u):$(id -g)" "${XDG_RUNTIME_DIR}" 2>/dev/null
+        fi
     fi
     unset expected_runtime_dir
 fi
 
 # VS Code shell integration
-# shellcheck disable=SC1090
-if [[ "${TERM_PROGRAM}" == "vscode" ]] && command -v code &>/dev/null; then
-    vscode_integration_path="$(code --locate-shell-integration-path bash 2>/dev/null)"
-    if [[ -n "${vscode_integration_path}" && -r "${vscode_integration_path}" ]]; then
+if [[ "${TERM_PROGRAM}" == "vscode" ]] && _has_cmd code; then
+    if vscode_integration_path="$(code --locate-shell-integration-path bash 2>/dev/null)" && [[ -r "${vscode_integration_path}" ]]; then
+        # shellcheck disable=SC1090
         source "${vscode_integration_path}"
     fi
     unset vscode_integration_path
 fi
 
 # --- Utility Hooks ---
-if command -v fzf &>/dev/null; then
+if _has_cmd fzf; then
     export FZF_DEFAULT_OPTS='--height 10 --layout=reverse --color=bg+:#414559,bg:#303446,spinner:#f2d5cf,hl:#e78284 --color=fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf --color=marker:#f2d5cf,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284'
-    if command -v fd &>/dev/null; then
+    if _has_cmd fd; then
         export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
         export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
         export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
     fi
     eval "$(fzf --bash)" 2>/dev/null || echo "Warning: Failed to initialize fzf" >&2
 fi
-if command -v direnv &>/dev/null; then
+
+if _has_cmd direnv; then
     export DIRENV_LOG_FORMAT=""
     eval "$(direnv hook bash)" 2>/dev/null || echo "Warning: Failed to initialize direnv" >&2
 fi
 
-if command -v starship &>/dev/null; then
+if _has_cmd starship; then
     eval "$(starship init bash)" 2>/dev/null || echo "Warning: Failed to initialize starship" >&2
 fi
 
-if command -v zoxide &>/dev/null; then
+if _has_cmd zoxide; then
     eval "$(zoxide init bash)" 2>/dev/null || echo "Warning: Failed to initialize zoxide" >&2
 fi
+
+# --- Cleanup ---
+unset _cmd_cache
+unset -f _has_cmd
