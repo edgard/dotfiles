@@ -14,6 +14,7 @@ osascript -e 'tell application "System Settings" to quit'
 # Language and Region
 defaults write NSGlobalDomain AppleLanguages -array "en-US" "pt-BR" # Set user languages priority
 defaults write NSGlobalDomain AppleLocale -string "en_PL"           # Set user locale to English (Poland)
+defaults write NSGlobalDomain AppleICUForce12HourTime -bool true    # Use 12-hour time format
 
 # General UI/UX
 defaults write NSGlobalDomain NSQuitAlwaysKeepsWindow -bool false           # Don't restore windows when quitting and re-opening apps
@@ -96,7 +97,10 @@ defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true # S
 defaults write com.apple.dock tilesize -int 24                   # Set Dock icon size to 24 pixels
 defaults write com.apple.dock mineffect -string "scale"          # Use scale effect when minimizing windows
 defaults write com.apple.dock minimize-to-application -bool true # Minimize windows into their application icon
-defaults write com.apple.dock show-process-indicators -bool true # Show indicator lights for open applications
+
+# Desktop
+defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false # Disable click to show desktop
+defaults write com.apple.WindowManager GloballyEnabled -bool false # Disable Stage Manager
 
 # Mission Control
 defaults write com.apple.dock "expose-group-apps" -bool true # Group windows by application in Mission Control

@@ -1,0 +1,194 @@
+#!/bin/bash
+
+# Helper for usage errors
+_usage() {
+    echo "Usage: $1"
+}
+
+# Environment
+export KUBECTL="kubectl"
+
+# --- Kubernetes (k_) Operations ---
+k_events() {
+    $KUBECTL get events --sort-by='{.lastTimestamp}'
+}
+
+k_nodes() {
+    $KUBECTL get nodes -o custom-columns="NAME:.metadata.name,READY:.status.conditions[?(@.type==\"Ready\")].status,VERSION:.status.nodeInfo.kubeletVersion,ARCH:.status.nodeInfo.architecture,KARP_REG:.metadata.labels.karpenter\.sh/registered,KARP_INIT:.metadata.labels.karpenter\.sh/initialized,KARP_TAINT:.spec.taints[?(@.value==\"Karpenter\")].key,DEL_SINCE:.metadata.deletionTimestamp"
+}
+
+k_keys() {
+    $KUBECTL get key -o custom-columns="NAME:.metadata.name,READY:.status.conditions[?(@.type==\"Ready\")].status,SYNCED:.status.conditions[?(@.type==\"Synced\")].status,EXTERNAL-NAME:.metadata.annotations.crossplane\.io/external-name,OWNER-KIND:.metadata.ownerReferences[*].kind"
+}
+
+k_node_terminate() {
+    [ -z "$1" ] && _usage "k_node_terminate <nodeclaim-name>" && return 1
+    $KUBECTL patch "nodeclaim.karpenter.sh/$1" --type=merge -p '{"metadata":{"annotations":{"karpenter.sh/nodeclaim-termination-timestamp":"'"$(date -u +"%Y-%m-%dT%H:%M:%SZ")"'"}}}'
+}
+
+k_finalizers_remove() {
+    [ $# -lt 2 ] && _usage "k_finalizers_remove <resource-type> <resource-name> [-n <namespace>]" && return 1
+    $KUBECTL patch --type=merge -p '{"metadata":{"finalizers":null}}' "$@"
+}
+
+k_conditions_get() {
+    [ -z "$1" ] && _usage "k_conditions_get <resource-type>" && return 1
+    $KUBECTL get "$1" -o jsonpath="{range .items[*]}{.metadata.name}{' '}{.status..conditions[*].type}{'\n- '}{.status..conditions[*].status}{'\n'}{end}" | column -ts ' '
+}
+
+# --- Runtime (rt_) Operations ---
+rt_trace() {
+    [ -z "$1" ] && _usage "rt_trace <cluster-id>" && return 1
+    local namespace
+    namespace=$($KUBECTL get "XEKSRuntime/$1" -o jsonpath="{.metadata.labels.crossplane\.io/claim-namespace}")
+    [ -z "$namespace" ] && echo "Namespace not found for cluster ID: $1" && return 1
+    crossplane beta trace --concurrency=20 "nrfruntime" -n "$namespace" "$1" | grep -v 'Role\|Rule\|Target\|Queue\|Key'
+}
+
+rt_details() {
+    [ -z "$1" ] && _usage "rt_details <cluster-id>" && return 1
+    local namespace
+    namespace=$($KUBECTL get "XEKSRuntime/$1" -o jsonpath="{.metadata.labels.crossplane\.io/claim-namespace}")
+    $KUBECTL get "nrfruntime" -n "$namespace" "$1" -oyaml | yq 'del(.status.platform.app, .status.runtime.eks.certificateAuthorityData, .spec.spotinst)'
+}
+
+rt_login_prod() {
+    [ -z "$1" ] && _usage "rt_login_prod <runtime-name>" && return 1
+    local rt="$1" ns region
+    [[ "$($KUBECTL config current-context)" != "npe-prod-us-west-2" ]] && {
+        echo "Current context is not npe-prod-us-west-2, logging to prod..."
+        npe-auth -e prod -c npe-prod-us-west-2 -p
+    }
+    ns=$($KUBECTL get "XEKSCluster/$rt" -o jsonpath="{.metadata.labels.crossplane\.io/claim-namespace}" | cut -d'-' -f2)
+    region=$($KUBECTL get "XEKSCluster/$rt" -o jsonpath="{.spec.resourceConfig.region}")
+    NPECTL_IS_OKTA_QA=false NPECTL_NPE_SUPPORT=true NPECTL_RUNTIME_NAME="$rt" npectl runtime login -a "$ns" -r "$region"
+}
+
+rt_login() {
+    [ -z "$1" ] && _usage "rt_login <runtime-name>" && return 1
+    local rt="$1" ns region env
+    ns=$($KUBECTL get "XEKSCluster/$rt" -o jsonpath="{.metadata.labels.crossplane\.io/claim-namespace}")
+    region=$($KUBECTL get "XEKSCluster/$rt" -o jsonpath="{.spec.resourceConfig.region}")
+    env=$($KUBECTL get -n "$ns" "NRFRuntime/$rt" -o jsonpath="{.spec.env}")
+    npe-auth -e "$env" -r "$region" -t -c "nike-platformengine-$rt" -p
+}
+
+rt_list() {
+    $KUBECTL get nrfruntime -A -o custom-columns="NAMESPACE:.metadata.labels.crossplane\.io/claim-namespace,NAME:.metadata.name,REGION:.spec.region,NRF:.spec.platformTemplate.runtime.git.targetRevision,EKS:.spec.eks.kubernetesVersion,SYNCED:.status.conditions[?(@.type==\"Synced\")].status,READY:.status.conditions[?(@.type==\"Ready\")].status,PAUSED:.metadata.annotations.crossplane\.io/paused,RLT_PAUSED:.metadata.annotations.rollout/paused,READYDEL:.metadata.annotations.nrf/ready-to-delete,CORE:.status..resources.*[?(@.name==\"nrf-core-components\")].health.status,XP_CORE:.status..resources.*[?(@.name==\"nrf-crossplane-core-components\")].health.status,SEC:.status..resources.*[?(@.name==\"nrf-security-components\")].health.status,XP:.status..resources.*[?(@.name==\"nrf-crossplane-components\")].health.status,GITOPS:.status..resources.*[?(@.name==\"nrf-gitops-components\")].health.status,NET:.status..resources.*[?(@.name==\"nrf-networking-components\")].health.status,OBS:.status..resources.*[?(@.name==\"nrf-observability-components\")].health.status,ADDONS:.status..resources.*[?(@.name==\"nrf-addons-components\")].health.status"
+}
+
+rt_versions() {
+    $KUBECTL get nrfruntime -A -o custom-columns="NAMESPACE:.metadata.labels.crossplane\.io/claim-namespace,NAME:.metadata.name,REGION:.spec.region,REV:.status.platform.app..revision,NRF:.spec.platformTemplate.runtime.git.targetRevision,CORE:.spec.platformTemplate.runtimeComponents[?(@.git.repo==\"nrf-core-components\")].git.targetRevision,XP_CORE:.spec.platformTemplate.runtimeComponents[?(@.git.repo==\"nrf-crossplane-core-components\")].git.targetRevision,SEC:.spec.platformTemplate.runtimeComponents[?(@.git.repo==\"nrf-security-components\")].git.targetRevision,XP:.spec.platformTemplate.runtimeComponents[?(@.git.repo==\"nrf-crossplane-components\")].git.targetRevision,GITOPS:.spec.platformTemplate.runtimeComponents[?(@.git.repo==\"nrf-gitops-components\")].git.targetRevision,NET:.spec.platformTemplate.runtimeComponents[?(@.git.repo==\"nrf-networking-components\")].git.targetRevision,OBS:.spec.platformTemplate.runtimeComponents[?(@.git.repo==\"nrf-observability-components\")].git.targetRevision,ADDONS:.spec.platformTemplate.runtimeComponents[?(@.git.repo==\"nrf-addons-components\")].git.targetRevision"
+}
+
+rt_status() {
+    $KUBECTL get XNRFRuntime -o yaml -o custom-columns="NAMESPACE:.spec.claimRef.namespace,NAME:.spec.claimRef.name,REGION:.spec.region,ID:metadata.name,STATUS:.status.conditions[?(@.type==\"Ready\")].reason"
+}
+
+# --- ArgoCD (argo_) Operations ---
+argo_portforward() {
+    $KUBECTL port-forward svc/nrf-argocd-server -n argocd-system 8080:443
+}
+
+argo_apps() {
+    $KUBECTL get application -n argocd-system -o custom-columns="NAME:.metadata.name,SYNC:.status.sync.status,HEALTH:.status.health.status,WAVE:.metadata.annotations.argocd\.argoproj\.io/sync-wave" --sort-by='{.metadata.annotations.argocd\.argoproj\.io/sync-wave}'
+}
+
+argo_revisions() {
+    $KUBECTL get application -n argocd-system -o custom-columns="NAME:.metadata.name,SYNC:.status.sync.status,HEALTH:.status.health.status,WAVE:.metadata.annotations.argocd\.argoproj\.io/sync-wave,REV:.status.sync.revision,REVISION:.status.operationState.operation.sync.revision"
+}
+
+argo_paths() {
+    $KUBECTL get application -n argocd-system -o custom-columns="NAME:.metadata.name,SYNC:.status.sync.status,HEALTH:.status.health.status,PATH:.spec.source.path"
+}
+
+argo_app_status() {
+    [ -z "$1" ] && _usage "argo_app_status <app-name>" && return 1
+    $KUBECTL get application "$1" -n argocd-system -o jsonpath="{.status.resources}" | jq -r '.. | arrays | .[] | "\(.kind) \(.name) \(.namespace) \(.status) \(.health.status)"' | column -ts ' '
+}
+
+# --- AWS Operations ---
+aws_identity() {
+    aws sts get-caller-identity
+}
+
+aws_eks_clusters() {
+    [ -z "$1" ] && _usage "aws_eks_clusters <region>" && return 1
+    aws eks list-clusters --region "$1"
+}
+
+# --- NPE CLI (npectl_) Operations ---
+npectl_local() {
+    [ -z "$1" ] && _usage "npectl_local <command>" && return 1
+    LOCAL_API=true npe-npectl "${@}"
+}
+
+npectl_dev() {
+    [ -z "$1" ] && _usage "npectl_dev <command>" && return 1
+    DEV_API=true npe-npectl "${@}"
+}
+
+npectl_test() {
+    [ -z "$1" ] && _usage "npectl_test <command>" && return 1
+    TEST_API=true npe-npectl "${@}"
+}
+
+npectl_qa() {
+    [ -z "$1" ] && _usage "npectl_qa <command>" && return 1
+    QA_API=true npe-npectl "${@}"
+}
+
+npectl_prod() {
+    [ -z "$1" ] && _usage "npectl_prod <command>" && return 1
+    PROD_API=true npe-npectl "${@}"
+}
+
+# --- Platform Operations ---
+platform_list() {
+    $KUBECTL get platforms -o custom-columns="NAMESPACE:.metadata.labels.crossplane\.io/claim-namespace,ACCOUNT:.spec.forProvider.clusters[0].accountID,NAME:.metadata.name,ZONE:.spec.forProvider.runtime.vars.internal-hosted-zone,NRF:.spec.forProvider.runtime.git.targetRevision,READY:.status.conditions[?(@.type==\"Ready\")].status,PAUSED:.metadata.annotations.crossplane\.io/paused"
+}
+
+platform_issues() {
+    [ -z "$1" ] && _usage "platform_issues <platform-name>" && return 1
+    $KUBECTL get Platform "$1" -o jsonpath="{.status.atProvider.app..resources}" | jq -r '.. | arrays | .[] | "\(.name) \(.status) \(.health.status)"' | grep -v 'Synced Healthy' | column -ts ' '
+}
+
+platform_resources() {
+    [ -z "$1" ] && _usage "platform_resources <platform-name>" && return 1
+    $KUBECTL get Platform "$1" -o jsonpath="{.status.atProvider.app..resources}" | jq -r '.. | arrays | .[] | "\(.name) \(.status) \(.health.status)"' | column -ts ' '
+}
+
+# --- Crossplane (xp_) Operations ---
+xp_trace() {
+    [ -z "$1" ] || [ -z "$2" ] && _usage "xp_trace <namespace> <runtime>" && return 1
+    crossplane beta trace "nrfruntime" -n "$1" "$2"
+}
+
+xp_trace_wide() {
+    [ -z "$1" ] || [ -z "$2" ] && _usage "xp_trace_wide <namespace> <runtime>" && return 1
+    crossplane beta trace "nrfruntime" -n "$1" "$2" --output=wide
+}
+
+xp_claim_resources() {
+    [ -z "$1" ] && _usage "xp_claim_resources <claim-name>" && return 1
+    $KUBECTL get NRFRuntime,XNRFRuntime,XEKSRuntime,XEKSAddon,XEKSCluster,XEKSSecurityGroup,XEKSService,XSpotInst,Platform,NikeTags,MetaData,Usage,ClusterAuth,Cluster,ProviderConfig,RolePolicyAttachment,Role.iam,Key,SecurityGroupRule,SecurityGroup,Release,Object,InstanceProfile,Aws,Addon,OpenIDConnectProvider -l crossplane.io/claim-name="$1" -A --no-headers
+}
+
+xp_object_get() {
+    [ -z "$1" ] && _usage "xp_object_get <resource-name>" && return 1
+    $KUBECTL get Object -o jsonpath="{range .items[?(@.metadata.annotations.crossplane\.io/composition-resource-name=='$1')]}{.metadata.name}{' '}{.status.atProvider.manifest.status.conditions[*].type}{'\n- '}{.status.atProvider.manifest.status.conditions[*].status}{'\n'}{end}" | column -ts ' '
+}
+
+xp_usage_get() {
+    [ -z "$1" ] && _usage "xp_usage_get <claim-name>" && return 1
+    $KUBECTL get Usage -l crossplane.io/claim-name="$1" -o custom-columns="KIND:.metadata.kind,NAME:.metadata.name,DEL:.metadata.deletionTimestamp"
+}
+
+# --- Rollout Operations ---
+rollout_list() {
+    $KUBECTL get rollouts.release.nrf.crossplane.nike.com -o "custom-columns=NAME:.metadata.name,TARGET_REV:.spec.forProvider.tenants[0].targetRevision,TARGET_REV_NRF:.spec.forProvider.nrf.targetRevision,READY:.status.conditions[?(@.type==\"Ready\")].status,SYNCED:.status.conditions[?(@.type==\"Synced\")].status"
+}
+
+rollout_components() {
+    $KUBECTL get rollouts.release.nrf.crossplane.nike.com -o "custom-columns=NAME:.metadata.name,READY:.status.conditions[?(@.type==\"Ready\")].status,SYNCED:.status.conditions[?(@.type==\"Synced\")].status,CORE:.spec.forProvider.nrfComponents[?(@.repo==\"nrf-core-components\")].targetRevision,XP_CORE:.spec.forProvider.nrfComponents[?(@.repo==\"nrf-crossplane-core-components\")].targetRevision,SEC:.spec.forProvider.nrfComponents[?(@.repo==\"nrf-security-components\")].targetRevision,XP:.spec.forProvider.nrfComponents[?(@.repo==\"nrf-crossplane-components\")].targetRevision,GITOPS:.spec.forProvider.nrfComponents[?(@.repo==\"nrf-gitops-components\")].targetRevision,NET:.spec.forProvider.nrfComponents[?(@.repo==\"nrf-networking-components\")].targetRevision,OBS:.spec.forProvider.nrfComponents[?(@.repo==\"nrf-observability-components\")].targetRevision,ADDONS:.spec.forProvider.nrfComponents[?(@.repo==\"nrf-addons-components\")].targetRevision"
+}

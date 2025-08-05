@@ -35,7 +35,7 @@ def get_merged_brewfile(base_dir: Optional[Path] = None) -> Path:
         sys.stderr.write(f"Error: Unsupported OS: {os_type}\n")
         sys.exit(1)
 
-    brewfiles = [base / 'Brewfile.common', base / f'Brewfile.{suffix}']
+    brewfiles = [base / 'Brewfile.common', base / 'Brewfile.work', base / f'Brewfile.{suffix}']
     temp_path = Path(tempfile.gettempdir()) / f'brewfile_merged_{os.getpid()}.brew'
 
     # Header

@@ -7,8 +7,6 @@
 
 tap "fluxcd/tap"
 tap "go-task/tap"
-tap "nike-inc/nike"
-tap "vmware-tanzu/carvel"
 
 ##############################################################################
 # CLI Tools
@@ -40,16 +38,10 @@ brew "yq"
 # Cloud and Kubernetes Tools
 ##############################################################################
 
-brew "awscli"
-brew "eksctl"
 brew "helm"
-brew "gimme-aws-creds"
 brew "k3sup"
-brew "kind"
 brew "kubernetes-cli"
 brew "kubectx"
 brew "kustomize"
 brew "fluxcd/tap/flux"
 brew "velero"
-brew "vmware-tanzu/carvel/vendir"
-brew "nike-inc/nike/cerberus-cli"

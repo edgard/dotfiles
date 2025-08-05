@@ -22,7 +22,7 @@ brew "watch"
 
 cask "appcleaner"
 cask "bruno"
-cask "docker"
+cask "docker-desktop"
 cask "ghostty"
 cask "google-chrome"
 cask "kdenlive"

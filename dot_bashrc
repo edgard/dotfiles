@@ -260,3 +260,7 @@ fi
 # --- Cleanup ---
 unset _cmd_cache
 unset -f _has_cmd
+
+# Source .aliases_local if it exists
+# shellcheck disable=SC1091
+[[ -f "${HOME}/.aliases_local" ]] && source "${HOME}/.aliases_local"
