@@ -1,24 +1,22 @@
-# Cross-platform Brewfile for user utilities
-# Contains packages compatible with both macOS and Linux
+# Common Brewfile for baseline setup
+# Contains packages and apps used across profiles (macOS)
 
 ##############################################################################
 # Taps
 ##############################################################################
 
-tap "fluxcd/tap"
-tap "go-task/tap"
+tap "buo/cask-upgrade"
 
 ##############################################################################
 # CLI Tools
 ##############################################################################
 
-brew "age"
 brew "direnv"
 brew "fd"
 brew "fzf"
-brew "go-task/tap/go-task"
-brew "sops"
+brew "mas"
 brew "starship"
+brew "watch"
 brew "zoxide"
 
 ##############################################################################
@@ -30,18 +28,23 @@ brew "go"
 brew "jq"
 brew "node"
 brew "shellcheck"
-brew "tfenv"
-brew "tflint"
 brew "yq"
 
 ##############################################################################
-# Cloud and Kubernetes Tools
+# macOS Applications (Casks)
 ##############################################################################
 
-brew "helm"
-brew "k3sup"
-brew "kubernetes-cli"
-brew "kubectx"
-brew "kustomize"
-brew "fluxcd/tap/flux"
-brew "velero"
+cask "appcleaner"
+cask "ghostty"
+cask "kdenlive"
+cask "krita"
+cask "rectangle"
+cask "steermouse"
+cask "visual-studio-code"
+cask "vlc"
+
+##############################################################################
+# Mac App Store Applications
+##############################################################################
+
+mas "Amphetamine", id: 937984704

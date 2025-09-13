@@ -1,28 +1,9 @@
 #!/usr/bin/env bash
 
 ##############################################################################
-# OS-Specific System Package Installation
+# macOS System Package Installation
 ##############################################################################
 
-{{ if eq .chezmoi.os "linux" -}}
-echo "Installing essential Linux system packages..."
-
-if command -v apt-get >/dev/null 2>&1; then
-    # Debian/Ubuntu
-    sudo apt update
-    sudo apt install -y build-essential python3 curl unzip git
-elif command -v dnf >/dev/null 2>&1; then
-    # Fedora/RHEL
-    sudo dnf update -y
-    sudo dnf install -y gcc gcc-c++ make python3 curl unzip git
-elif command -v pacman >/dev/null 2>&1; then
-    # Arch Linux
-    sudo pacman -Syu --noconfirm
-    sudo pacman -S --noconfirm base-devel python curl unzip git
-fi
-{{ end -}}
-
-{{ if eq .chezmoi.os "darwin" -}}
 echo "Installing essential macOS system packages..."
 
 # Trigger Command Line Developer Tools installation by attempting to use git
@@ -45,10 +26,9 @@ if ! xcode-select -p &>/dev/null; then
         echo "Command Line Developer Tools installation completed successfully."
     fi
 fi
-{{ end -}}
 
 ##############################################################################
-# Homebrew Installation (Cross-Platform)
+# Homebrew Installation
 ##############################################################################
 
 echo "Checking Homebrew installation..."
@@ -58,21 +38,15 @@ if ! command -v brew >/dev/null 2>&1; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
     # Add Homebrew to PATH
-    if [[ "${OSTYPE}" == "darwin"* ]]; then
-        if [[ -f "/opt/homebrew/bin/brew" ]]; then
-            eval "$(/opt/homebrew/bin/brew shellenv)"
-        elif [[ -f "/usr/local/bin/brew" ]]; then
-            eval "$(/usr/local/bin/brew shellenv)"
-        fi
-    elif [[ "${OSTYPE}" == "linux"* ]]; then
-        if [[ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
-            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-        fi
+    if [[ -f "/opt/homebrew/bin/brew" ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ -f "/usr/local/bin/brew" ]]; then
+        eval "$(/usr/local/bin/brew shellenv)"
     fi
 fi
 
 ##############################################################################
-# Cross-Platform Finalization
+# Finalization
 ##############################################################################
 
 echo "System and user package installation complete."

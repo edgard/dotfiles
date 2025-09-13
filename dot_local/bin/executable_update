@@ -3,9 +3,16 @@
 Brewfile and system update manager.
 
 Usage:
-  update             # Update system (default)
-  update cleanup     # Clean up unused packages
-  update install     # Install packages from Brewfiles
+  update [--profile {work,home}]          # Update system (default)
+  update cleanup [--profile {work,home}]  # Clean up unused packages
+  update install [--profile {work,home}]  # Install packages from Brewfiles
+
+Profiles:
+  - work: Adds work-specific packages on top of common (default via $BREW_PROFILE or 'home')
+  - home: Adds home-specific packages on top of common
+
+Environment:
+  BREW_PROFILE  Profile to use when not specified via --profile (work|home)
 """
 import os
 import platform
@@ -24,18 +31,15 @@ EXTRAS_DIR = Path.home() / '.local' / 'share' / 'chezmoi' / 'extras'
 SECTION_ORDER = ('tap', 'brew', 'cask', 'mas')
 
 
-def get_merged_brewfile(base_dir: Optional[Path] = None) -> Path:
-    base = Path(base_dir or EXTRAS_DIR).expanduser().resolve()
-    os_type = platform.system().lower()
-    if os_type.startswith('darwin'):
-        suffix = 'darwin'
-    elif os_type.startswith('linux'):
-        suffix = 'linux'
-    else:
-        sys.stderr.write(f"Error: Unsupported OS: {os_type}\n")
-        sys.exit(1)
+def get_merged_brewfile(base_dir: Optional[Path] = None, profile: str = 'home') -> Path:
+    """Create a merged Brewfile from common + selected profile.
 
-    brewfiles = [base / 'Brewfile.common', base / 'Brewfile.work', base / f'Brewfile.{suffix}']
+    - Always includes Brewfile.common
+    - Includes Brewfile.<profile> (work or home)
+    """
+    base = Path(base_dir or EXTRAS_DIR).expanduser().resolve()
+    # Collect candidate brewfiles
+    brewfiles: List[Path] = [base / 'Brewfile.common', base / f'Brewfile.{profile}']
     temp_path = Path(tempfile.gettempdir()) / f'brewfile_merged_{os.getpid()}.brew'
 
     # Header
@@ -69,14 +73,14 @@ def get_merged_brewfile(base_dir: Optional[Path] = None) -> Path:
     return temp_path
 
 
-def brew_cleanup(brewfiles_dir: Optional[Path] = None) -> None:
+def brew_cleanup(brewfiles_dir: Optional[Path] = None, profile: str = 'home') -> None:
     extras = Path(brewfiles_dir or EXTRAS_DIR)
     if not extras.is_dir():
         sys.stderr.write(f"Error: Brewfiles directory not found: {extras}\n")
         sys.exit(1)
 
     print("Analyzing installed packages...")
-    merged = get_merged_brewfile(extras)
+    merged = get_merged_brewfile(extras, profile=profile)
     try:
         print("Checking for packages to clean up...")
         proc = subprocess.run(
@@ -111,7 +115,7 @@ def brew_cleanup(brewfiles_dir: Optional[Path] = None) -> None:
             pass
 
 
-def brew_install(brewfiles_dir: Optional[Path] = None) -> None:
+def brew_install(brewfiles_dir: Optional[Path] = None, profile: str = 'home') -> None:
     extras = Path(brewfiles_dir or EXTRAS_DIR)
     if not extras.is_dir():
         sys.stderr.write(f"Error: Brewfiles directory not found: {extras}\n")
@@ -125,7 +129,7 @@ def brew_install(brewfiles_dir: Optional[Path] = None) -> None:
         sys.exit(1)
 
     print("Installing packages...")
-    merged = get_merged_brewfile(extras)
+    merged = get_merged_brewfile(extras, profile=profile)
     try:
         subprocess.run(["brew", "bundle", "--file", str(merged)], check=True)
         print("All packages installed.")
@@ -139,7 +143,7 @@ def brew_install(brewfiles_dir: Optional[Path] = None) -> None:
             pass
 
 
-def update_system() -> None:
+def update_system(profile: str = 'home') -> None:
     managers = {
         "chezmoi": shutil.which("chezmoi") and "Dotfiles",
         "brew":    shutil.which("brew") and "Homebrew",
@@ -165,8 +169,8 @@ def update_system() -> None:
                     subprocess.run([
                         "brew", "cu", "-y", "-q", "--cleanup", "--no-brew-update"
                     ], check=True)
-                brew_install()
-                brew_cleanup()
+                brew_install(profile=profile)
+                brew_cleanup(profile=profile)
                 subprocess.run(["brew", "cleanup", "-s"], check=True)
             elif cmd == "apt":
                 subprocess.run(["sudo", "apt", "update"], check=True)
@@ -197,21 +201,24 @@ def main():
     parser = ArgumentParser(
         description="Manage Brewfiles and system updates"
     )
+    # Global options
+    parser.add_argument(
+        "--profile",
+        choices=["work", "home"],
+        default=os.environ.get("BREW_PROFILE", "home"),
+        help="Select Brewfile profile to use (default: env BREW_PROFILE or 'home')",
+    )
     sub = parser.add_subparsers(dest="command")
-    sub.add_parser(
-        "cleanup", help="Clean up unused Homebrew packages"
-    )
-    sub.add_parser(
-        "install", help="Install packages from Brewfiles"
-    )
+    sub.add_parser("cleanup", help="Clean up unused Homebrew packages")
+    sub.add_parser("install", help="Install packages from Brewfiles")
     args = parser.parse_args()
 
     if args.command == "cleanup":
-        brew_cleanup()
+        brew_cleanup(profile=args.profile)
     elif args.command == "install":
-        brew_install()
+        brew_install(profile=args.profile)
     else:
-        update_system()
+        update_system(profile=args.profile)
 
 
 if __name__ == "__main__":

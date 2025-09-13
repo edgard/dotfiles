@@ -1,43 +1,31 @@
-# macOS-specific Brewfile
-# Contains packages and apps exclusive to macOS
+# Home profile Brewfile
+# Add packages and apps specific to your home setup.
 
 ##############################################################################
 # Taps
 ##############################################################################
 
-tap "buo/cask-upgrade"
+# tap "example/tap"
 
 ##############################################################################
 # CLI Tools
 ##############################################################################
 
-brew "bash"
-brew "coreutils"
-brew "mas"
-brew "watch"
+brew "docker"
 
 ##############################################################################
 # macOS Applications (Casks)
 ##############################################################################
 
-cask "appcleaner"
-cask "bruno"
-cask "docker-desktop"
-cask "ghostty"
-cask "google-chrome"
-cask "kdenlive"
-cask "krita"
-cask "rectangle"
-cask "steermouse"
+cask "discord"
+cask "orcaslicer"
+cask "spotify"
 cask "telegram-desktop"
-cask "visual-studio-code"
-cask "vlc"
 
 ##############################################################################
 # Mac App Store Applications
 ##############################################################################
 
-mas "Amphetamine", id: 937984704
 mas "GarageBand", id: 682658836
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694

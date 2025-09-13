@@ -1,38 +1,54 @@
+# Work profile Brewfile
+# Add packages and apps specific to your work setup.
+
+##############################################################################
+# Taps
+##############################################################################
+
+tap "cue-lang/tap"
+tap "kudobuilder/tap"
+tap "kyverno/chainsaw", "https://github.com/kyverno/chainsaw"
+tap "nike-inc/nike"
+tap "vmware-tanzu/carvel"
+
+##############################################################################
+# CLI Tools
+##############################################################################
+
 brew "argo"
 brew "argocd"
 brew "awscli"
-brew "docker"
+brew "cue-lang/tap/cue"
 brew "gimme-aws-creds"
 brew "goenv"
+brew "golangci-lint"
 brew "helm"
 brew "hub"
 brew "ijq"
 brew "jq"
+brew "k3sup"
 brew "kind"
 brew "krew"
+brew "kubectx"
 brew "kubernetes-cli"
-brew "golangci-lint"
-
-tap "kudobuilder/tap"
-brew "kuttl"
-
 brew "kustomize"
-brew "mas"
+brew "kuttl"
+brew "kyverno/chainsaw/chainsaw"
+brew "nike-inc/nike/cerberus-cli"
 brew "operator-sdk"
 brew "shellcheck"
+brew "tfenv"
+brew "tflint"
+brew "upbound/tap/up"
 brew "velero"
+brew "vendir"
 brew "watch"
 brew "yq"
 
-tap "nike-inc/nike"
-brew "nike-inc/nike/cerberus-cli"
-tap "cue-lang/tap"
-brew "cue-lang/tap/cue"
-tap "vmware-tanzu/carvel"
-brew "vendir"
-brew "upbound/tap/up"
+##############################################################################
+# macOS Applications (Casks)
+##############################################################################
 
-tap "kyverno/chainsaw", "https://github.com/kyverno/chainsaw"
-brew "kyverno/chainsaw/chainsaw"
-
-cask "postman"
+cask "bruno"
+cask "docker-desktop"
+cask "google-chrome"
