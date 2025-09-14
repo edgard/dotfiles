@@ -17,19 +17,16 @@ fi
 
 export MANROFFOPT='-c'
 
-if [[ "${TERM_PROGRAM}" == "vscode" ]] && (( $+commands[code] )); then
+if (( $+commands[code] )); then
     export EDITOR='code -w'
-    export VISUAL='code -w'
 elif (( $+commands[nvim] )); then
     export EDITOR=nvim
-    export VISUAL=nvim
 elif (( $+commands[vim] )); then
     export EDITOR=vim
-    export VISUAL=vim
 elif (( $+commands[vi] )); then
     export EDITOR=vi
-    export VISUAL=vi
 fi
+export VISUAL="${EDITOR}"
 
 export CLICOLOR=1
 export LSCOLORS='ExGxFxDxCxegedabagacad'
