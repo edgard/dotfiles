@@ -20,7 +20,7 @@ brew "docker"
 cask "discord"
 cask "orcaslicer"
 cask "spotify"
-cask "telegram-desktop"
+cask "telegram"
 
 ##############################################################################
 # Mac App Store Applications

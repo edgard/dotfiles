@@ -36,7 +36,6 @@ brew "yq"
 
 cask "appcleaner"
 cask "ghostty"
-cask "kdenlive"
 cask "krita"
 cask "rectangle"
 cask "steermouse"
