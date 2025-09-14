@@ -19,7 +19,6 @@ brew "docker"
 
 cask "discord"
 cask "orcaslicer"
-cask "spotify"
 cask "telegram"
 
 ##############################################################################
