@@ -1,66 +1,45 @@
 #!/usr/bin/env zsh
 # shellcheck disable=all
 
-# --- PATH and FPATH Configuration ---
-# This file manages the shell's command search path (PATH)
-# and function search path (FPATH).
-
-# --- Type Declarations ---
-# Ensure PATH/path and FPATH/fpath are tied, unique, and exported.
+# Unique, exported PATH/FPATH tied to arrays
 typeset -gU path PATH
 typeset -gUT FPATH fpath
 
-# --- System Path Setup ---
-# Initialize PATH using path_helper if available.
 [[ -x "/usr/libexec/path_helper" ]] && eval "$(/usr/libexec/path_helper -s)"
 
-# --- Homebrew Environment Setup ---
-# Detects Homebrew installation and adds its paths to the environment.
+# Load Homebrew shellenv if installed
 function _setup_homebrew() {
     local brew_executable
-    # Check standard Homebrew locations (Apple Silicon or Intel)
     [[ -x "/opt/homebrew/bin/brew" ]] && brew_executable="/opt/homebrew/bin/brew"
     [[ -z "$brew_executable" && -x "/usr/local/bin/brew" ]] && brew_executable="/usr/local/bin/brew"
-
-    # If found, evaluate brew shellenv
     if [[ -n "$brew_executable" ]]; then
         eval "$("$brew_executable" shellenv)"
         return 0
     fi
-    return 1 # Indicate Homebrew not found
+    return 1
 }
 
-_setup_homebrew # Execute the setup function
-unfunction _setup_homebrew # Remove the temporary function
+_setup_homebrew
+unfunction _setup_homebrew
 
-# --- Language Environment Variables and Paths ---
-# Add paths for specific programming language tools if installed via Homebrew.
+local brew_prefix
 
-local brew_prefix # Use local variable for efficiency
-
-# Go
 if (( $+commands[brew] )) && brew_prefix=$(brew --prefix go 2>/dev/null); then
-    export GOPATH="${GOPATH:-${HOME}/.go}" # Set GOPATH if not already set
-    path+=("${GOPATH}/bin") # Add Go binary path
+    export GOPATH="${GOPATH:-${HOME}/.go}"
+    path+=("${GOPATH}/bin")
 fi
 
-# Node.js (via brew)
 if (( $+commands[brew] )) && brew_prefix=$(brew --prefix node 2>/dev/null); then
-    # Configure npm global install location
     export NPM_CONFIG_PREFIX="${NPM_CONFIG_PREFIX:-${HOME}/.npm-global}"
-    path+=("${NPM_CONFIG_PREFIX}/bin") # Add npm global bin path
+    path+=("${NPM_CONFIG_PREFIX}/bin")
 fi
 
-# --- User Custom Paths ---
-# Add user-specific binary directories to the PATH.
 local -a user_paths=(
     "${HOME}/.local/bin"
     "${HOME}/Documents/Projects/dev-utils/bin"
 )
 for user_path in $user_paths; do
-    # Add path only if it's a directory
     [[ -d "$user_path" ]] && path+=("$user_path")
 done
 
-# --- Cleanup ---
-unset brew_prefix user_path user_paths # Remove temporary variables
+unset brew_prefix user_path user_paths

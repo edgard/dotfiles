@@ -1,20 +1,11 @@
 #!/usr/bin/env zsh
 # shellcheck disable=all
 
-# --- Zsh Runtime Configuration ---
-# This file is sourced for interactive shells.
-# It sets up shell behavior, history, completion, key bindings, and sources custom configurations.
+zmodload zsh/zutil
+zmodload zsh/complist
+zmodload zsh/parameter
+zmodload zsh/terminfo 2>/dev/null
 
-# --- Core ZSH Setup ---
-
-zmodload zsh/zutil     # Core utilities
-zmodload zsh/complist  # Enhanced completion list display
-zmodload zsh/parameter # Faster parameter handling (used by history)
-zmodload zsh/terminfo 2>/dev/null # Terminal capabilities (for key bindings)
-
-# --- Shell Behavior Options ---
-
-# Input/Output
 setopt MULTIOS              # Allow multiple redirections (e.g., > file1 > file2)
 setopt CLOBBER              # Allow > to overwrite existing files (default)
 setopt COMBINING_CHARS      # Handle Unicode combining characters correctly
@@ -22,20 +13,16 @@ setopt INTERACTIVE_COMMENTS # Allow comments starting with # in interactive shel
 setopt NO_BEEP              # Disable audible bell on errors
 setopt NO_MAIL_WARNING      # Disable "you have mail" notifications
 
-# General Behavior
 setopt HASH_LIST_ALL         # Hash command locations on first use for speed
 setopt PATH_SCRIPT           # Search PATH for scripts even if not marked executable
 setopt PROMPT_SUBST          # Allow parameter expansion and command substitution in prompts
 setopt SHORT_LOOPS           # Allow shorter loop syntax (e.g., for i ({1..3}) ...)
 setopt NO_WARN_CREATE_GLOBAL # Suppress warnings when creating global variables
 
-# --- History Configuration ---
+HISTFILE="${HOME}/.zsh_history"
+HISTSIZE=1000000
+SAVEHIST=1000000
 
-HISTFILE="${HOME}/.zsh_history" # History file location
-HISTSIZE=1000000                # Max history entries in memory
-SAVEHIST=1000000                # Max history entries saved to file
-
-# History Behavior Options
 setopt SHARE_HISTORY          # Share history instantly across all running shells
 setopt EXTENDED_HISTORY       # Save timestamp and duration for each command
 setopt HIST_VERIFY            # Show command before executing from history expansion
@@ -48,8 +35,6 @@ setopt HIST_EXPIRE_DUPS_FIRST # Remove older duplicates first when trimming hist
 setopt HIST_IGNORE_ALL_DUPS   # Never store duplicate commands
 setopt HIST_SAVE_NO_DUPS      # Don't write duplicate consecutive commands to the history file
 
-# --- Directory Navigation ---
-
 setopt AUTO_PUSHD        # Automatically pushd when changing directories with cd
 setopt PUSHD_TO_HOME     # `pushd` without arguments goes to $HOME
 setopt PUSHD_MINUS       # Allow `cd -N` to navigate back N directories in the stack
@@ -57,18 +42,13 @@ setopt PUSHD_SILENT      # Suppress printing the directory stack after pushd/pop
 setopt PUSHD_IGNORE_DUPS # Don't push duplicate directories onto the stack
 setopt NO_AUTO_CD        # Disable implicit cd when typing a directory name
 
-# --- Completion System ---
-
-# Initialize the completion system
 autoload -Uz compinit
 compinit
 
-# Completion Styling and Behavior
 zstyle ':completion:*' use-cache on
-zstyle ':completion:*' menu select # Enable menu selection for completions
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # Case-insensitive matching
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
-# Completion Options
 setopt ALWAYS_TO_END     # Move cursor to the end of the completed word
 setopt AUTO_LIST         # Automatically list choices on ambiguous completion
 setopt AUTO_MENU         # Show completion menu after second consecutive tab press
@@ -81,15 +61,11 @@ setopt NO_CORRECT        # Disable auto-correction of commands
 setopt NO_CORRECT_ALL    # Disable auto-correction of arguments
 setopt NO_LIST_BEEP      # Disable beep on ambiguous completion
 
-# --- Pattern Matching and Globbing ---
-
 setopt EXTENDED_GLOB   # Enable extended globbing features (like `^` for negation)
 setopt RC_EXPAND_PARAM # Expand array parameters in substitutions (e.g., ${array[@]})
 setopt NO_CASE_GLOB    # Case-sensitive globbing (pathname expansion)
 setopt NO_CASE_MATCH   # Case-sensitive pattern matching
 setopt NO_NOMATCH      # If a pattern has no match, leave it unchanged (don't error)
-
-# --- Job Control ---
 
 setopt AUTO_RESUME    # Attempt to resume existing jobs matching the command typed
 setopt CHECK_JOBS     # Report status of background jobs before exiting the shell
@@ -98,15 +74,8 @@ setopt NOTIFY         # Report status of background jobs immediately upon comple
 setopt NO_BG_NICE     # Don't run background jobs at a lower priority
 setopt NO_HUP         # Don't send HUP signal to background jobs on shell exit
 
-# --- Key Bindings ---
-
-# Use Emacs-style key bindings
 bindkey -e
-
-# Set key timeout for multi-key sequences (e.g., widgets)
 KEYTIMEOUT=1
-
-# --- Custom Configurations ---
 
 source "${HOME}/.zsh/01-path.zsh"
 source "${HOME}/.zsh/02-env.zsh"
