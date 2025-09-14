@@ -106,6 +106,10 @@ defaults write com.apple.WindowManager GloballyEnabled -bool false # Disable Sta
 defaults write com.apple.dock "expose-group-apps" -bool true # Group windows by application in Mission Control
 defaults write com.apple.dock mru-spaces -bool false         # Don't automatically rearrange Spaces based on most recent use
 
+# Launchpad
+defaults write com.apple.dock springboard-rows -int 7        # Set Launchpad rows to 7
+defaults write com.apple.dock springboard-columns -int 9     # Set Launchpad columns to 9
+
 ###############################################################################
 # Network and Storage
 ###############################################################################
