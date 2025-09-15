@@ -36,6 +36,7 @@ brew "yq"
 
 cask "appcleaner"
 cask "ghostty"
+cask "kdenlive"
 cask "krita"
 cask "rectangle"
 cask "steermouse"
@@ -47,4 +48,3 @@ cask "vlc"
 ##############################################################################
 
 mas "Amphetamine", id: 937984704
-mas "Bitwarden", id: 1352778147
