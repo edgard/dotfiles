@@ -16,6 +16,7 @@ brew "fd"
 brew "fzf"
 brew "mas"
 brew "starship"
+brew "typst"
 brew "watch"
 brew "zoxide"
 
@@ -35,6 +36,7 @@ brew "yq"
 ##############################################################################
 
 cask "appcleaner"
+cask "container"
 cask "ghostty"
 cask "kdenlive"
 cask "krita"
