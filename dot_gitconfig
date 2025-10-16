@@ -58,13 +58,6 @@
     mergeoptions = --ff-only
 
 ##############################################################################
-# HTTP
-##############################################################################
-
-[http "https://gopkg.in"]
-    followRedirects = true
-
-##############################################################################
 # Color Settings
 ##############################################################################
 
@@ -105,3 +98,17 @@
     header = 189             # Text
     help = 147               # Lavender
     error = 210              # Red
+
+##############################################################################
+# Special Cases
+##############################################################################
+
+[credential "https://github.com"]
+        helper =
+        helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+        helper =
+        helper = !/opt/homebrew/bin/gh auth git-credential
+
+[http "https://gopkg.in"]
+    followRedirects = true

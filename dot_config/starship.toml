@@ -9,6 +9,7 @@ $directory\
 $git_branch\
 $git_status\
 $git_state\
+$kubernetes\
 $cmd_duration\
 $jobs\
 $character"""
@@ -54,6 +55,71 @@ style = "#81c8be"        # Teal
 
 [git_state]
 style = "#e78284"        # Red
+
+##############################################################################
+# Kubernetes Context
+##############################################################################
+
+[kubernetes]
+format = '[☸ $context( \($namespace\))]($style) '
+disabled = false
+
+# Extract cluster name from EKS ARN and apply colors based on environment
+[[kubernetes.contexts]]
+# Production EKS clusters - Red
+context_pattern = "arn:aws:eks:[^:]+:[^:]+:cluster/(.*prod.*)"
+context_alias = "$1"
+style = "#e78284"     # Red for production
+
+[[kubernetes.contexts]]
+# QA EKS clusters - Yellow
+context_pattern = "arn:aws:eks:[^:]+:[^:]+:cluster/(.*qa.*)"
+context_alias = "$1"
+style = "#e5c890"     # Yellow for QA
+
+[[kubernetes.contexts]]
+# Test EKS clusters - Blue
+context_pattern = "arn:aws:eks:[^:]+:[^:]+:cluster/(.*test.*)"
+context_alias = "$1"
+style = "#8caaee"     # Blue for test
+
+[[kubernetes.contexts]]
+# Dev EKS clusters - Green
+context_pattern = "arn:aws:eks:[^:]+:[^:]+:cluster/(.*dev.*)"
+context_alias = "$1"
+style = "#a6d189"     # Green for dev
+
+# Any other EKS ARN - extract cluster name with default color
+[[kubernetes.contexts]]
+context_pattern = "arn:aws:eks:[^:]+:[^:]+:cluster/(.+)"
+context_alias = "$1"
+style = "#f4b8e4"     # Pink (default)
+
+# Non-EKS contexts with environment-based coloring
+[[kubernetes.contexts]]
+# Production contexts - Red
+context_pattern = ".*(prod|production).*"
+style = "#e78284"     # Red for production
+
+[[kubernetes.contexts]]
+# QA contexts - Yellow
+context_pattern = ".*(qa|staging).*"
+style = "#e5c890"     # Yellow for QA
+
+[[kubernetes.contexts]]
+# Test contexts - Blue
+context_pattern = ".*test.*"
+style = "#8caaee"     # Blue for test
+
+[[kubernetes.contexts]]
+# Dev contexts - Green
+context_pattern = ".*(dev|development).*"
+style = "#a6d189"     # Green for dev
+
+# Default catch-all
+[[kubernetes.contexts]]
+context_pattern = ".*"
+style = "#f4b8e4"     # Pink (default)
 
 ##############################################################################
 # Command Duration

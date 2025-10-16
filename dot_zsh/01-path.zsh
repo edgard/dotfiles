@@ -34,6 +34,10 @@ if (( $+commands[brew] )) && brew_prefix=$(brew --prefix node 2>/dev/null); then
     path+=("${NPM_CONFIG_PREFIX}/bin")
 fi
 
+if (( $+commands[brew] )) && brew_prefix=$(brew --prefix krew 2>/dev/null); then
+    path+=("${HOME}/.krew/bin")
+fi
+
 local -a user_paths=(
     "${HOME}/.local/bin"
     "${HOME}/Documents/Projects/dev-utils/bin"
