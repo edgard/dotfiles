@@ -15,7 +15,6 @@ Environment:
   BREW_PROFILE  Profile to use when not specified via --profile (work|home)
 """
 import os
-import platform
 import shutil
 import subprocess
 import sys
@@ -115,18 +114,25 @@ def brew_cleanup(brewfiles_dir: Optional[Path] = None, profile: str = 'home') ->
             pass
 
 
-def brew_install(brewfiles_dir: Optional[Path] = None, profile: str = 'home') -> None:
+def brew_install(
+    brewfiles_dir: Optional[Path] = None,
+    profile: str = 'home',
+    skip_update: bool = False,
+) -> None:
     extras = Path(brewfiles_dir or EXTRAS_DIR)
     if not extras.is_dir():
         sys.stderr.write(f"Error: Brewfiles directory not found: {extras}\n")
         sys.exit(1)
 
-    print("Updating Homebrew...")
-    try:
-        subprocess.run(["brew", "update"], check=True)
-    except subprocess.CalledProcessError:
-        sys.stderr.write("Error: Homebrew update failed.\n")
-        sys.exit(1)
+    if skip_update:
+        print("Using existing Homebrew metadata...")
+    else:
+        print("Updating Homebrew...")
+        try:
+            subprocess.run(["brew", "update"], check=True)
+        except subprocess.CalledProcessError:
+            sys.stderr.write("Error: Homebrew update failed.\n")
+            sys.exit(1)
 
     print("Installing packages...")
     merged = get_merged_brewfile(extras, profile=profile)
@@ -169,7 +175,7 @@ def update_system(profile: str = 'home') -> None:
                     subprocess.run([
                         "brew", "cu", "-y", "-q", "--cleanup", "--no-brew-update"
                     ], check=True)
-                brew_install(profile=profile)
+                brew_install(profile=profile, skip_update=True)
                 brew_cleanup(profile=profile)
                 subprocess.run(["brew", "cleanup", "-s"], check=True)
             elif cmd == "apt":

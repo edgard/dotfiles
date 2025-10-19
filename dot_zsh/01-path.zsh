@@ -42,7 +42,7 @@ local -a user_paths=(
     "${HOME}/.local/bin"
     "${HOME}/Documents/Projects/dev-utils/bin"
 )
-for user_path in $user_paths; do
+for user_path in "${user_paths[@]}"; do
     [[ -d "$user_path" ]] && path+=("$user_path")
 done
 

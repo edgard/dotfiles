@@ -43,7 +43,7 @@
     lg = log -p
     pr = pull --rebase
     st = status
-    stash-all = stash save --include-untracked
+    stash-all = stash push --include-untracked
     type = cat-file -t
     undo = reset --soft HEAD^
 
@@ -105,10 +105,10 @@
 
 [credential "https://github.com"]
         helper =
-        helper = !/opt/homebrew/bin/gh auth git-credential
+        helper = !gh auth git-credential
 [credential "https://gist.github.com"]
         helper =
-        helper = !/opt/homebrew/bin/gh auth git-credential
+        helper = !gh auth git-credential
 
 [http "https://gopkg.in"]
     followRedirects = true
