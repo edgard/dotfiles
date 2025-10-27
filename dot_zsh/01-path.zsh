@@ -40,10 +40,16 @@ fi
 
 local -a user_paths=(
     "${HOME}/.local/bin"
-    "${HOME}/Documents/Projects/dev-utils/bin"
 )
 for user_path in "${user_paths[@]}"; do
     [[ -d "$user_path" ]] && path+=("$user_path")
 done
 
 unset brew_prefix user_path user_paths
+
+# ---- Local path overrides ----
+{
+    local _path_local="${HOME}/.config/local/path.zsh"
+    [[ -r "${_path_local}" ]] && source "${_path_local}"
+    unset _path_local
+}

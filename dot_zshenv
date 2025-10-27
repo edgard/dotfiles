@@ -7,10 +7,3 @@ skip_global_compinit=1
 export LC_ALL="${LC_ALL:-en_US.UTF-8}"
 export LANG="${LANG:-en_US.UTF-8}"
 export LANGUAGE="${LANGUAGE:-en_US.UTF-8}"
-
-# ---- Local early environment overrides ----
-{
-    local _zshenv_local="${HOME}/.config/local/zshenv"
-    [[ -r "${_zshenv_local}" ]] && source "${_zshenv_local}"
-    unset _zshenv_local
-}

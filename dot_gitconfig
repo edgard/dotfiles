@@ -1,7 +1,7 @@
 # Global Git Configuration
 
 [include]
-    path = ~/.gitconfig_local         # Local overrides (optional)
+    path = ~/.config/local/gitconfig  # Local overrides (optional)
 
 ##############################################################################
 # Core Settings
