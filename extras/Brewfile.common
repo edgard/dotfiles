@@ -24,6 +24,10 @@ brew "zoxide"
 # Development Tools
 ##############################################################################
 
+brew "colima"
+brew "docker"
+brew "docker-compose"
+
 brew "gh"
 brew "go"
 brew "jq"

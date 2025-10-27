@@ -37,6 +37,7 @@ brew "kyverno/chainsaw/chainsaw"
 brew "nike-inc/nike/cerberus-cli"
 brew "operator-sdk"
 brew "shellcheck"
+brew "terraform-docs"
 brew "tfenv"
 brew "tflint"
 brew "upbound/tap/up"
@@ -50,5 +51,3 @@ brew "yq"
 ##############################################################################
 
 cask "bruno"
-cask "docker-desktop"
-cask "google-chrome"
