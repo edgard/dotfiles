@@ -40,7 +40,6 @@ brew "yq"
 ##############################################################################
 
 cask "appcleaner"
-cask "container"
 cask "ghostty"
 cask "kdenlive"
 cask "krita"
