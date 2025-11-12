@@ -44,10 +44,10 @@ brew "kubectx"
 # macOS Applications (Casks)
 ##############################################################################
 
+cask "affinity"
 cask "appcleaner"
 cask "ghostty"
 cask "kdenlive"
-cask "krita"
 cask "rectangle"
 cask "steermouse"
 cask "visual-studio-code"
