@@ -13,7 +13,7 @@ tap "buo/cask-upgrade"
 
 brew "direnv"
 brew "fd"
-brew "fzf"
+brew "atuin"
 brew "mas"
 brew "starship"
 brew "typst"

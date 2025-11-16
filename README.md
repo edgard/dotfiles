@@ -37,7 +37,6 @@ export DOCKER_HOST=unix:///Users/edgard/.colima/default/docker.sock
 ```zsh
 # ~/.config/local/aliases.zsh
 alias kctx='kubectx my-work-cluster'
-alias please='sudo $(fc -ln -1)'
 ```
 
 ```ini
@@ -46,3 +45,10 @@ alias please='sudo $(fc -ln -1)'
     name = Jane Doe
     email = jane@work.example
 ```
+
+## Shell history (Atuin)
+
+1. Create or sign into your Atuin account: `atuin register` (or `atuin login` if you already have credentials).
+1. Import previous history so nothing is lost: `atuin import auto` reads whichever shell history files it finds.
+1. Trigger the first sync with `atuin sync`.
+1. Remove `~/.zsh_history`
