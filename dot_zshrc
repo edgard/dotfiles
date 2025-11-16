@@ -19,21 +19,11 @@ setopt PROMPT_SUBST          # Allow parameter expansion and command substitutio
 setopt SHORT_LOOPS           # Allow shorter loop syntax (e.g., for i ({1..3}) ...)
 setopt NO_WARN_CREATE_GLOBAL # Suppress warnings when creating global variables
 
-HISTFILE="${HOME}/.zsh_history"
-HISTSIZE=1000000
-SAVEHIST=1000000
+HISTFILE=/dev/null
+HISTSIZE=0
+SAVEHIST=0
 
-setopt SHARE_HISTORY          # Share history instantly across all running shells
-setopt EXTENDED_HISTORY       # Save timestamp and duration for each command
-setopt HIST_VERIFY            # Show command before executing from history expansion
-setopt HIST_FCNTL_LOCK        # Use fcntl locking for better history file concurrency
-setopt HIST_LEX_WORDS         # Treat complex commands as single history entries
-setopt HIST_REDUCE_BLANKS     # Remove superfluous blanks from history entries
-setopt HIST_IGNORE_SPACE      # Ignore commands starting with a space
-setopt HIST_FIND_NO_DUPS      # Don't show duplicate consecutive commands when searching
-setopt HIST_EXPIRE_DUPS_FIRST # Remove older duplicates first when trimming history
-setopt HIST_IGNORE_ALL_DUPS   # Never store duplicate commands
-setopt HIST_SAVE_NO_DUPS      # Don't write duplicate consecutive commands to the history file
+setopt NO_SHARE_HISTORY
 
 setopt AUTO_PUSHD        # Automatically pushd when changing directories with cd
 setopt PUSHD_TO_HOME     # `pushd` without arguments goes to $HOME

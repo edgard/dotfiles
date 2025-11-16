@@ -1,9 +1,8 @@
 #!/usr/bin/env zsh
 # shellcheck disable=all
 
-alias history='fc -l 1'
+alias history='atuin history list --cmd-only'
 alias ls='ls -F -G'
-alias please='sudo $(fc -ln -1)'
 
 (( $+commands[kubectl] )) && alias k='kubectl'
 (( $+commands[kubens] ))  && alias kns='kubens'
