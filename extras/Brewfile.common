@@ -30,6 +30,8 @@ brew "jq"
 brew "node"
 brew "shellcheck"
 brew "yq"
+brew "prettier"
+brew "yamlfmt"
 
 brew "colima"
 brew "docker"
