@@ -22,7 +22,7 @@ hide_gpt5_1_migration_prompt = true
 
 [profiles.safe]
 approval_policy = "untrusted"
-sandbox_mode = "read-only"
+sandbox_mode = "workspace-write"
 
 [profiles.safe.sandbox_workspace_write]
 writable_roots = [
