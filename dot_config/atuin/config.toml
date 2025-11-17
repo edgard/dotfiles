@@ -10,8 +10,8 @@ inline_height_shell_up_key_binding = 1
 show_help = false
 filter_mode_shell_up_key_binding = "session"
 show_preview = false
-search_mode = "skim"
-search_mode_shell_up_key_binding = "skim"
+search_mode = "fuzzy"
+search_mode_shell_up_key_binding = "fuzzy"
 show_tabs = false
 secrets_filter = false
 
