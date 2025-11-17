@@ -1,0 +1,39 @@
+model = "gpt-5.1-codex"
+model_reasoning_effort = "high"
+model_verbosity = "medium"
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+file_opener = "vscode"
+project_doc_max_bytes = 65536
+project_doc_fallback_filenames = [".agents.md", ".github/copilot-instructions.md"]
+
+[features]
+apply_patch_freeform = true
+streamable_shell = true
+web_search_request = true
+rmcp_client = true
+
+[tui]
+notifications = ["approval-requested", "agent-turn-complete"]
+
+[notice]
+hide_rate_limit_model_nudge = true
+hide_gpt5_1_migration_prompt = true
+
+[profiles.safe]
+approval_policy = "untrusted"
+sandbox_mode = "read-only"
+
+[profiles.safe.sandbox_workspace_write]
+writable_roots = [
+  "/Users/edgard/Documents/Projects",
+  "/Users/edgard/.cache"
+]
+network_access = true
+exclude_tmpdir_env_var = false
+exclude_slash_tmp = false
+
+[profiles.safe.shell_environment_policy]
+inherit = "core"
+exclude = ["AWS_*", "AZURE_*", "GCP_*", "*TOKEN*", "*SECRET*", "*KEY*"]
+set = { EDITOR = "code -w", VISUAL = "code -w", LANG = "en_US.UTF-8" }
