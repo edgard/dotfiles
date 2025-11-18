@@ -119,6 +119,14 @@ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true # D
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true     # Don't create .DS_Store files on USB volumes
 
 ###############################################################################
+# Safari
+###############################################################################
+
+defaults write com.apple.Safari WebKitDNSPrefetchingEnabled -bool false
+defaults write com.apple.Safari WebKitPreferences.experimental.HTTP3Enabled -bool false
+defaults write com.apple.Safari PreConnectForInitialNavigation -bool false
+
+###############################################################################
 # Apply Changes
 ###############################################################################
 
