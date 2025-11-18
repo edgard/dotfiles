@@ -32,6 +32,7 @@ brew "shellcheck"
 brew "yq"
 brew "prettier"
 brew "yamlfmt"
+brew "yamllint"
 
 brew "colima"
 brew "docker"
