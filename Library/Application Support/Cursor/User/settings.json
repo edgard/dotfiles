@@ -1,0 +1,135 @@
+{
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[yaml]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.dragAndDrop": false,
+    "editor.emptySelectionClipboard": false,
+    "editor.fontFamily": "Iosevka Custom, monospace",
+    "editor.fontSize": 16,
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": false,
+    "editor.formatOnType": false,
+    "editor.inlineSuggest.enabled": true,
+    "editor.links": false,
+    "editor.minimap.enabled": false,
+    "editor.minimap.renderCharacters": false,
+    "editor.renderControlCharacters": true,
+    "editor.renderWhitespace": "boundary",
+    "editor.roundedSelection": false,
+    "editor.rulers": [
+        80
+    ],
+    "editor.suggestSelection": "first",
+    "files.autoGuessEncoding": true,
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.factorypath": true,
+        "**/.project": true,
+        "**/.settings": true
+    },
+    "files.hotExit": "off",
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true,
+    "git.ignoreMissingGitWarning": true,
+    "go.lintTool": "golangci-lint-v2",
+    "go.lintFlags": [
+        "--path-mode=abs",
+        "--fast-only"
+    ],
+    "go.formatTool": "custom",
+    "go.alternateTools": {
+        "customFormatter": "golangci-lint-v2"
+    },
+    "go.formatFlags": [
+        "fmt",
+        "--stdin"
+    ],
+    "go.toolsManagement.autoUpdate": true,
+    "redhat.telemetry.enabled": false,
+    "security.workspace.trust.untrustedFiles": "open",
+    "terminal.integrated.drawBoldTextInBrightColors": false,
+    "terminal.integrated.enablePersistentSessions": false,
+    "terminal.integrated.fontSize": 16,
+    "terminal.integrated.shellIntegration.enabled": true,
+    "update.showReleaseNotes": false,
+    "window.newWindowDimensions": "maximized",
+    "window.restoreWindows": "none",
+    "workbench.colorTheme": "Catppuccin Frappé",
+    "workbench.editor.empty.hint": "hidden",
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
+    "workbench.editor.highlightModifiedTabs": true,
+    "workbench.editor.pinnedTabSizing": "shrink",
+    "workbench.iconTheme": "catppuccin-frappe",
+    "workbench.startupEditor": "none",
+    "editor.semanticHighlighting.enabled": true,
+    "terminal.integrated.minimumContrastRatio": 1,
+    "window.titleBarStyle": "custom",
+    "catppuccin.workbenchMode": "flat",
+    "catppuccin.extraBordersEnabled": true,
+    "editor.accessibilitySupport": "off",
+    "workbench.secondarySideBar.showLabels": false,
+    "makefile.configureOnOpen": true,
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.profiles.osx": {
+        "bash": {
+            "path": "bash",
+            "args": [
+                "-l"
+            ],
+            "icon": "terminal-bash"
+        },
+        "zsh": {
+            "path": "zsh",
+            "args": [
+                "-l"
+            ]
+        },
+        "bash (brew)": {
+            "path": "/opt/homebrew/bin/bash",
+            "args": [
+                "-l"
+            ],
+            "icon": "terminal-bash"
+        }
+    },
+    "files.enableTrash": false,
+    "git.discardUntrackedChangesToTrash": false,
+    "remote.SSH.remotePlatform": {
+        "dev.home.arpa": "linux"
+    },
+    "[dockercompose]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "advanced",
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": false,
+            "strings": true
+        },
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "[github-actions-workflow]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "cursor.general.disableHttp2": true,
+    "cursor.composer.queueMessageDefaultBehavior": "queue"
+}

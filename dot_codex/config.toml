@@ -3,7 +3,7 @@ model_reasoning_effort = "high"
 model_verbosity = "medium"
 approval_policy = "never"
 sandbox_mode = "danger-full-access"
-file_opener = "vscode"
+file_opener = "cursor"
 project_doc_max_bytes = 65536
 project_doc_fallback_filenames = [".agents.md", ".github/copilot-instructions.md"]
 
@@ -36,4 +36,4 @@ exclude_slash_tmp = false
 [profiles.safe.shell_environment_policy]
 inherit = "core"
 exclude = ["AWS_*", "AZURE_*", "GCP_*", "*TOKEN*", "*SECRET*", "*KEY*"]
-set = { EDITOR = "code -w", VISUAL = "code -w", LANG = "en_US.UTF-8" }
+set = { EDITOR = "cursor -w", VISUAL = "cursor -w", LANG = "en_US.UTF-8" }
