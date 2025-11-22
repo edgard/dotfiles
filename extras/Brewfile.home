@@ -27,7 +27,7 @@ brew "flux"
 
 cask "codex"
 cask "discord"
-cask "orcaslicer"
+cask "bambu-studio"
 cask "telegram"
 
 ##############################################################################
