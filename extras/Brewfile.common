@@ -53,6 +53,7 @@ cask "ghostty"
 cask "kdenlive"
 cask "rectangle"
 cask "steermouse"
+cask "cursor"
 cask "visual-studio-code"
 cask "vlc"
 
