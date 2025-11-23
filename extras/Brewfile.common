@@ -42,6 +42,7 @@ brew "kind"
 brew "kubernetes-cli"
 brew "krew"
 brew "kubectx"
+brew "oras"
 
 ##############################################################################
 # macOS Applications (Casks)
