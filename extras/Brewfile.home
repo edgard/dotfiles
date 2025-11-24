@@ -19,7 +19,6 @@ tap "fluxcd/tap"
 
 brew "age"
 brew "sops"
-brew "flux"
 
 ##############################################################################
 # macOS Applications (Casks)
