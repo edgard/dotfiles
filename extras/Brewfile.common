@@ -11,9 +11,9 @@ tap "buo/cask-upgrade"
 # CLI Tools
 ##############################################################################
 
+brew "atuin"
 brew "direnv"
 brew "fd"
-brew "atuin"
 brew "mas"
 brew "starship"
 brew "typst"
@@ -28,20 +28,23 @@ brew "gh"
 brew "go"
 brew "jq"
 brew "node"
-brew "shellcheck"
-brew "yq"
 brew "prettier"
+brew "shellcheck"
 brew "yamlfmt"
 brew "yamllint"
+brew "yq"
+
+##############################################################################
+# Container & Kubernetes Tools
+##############################################################################
 
 brew "colima"
 brew "docker"
-
 brew "helm"
 brew "kind"
-brew "kubernetes-cli"
 brew "krew"
 brew "kubectx"
+brew "kubernetes-cli"
 brew "oras"
 
 ##############################################################################
@@ -54,7 +57,6 @@ cask "ghostty"
 cask "kdenlive"
 cask "rectangle"
 cask "steermouse"
-cask "cursor"
 cask "visual-studio-code"
 cask "vlc"
 
