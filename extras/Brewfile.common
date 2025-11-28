@@ -51,7 +51,6 @@ brew "oras"
 # macOS Applications (Casks)
 ##############################################################################
 
-cask "affinity"
 cask "appcleaner"
 cask "ghostty"
 cask "kdenlive"
@@ -65,3 +64,4 @@ cask "vlc"
 ##############################################################################
 
 mas "Amphetamine", id: 937984704
+mas "Bitwarden", id: 1352778147

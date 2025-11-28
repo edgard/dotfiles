@@ -53,6 +53,7 @@ brew "vendir"
 
 cask "bruno"
 cask "cursor"
+cask "krita"
 
 ##############################################################################
 # Mac App Store Applications
