@@ -14,28 +14,26 @@
 
 ## Local overrides
 
-All per-machine overrides live under one directory: `~/.config/local`. Create these files locally as needed — they are not tracked by chezmoi.
+All per-machine overrides live under `~/.config/local` (not tracked by chezmoi).
 
-- `~/.config/local/path.zsh` — appended after the default PATH configuration.
-- `~/.config/local/env.zsh` — appended after the core env setup.
-- `~/.config/local/aliases.zsh` — appended after the default aliases.
-- `~/.config/local/gitconfig` — included from the global git config for machine-specific settings.
+- Zsh: any `~/.config/local/*.zsh` files are sourced after the base config, in lexicographic order (e.g., `10-path.zsh`, `20-env.zsh`, `30-aliases.zsh`).
+- Git: `~/.config/local/gitconfig` is included from the global git config for machine-specific settings.
 
 Examples:
 
 ```zsh
-# ~/.config/local/path.zsh
+# ~/.config/local/10-path.zsh
 path=("${HOME}/.config/local/bin" "${HOME}/.poetry/bin" "${path[@]}")
 ```
 
 ```zsh
-# ~/.config/local/env.zsh
+# ~/.config/local/20-env.zsh
 export BREW_PROFILE=home
 export DOCKER_HOST=unix:///Users/edgard/.colima/default/docker.sock
 ```
 
 ```zsh
-# ~/.config/local/aliases.zsh
+# ~/.config/local/30-aliases.zsh
 alias kctx='kubectx my-work-cluster'
 ```
 
