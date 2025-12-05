@@ -51,6 +51,7 @@ brew "vendir"
 # macOS Applications (Casks)
 ##############################################################################
 
+cask "cursor"
 cask "bruno"
 cask "krita"
 

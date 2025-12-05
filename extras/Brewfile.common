@@ -52,7 +52,6 @@ brew "oras"
 ##############################################################################
 
 cask "appcleaner"
-cask "cursor"
 cask "ghostty"
 cask "kdenlive"
 cask "rectangle"
