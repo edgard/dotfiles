@@ -1,18 +1,1 @@
 Include ~/.colima/ssh_config
-
-Host *
-  ForwardAgent no
-  ForwardX11 no
-  IdentitiesOnly yes
-  AddKeysToAgent yes
-  ServerAliveInterval 30
-  ServerAliveCountMax 4
-  TCPKeepAlive yes
-  Compression yes
-  ControlMaster auto
-  ControlPath ~/.ssh/controlmasters/%C
-  ControlPersist 10m
-  StrictHostKeyChecking ask
-  UserKnownHostsFile ~/.ssh/known_hosts
-  HashKnownHosts yes
-  PreferredAuthentications publickey,password

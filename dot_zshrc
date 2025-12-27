@@ -70,3 +70,4 @@ KEYTIMEOUT=1
 source "${HOME}/.zsh/01-path.zsh"
 source "${HOME}/.zsh/02-env.zsh"
 source "${HOME}/.zsh/03-aliases.zsh"
+source "${HOME}/.zsh/04-local.zsh"

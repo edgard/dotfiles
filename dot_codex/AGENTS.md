@@ -1,4 +1,4 @@
-# Global Codex Guidance
+# Global AI Coding Agent Guidance
 
 - Keep answers terse and practical; start with the outcome or findings, then give just enough detail to act. Skip pleasantries.
 - Avoid destructive actions (resets, force pushes, chmod/chown) unless explicitly requested; never touch unrelated files. If safety is uncertain, pause and ask.

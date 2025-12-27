@@ -47,10 +47,3 @@ fi
 if (( $+commands[starship] )); then
     eval "$(starship init zsh)" 2>/dev/null || print -P "%F{yellow}Warning: Failed to initialize starship prompt%f" >&2
 fi
-
-# ---- Local environment overrides ----
-{
-    local _env_local="${HOME}/.config/local/env.zsh"
-    [[ -r "${_env_local}" ]] && source "${_env_local}"
-    unset _env_local
-}

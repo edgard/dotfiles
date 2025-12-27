@@ -39,6 +39,7 @@ brew "tflint"
 
 brew "argo"
 brew "argocd"
+brew "kind"
 brew "kustomize"
 brew "kuttl"
 brew "kyverno/chainsaw/chainsaw"
@@ -51,8 +52,9 @@ brew "vendir"
 # macOS Applications (Casks)
 ##############################################################################
 
-cask "bruno"
 cask "cursor"
+cask "bruno"
+cask "krita"
 
 ##############################################################################
 # Mac App Store Applications
