@@ -1,15 +1,13 @@
-model = "gpt-5.2-codex"
-model_reasoning_effort = "xhigh"
-model_verbosity = "medium"
 approval_policy = "never"
 sandbox_mode = "danger-full-access"
-file_opener = "vscode"
+check_for_update_on_startup = false
 
-[features]
-apply_patch_freeform = true
-streamable_shell = true
-web_search_request = true
-rmcp_client = true
+[mcp_servers.context7]
+url = "https://mcp.context7.com/mcp"
+env_http_headers = { CONTEXT7_API_KEY = "CONTEXT7_API_KEY" }
 
-[notice.model_migrations]
-"gpt-5.1-codex-max" = "gpt-5.2-codex"
+[mcp_servers.grep]
+url = "https://mcp.grep.app"
+
+[mcp_servers.exa]
+url = "https://mcp.exa.ai/mcp"
