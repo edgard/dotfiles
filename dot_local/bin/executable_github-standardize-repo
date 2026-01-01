@@ -1,0 +1,373 @@
+#!/usr/bin/env bash
+#
+# github-standardize-repo - Apply standardized settings to a GitHub repository
+#
+# Usage:
+#   github-standardize-repo <owner/repo> [options]
+#
+# Options:
+#   --skip-topics       Skip the repository topics check
+#   --with-ci[=CHECKS]  Require CI status checks (default: lint,test,build)
+#   --dry-run           Show what would be done without making changes
+#   --verbose, -v       Show detailed API responses
+#   --quiet, -q         Suppress all non-error output
+#   --help, -h          Show this help message
+#
+# Examples:
+#   github-standardize-repo edgard/my-new-repo
+#   github-standardize-repo edgard/my-new-repo --with-ci
+#   github-standardize-repo edgard/my-new-repo --with-ci=lint,test,deploy
+#   github-standardize-repo edgard/my-new-repo --dry-run --verbose
+#
+
+set -euo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+# Configuration
+SKIP_TOPICS=false
+WITH_CI=false
+CI_CONTEXTS="lint,test,build"
+DRY_RUN=false
+VERBOSE=false
+QUIET=false
+
+#######################################
+# Display help message
+#######################################
+show_help() {
+    cat << 'EOF'
+github-standardize-repo - Apply standardized settings to a GitHub repository
+
+Usage:
+  github-standardize-repo <owner/repo> [options]
+
+Options:
+  --skip-topics       Skip the repository topics check
+  --with-ci[=CHECKS]  Require CI status checks (default: lint,test,build)
+  --dry-run           Show what would be done without making changes
+  --verbose, -v       Show detailed API responses
+  --quiet, -q         Suppress all non-error output
+  --help, -h          Show this help message
+
+Examples:
+  github-standardize-repo edgard/my-new-repo
+  github-standardize-repo edgard/my-new-repo --with-ci
+  github-standardize-repo edgard/my-new-repo --with-ci=lint,test,deploy
+  github-standardize-repo edgard/my-new-repo --dry-run --verbose
+EOF
+    exit 0
+}
+
+#######################################
+# Log message (respects --quiet)
+#######################################
+log() {
+    [[ "$QUIET" == false ]] && echo -e "$@"
+    return 0
+}
+
+#######################################
+# Log verbose message (only with --verbose)
+#######################################
+log_verbose() {
+    [[ "$VERBOSE" == true ]] && echo -e "${BLUE}[verbose]${NC} $*"
+    return 0
+}
+
+#######################################
+# Build CI status checks JSON from comma-separated contexts
+#######################################
+build_status_checks_json() {
+    local checks=""
+    IFS=',' read -ra CONTEXTS <<< "$CI_CONTEXTS"
+    for ctx in "${CONTEXTS[@]}"; do
+        [[ -n "$checks" ]] && checks="${checks},"
+        checks="${checks}{\"context\":\"${ctx}\"}"
+    done
+    echo "$checks"
+}
+
+# Parse arguments
+if [[ $# -lt 1 ]]; then
+    echo -e "${RED}Error: Repository argument required${NC}" >&2
+    echo "Usage: $0 <owner/repo> [options]" >&2
+    echo "Try '$0 --help' for more information." >&2
+    exit 1
+fi
+
+# Check for help flag first
+for arg in "$@"; do
+    case "$arg" in
+        --help|-h)
+            show_help
+            ;;
+    esac
+done
+
+REPO="$1"
+shift
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --skip-topics)
+            SKIP_TOPICS=true
+            shift
+            ;;
+        --with-ci=*)
+            WITH_CI=true
+            CI_CONTEXTS="${1#*=}"
+            shift
+            ;;
+        --with-ci)
+            WITH_CI=true
+            shift
+            ;;
+        --dry-run)
+            DRY_RUN=true
+            shift
+            ;;
+        --verbose|-v)
+            VERBOSE=true
+            shift
+            ;;
+        --quiet|-q)
+            QUIET=true
+            shift
+            ;;
+        *)
+            echo -e "${RED}Error: Unknown option $1${NC}" >&2
+            exit 1
+            ;;
+    esac
+done
+
+# Validate repo format
+if [[ ! "$REPO" =~ ^[^/]+/[^/]+$ ]]; then
+    echo -e "${RED}Error: Invalid repository format. Use: owner/repo${NC}" >&2
+    exit 1
+fi
+
+# Dry-run banner
+if [[ "$DRY_RUN" == true ]]; then
+    log "${YELLOW}=== DRY-RUN MODE: No changes will be made ===${NC}\n"
+fi
+
+log "${BLUE}=== Standardizing repository: ${REPO} ===${NC}\n"
+
+# Step 1: Verify repository access
+log "${YELLOW}[1/7] Verifying repository access...${NC}"
+if [[ "$DRY_RUN" == true ]]; then
+    log "${BLUE}[dry-run] Would verify repository ${REPO} exists${NC}"
+else
+    if ! gh api "repos/${REPO}" >/dev/null 2>&1; then
+        echo -e "${RED}Error: Repository ${REPO} not found or not accessible${NC}" >&2
+        exit 1
+    fi
+    log "${GREEN}✓ Repository verified${NC}"
+fi
+
+# Step 2: Repository Settings
+log "${YELLOW}[2/7] Applying repository settings...${NC}"
+if [[ "$DRY_RUN" == true ]]; then
+    log "${BLUE}[dry-run] Would apply repository settings:${NC}"
+    log "  - default_branch: master"
+    log "  - has_wiki: false, has_projects: false, has_discussions: false"
+    log "  - allow_merge_commit: false, allow_squash_merge: true, allow_rebase_merge: true"
+    log "  - delete_branch_on_merge: true, allow_update_branch: true"
+else
+    result=$(gh api "repos/${REPO}" -X PATCH \
+        -f default_branch=master \
+        -f homepage="" \
+        -F has_wiki=false \
+        -F has_projects=false \
+        -F has_discussions=false \
+        -F allow_merge_commit=false \
+        -F allow_squash_merge=true \
+        -F allow_rebase_merge=true \
+        -F delete_branch_on_merge=true \
+        -F allow_update_branch=true \
+        -F allow_auto_merge=false \
+        -f squash_merge_commit_title=PR_TITLE \
+        -f squash_merge_commit_message=PR_BODY 2>&1)
+    log_verbose "$result"
+    log "${GREEN}✓ Repository settings applied${NC}"
+fi
+
+# Step 3: Security Settings
+log "${YELLOW}[3/7] Applying security settings...${NC}"
+if [[ "$DRY_RUN" == true ]]; then
+    log "${BLUE}[dry-run] Would apply security settings:${NC}"
+    log "  - Secret scanning: enabled"
+    log "  - Push protection: enabled"
+    log "  - Dependabot security updates: disabled"
+    log "  - Vulnerability alerts: enabled"
+    log "  - Private vulnerability reporting: enabled"
+else
+    # Enable secret scanning and push protection
+    result=$(gh api "repos/${REPO}" -X PATCH \
+        -f security_and_analysis[secret_scanning][status]=enabled \
+        -f security_and_analysis[secret_scanning_push_protection][status]=enabled 2>&1)
+    log_verbose "$result"
+    log "${GREEN}✓ Secret scanning and push protection enabled${NC}"
+
+    # Disable Dependabot security updates (acceptable to fail on some repos)
+    if ! result=$(gh api "repos/${REPO}" -X PATCH \
+        -f security_and_analysis[dependabot_security_updates][status]=disabled 2>&1); then
+        if [[ "$result" == *"Dependabot"*"not"* ]] || [[ "$result" == *"not supported"* ]] || [[ "$result" == *"not available"* ]]; then
+            log "${YELLOW}⚠ Dependabot security updates not available for this repository${NC}"
+        else
+            echo -e "${RED}Error: Failed to configure Dependabot: ${result}${NC}" >&2
+            exit 1
+        fi
+    else
+        log_verbose "$result"
+        log "${GREEN}✓ Dependabot security updates disabled${NC}"
+    fi
+
+    # Enable vulnerability alerts (acceptable to fail on some repos)
+    if ! result=$(gh api "repos/${REPO}/vulnerability-alerts" -X PUT 2>&1); then
+        if [[ "$result" == *"not supported"* ]] || [[ "$result" == *"not available"* ]]; then
+            log "${YELLOW}⚠ Vulnerability alerts not available for this repository${NC}"
+        else
+            echo -e "${RED}Error: Failed to enable vulnerability alerts: ${result}${NC}" >&2
+            exit 1
+        fi
+    else
+        log "${GREEN}✓ Vulnerability alerts enabled${NC}"
+    fi
+
+    # Enable private vulnerability reporting
+    result=$(gh api "repos/${REPO}/private-vulnerability-reporting" -X PUT 2>&1)
+    log_verbose "$result"
+    log "${GREEN}✓ Private vulnerability reporting enabled${NC}"
+fi
+
+# Step 4: Code Scanning Default Setup
+log "${YELLOW}[4/7] Enabling code scanning default setup...${NC}"
+if [[ "$DRY_RUN" == true ]]; then
+    log "${BLUE}[dry-run] Would enable code scanning default setup${NC}"
+else
+    if ! result=$(gh api "repos/${REPO}/code-scanning/default-setup" -X PATCH -f state=configured 2>&1); then
+        if [[ "$result" == *"Advanced Security"* ]] || [[ "$result" == *"not supported"* ]] || [[ "$result" == *"no supported languages"* ]] || [[ "$result" == *"enable GitHub Advanced Security"* ]]; then
+            log "${YELLOW}⚠ Code scanning not available for this repository${NC}"
+        else
+            echo -e "${RED}Error: Failed to configure code scanning: ${result}${NC}" >&2
+            exit 1
+        fi
+    else
+        log_verbose "$result"
+        if echo "$result" | grep -q "run_url"; then
+            log "${GREEN}✓ Code scanning default setup enabled (scan initiated)${NC}"
+        else
+            log "${GREEN}✓ Code scanning default setup enabled${NC}"
+        fi
+    fi
+fi
+
+# Step 5: GitHub Actions Permissions
+log "${YELLOW}[5/7] Applying GitHub Actions permissions...${NC}"
+if [[ "$DRY_RUN" == true ]]; then
+    log "${BLUE}[dry-run] Would apply Actions permissions:${NC}"
+    log "  - default_workflow_permissions: write"
+    log "  - can_approve_pull_request_reviews: true"
+    log "  - enabled: true, allowed_actions: all"
+else
+    result=$(gh api "repos/${REPO}/actions/permissions/workflow" -X PUT \
+        -f default_workflow_permissions=write \
+        -F can_approve_pull_request_reviews=true 2>&1)
+    log_verbose "$result"
+    log "${GREEN}✓ Actions workflow permissions configured${NC}"
+
+    result=$(gh api "repos/${REPO}/actions/permissions" -X PUT \
+        -f enabled=true \
+        -f allowed_actions=all 2>&1)
+    log_verbose "$result"
+    log "${GREEN}✓ Actions enabled (all actions allowed)${NC}"
+fi
+
+# Step 6: Branch Protection Ruleset
+log "${YELLOW}[6/7] Creating branch protection ruleset...${NC}"
+
+# Build rules JSON
+RULES='[{"type":"deletion"},{"type":"non_fast_forward"},{"type":"required_linear_history"},{"type":"pull_request","parameters":{"required_approving_review_count":0,"dismiss_stale_reviews_on_push":false,"require_code_owner_review":false,"require_last_push_approval":false,"required_review_thread_resolution":false,"allowed_merge_methods":["squash","rebase"]}}'
+
+if [[ "$WITH_CI" == true ]]; then
+    STATUS_CHECKS=$(build_status_checks_json)
+    RULES="${RULES},{\"type\":\"required_status_checks\",\"parameters\":{\"strict_required_status_checks_policy\":true,\"required_status_checks\":[${STATUS_CHECKS}]}}"
+fi
+
+RULES="${RULES}]"
+
+BYPASS_ACTORS='[{"actor_id":5,"actor_type":"RepositoryRole","bypass_mode":"always"}]'
+
+if [[ "$DRY_RUN" == true ]]; then
+    log "${BLUE}[dry-run] Would create/update 'Master Protection' ruleset:${NC}"
+    log "  - Rules: deletion, non_fast_forward, required_linear_history, pull_request"
+    if [[ "$WITH_CI" == true ]]; then
+        log "  - CI checks: ${CI_CONTEXTS} (strict)"
+    fi
+    log "  - Bypass: repository admins"
+else
+    EXISTING_RULESET=$(gh api "repos/${REPO}/rulesets" --jq '.[] | select(.name == "Master Protection") | .id' 2>/dev/null || echo "")
+
+    if [[ -n "$EXISTING_RULESET" ]]; then
+        log "${BLUE}  Ruleset 'Master Protection' exists (ID: ${EXISTING_RULESET}), updating...${NC}"
+        result=$(gh api "repos/${REPO}/rulesets/${EXISTING_RULESET}" -X PUT \
+            -f name="Master Protection" \
+            -f target=branch \
+            -f enforcement=active \
+            -f bypass_actors="${BYPASS_ACTORS}" \
+            -f conditions='{"ref_name":{"include":["~DEFAULT_BRANCH"],"exclude":[]}}' \
+            -f rules="${RULES}" 2>&1)
+    else
+        result=$(gh api "repos/${REPO}/rulesets" -X POST \
+            -f name="Master Protection" \
+            -f target=branch \
+            -f enforcement=active \
+            -f bypass_actors="${BYPASS_ACTORS}" \
+            -f conditions='{"ref_name":{"include":["~DEFAULT_BRANCH"],"exclude":[]}}' \
+            -f rules="${RULES}" 2>&1)
+    fi
+    log_verbose "$result"
+    log "${GREEN}✓ Branch protection ruleset applied${NC}"
+fi
+
+# Step 7: Topics Check (optional)
+if [[ "$SKIP_TOPICS" == false ]]; then
+    log "${YELLOW}[7/7] Checking repository topics...${NC}"
+    if [[ "$DRY_RUN" == true ]]; then
+        log "${BLUE}[dry-run] Would check repository topics${NC}"
+    else
+        TOPICS=$(gh api "repos/${REPO}" --jq '.topics | length')
+        if [[ "$TOPICS" -eq 0 ]]; then
+            log "${BLUE}  No topics set. You may want to add topics with:${NC}"
+            log "${BLUE}    gh repo edit ${REPO} --add-topic topic1,topic2${NC}"
+        else
+            log "${GREEN}✓ Repository has ${TOPICS} topic(s)${NC}"
+        fi
+    fi
+else
+    log "${YELLOW}[7/7] Skipping topics check${NC}"
+fi
+
+# Summary
+log "\n${GREEN}=== Repository standardization complete! ===${NC}"
+log "${BLUE}Applied settings:${NC}"
+log "  • Default branch: master"
+log "  • Merge strategies: squash + rebase (no merge commits)"
+log "  • Features: issues enabled, wiki/projects/discussions disabled"
+log "  • Security: secret scanning, push protection, vulnerability alerts"
+log "  • Private vulnerability reporting: enabled"
+log "  • Code scanning: default setup configured"
+log "  • Actions: enabled (all actions), write permissions, can approve PRs"
+log "  • Branch protection: prevent deletion, force push, require linear history, require PR"
+if [[ "$WITH_CI" == true ]]; then
+    log "  • CI status checks: ${CI_CONTEXTS} (strict)"
+fi
+log "  • Bypass: repository admins can bypass protection rules"
