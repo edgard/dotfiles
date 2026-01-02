@@ -11,3 +11,7 @@ url = "https://mcp.grep.app"
 
 [mcp_servers.exa]
 url = "https://mcp.exa.ai/mcp"
+
+[mcp_servers.github]
+url = "https://api.githubcopilot.com/mcp/"
+env_http_headers = { Authorization = "GITHUB_PERSONAL_ACCESS_TOKEN" }
