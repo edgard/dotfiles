@@ -10,7 +10,7 @@
 - **Keep documentation minimal** and ASCII-only where possible.
 - **Always list modified file paths** and any necessary follow-up steps (tests, build, apply).
 
-## External Libraries & Evidence Lookup
+## External Resources & Tools
 - **Prefer active lookup over memory** when dealing with external code or libraries.
 - **Prefer primary sources** and link them when conclusions depend on external facts.
 - **Keep lookup proportional to the task;** avoid over-research for straightforward questions.
