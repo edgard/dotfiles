@@ -20,3 +20,4 @@
   - `context7` for official documentation
   - `exa` for recent or evolving information (prefer 2025+)
   - `grep` for real-world usage patterns in public repositories
+  - `github` for repository operations, issues, and PRs
