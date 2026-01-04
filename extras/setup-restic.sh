@@ -188,8 +188,8 @@ EOF
     SKIP_INITIAL=false
     for path in "${BACKUP_PATHS[@]}"; do
         if [ -d "$path" ]; then
-            EXISTING=$("$RESTIC_BIN" snapshots --host "$RESTIC_HOSTNAME" --path "$path" --json 2>/dev/null | grep -c '"time"' || echo "0")
-            if [ "$EXISTING" -gt 0 ]; then
+            SNAPSHOT_OUTPUT=$("$RESTIC_BIN" snapshots --host "$RESTIC_HOSTNAME" --path "$path" --json 2>/dev/null || echo "[]")
+            if [ "$SNAPSHOT_OUTPUT" != "[]" ] && [ "$SNAPSHOT_OUTPUT" != "null" ] && [ -n "$SNAPSHOT_OUTPUT" ]; then
                 echo "Snapshots already exist for $path, skipping initial backup."
                 SKIP_INITIAL=true
             fi
