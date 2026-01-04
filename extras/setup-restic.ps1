@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     This script installs and configures restic backup for Windows.
-    
+
     It:
       1. Stores credentials securely (restricted file permissions)
       2. Creates exclude file
@@ -21,7 +21,7 @@
 
 .NOTES
     Run this script as Administrator.
-    
+
     Install Restic first:
       winget install restic.restic
 #>
@@ -37,7 +37,6 @@ param(
 $ErrorActionPreference = "Stop"
 
 # Configuration
-$RESTIC_SERVER = "rest:https://restic.edgard.org"
 $RESTIC_HOSTNAME = $env:COMPUTERNAME.ToLower()
 $TARGET_HOME = [Environment]::GetFolderPath('UserProfile')
 
@@ -88,7 +87,8 @@ function Install-ResticBackup {
         $env:RESTIC_PASSWORD = $plainPass
     }
 
-    $env:RESTIC_REPOSITORY = $RESTIC_SERVER
+    $env:RESTIC_PASSWORD = (Get-Content -Path $PASSWORD_FILE -Raw).Trim()
+    $env:RESTIC_REPOSITORY = "rest:http://restic:$($env:RESTIC_PASSWORD)@restic.edgard.org:8000/"
 
     # Create exclude file
     Write-Host "==> Creating exclude patterns..." -ForegroundColor Green
@@ -97,14 +97,9 @@ function Install-ResticBackup {
 System Volume Information
 .venv
 node_modules
-.cache
-Cache
-Caches
+__pycache__
 *.tmp
 *.temp
-.npm
-.pnpm-store
-__pycache__
 Thumbs.db
 desktop.ini
 "@ | Set-Content -Path $EXCLUDE_FILE -Encoding UTF8
@@ -116,7 +111,6 @@ desktop.ini
 # Restic Backup Script for Windows (runs as SYSTEM)
 
 `$PASSWORD_FILE = "$PASSWORD_FILE"
-`$RESTIC_SERVER = "$RESTIC_SERVER"
 `$RESTIC_BIN = "$RESTIC_BIN"
 `$HOSTNAME = "$RESTIC_HOSTNAME"
 `$EXCLUDE_FILE = "$EXCLUDE_FILE"
@@ -124,7 +118,7 @@ desktop.ini
 `$BACKUP_PATH = "$TARGET_HOME\Documents"
 
 `$env:RESTIC_PASSWORD = (Get-Content -Path `$PASSWORD_FILE -Raw).Trim()
-`$env:RESTIC_REPOSITORY = `$RESTIC_SERVER
+`$env:RESTIC_REPOSITORY = "rest:http://restic:`$(`$env:RESTIC_PASSWORD)@restic.edgard.org:8000/"
 
 function Log {
     param([string]`$Message)
@@ -139,6 +133,7 @@ Log "Starting backup..."
     --tag documents ``
     --exclude-file `$EXCLUDE_FILE ``
     --exclude-caches ``
+    --verbose ``
     `$BACKUP_PATH 2>&1
 
 `$backupOutput | Out-File -FilePath `$LOG_FILE -Append

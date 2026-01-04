@@ -29,7 +29,6 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Configuration
-RESTIC_SERVER="rest:https://restic.edgard.org"
 RESTIC_HOSTNAME=$(hostname -s | tr '[:upper:]' '[:lower:]')
 TARGET_USER="${SUDO_USER:-$USER}"
 TARGET_HOME=$(eval echo "~$TARGET_USER")
@@ -78,7 +77,7 @@ install() {
     fi
 
     export RESTIC_PASSWORD
-    export RESTIC_REPOSITORY="$RESTIC_SERVER"
+    export RESTIC_REPOSITORY="rest:http://restic:${RESTIC_PASSWORD}@restic.edgard.org:8000/"
 
     # Create exclude file
     echo "==> Creating exclude patterns..."
@@ -87,14 +86,9 @@ install() {
 .Trash
 .venv
 node_modules
-.cache
-Cache
-Caches
+__pycache__
 *.tmp
 *.temp
-.npm
-.pnpm-store
-__pycache__
 EOF
     chmod 644 "$EXCLUDE_FILE"
     echo "Exclude file created at $EXCLUDE_FILE"
@@ -105,15 +99,15 @@ EOF
 #!/bin/bash
 
 PASSWORD_FILE="%%PASSWORD_FILE%%"
-RESTIC_SERVER="%%RESTIC_SERVER%%"
 RESTIC_BIN="%%RESTIC_BIN%%"
 RESTIC_HOSTNAME="%%RESTIC_HOSTNAME%%"
 EXCLUDE_FILE="%%EXCLUDE_FILE%%"
 LOG_FILE="%%LOG_FILE%%"
 BACKUP_PATH="%%BACKUP_PATH%%"
 
-export RESTIC_PASSWORD="$(cat "$PASSWORD_FILE")"
-export RESTIC_REPOSITORY="$RESTIC_SERVER"
+RESTIC_PASSWORD="$(cat "$PASSWORD_FILE")"
+export RESTIC_PASSWORD
+export RESTIC_REPOSITORY="rest:http://restic:${RESTIC_PASSWORD}@restic.edgard.org:8000/"
 
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
@@ -126,6 +120,7 @@ if "$RESTIC_BIN" backup \
     --tag documents \
     --exclude-file "$EXCLUDE_FILE" \
     --exclude-caches \
+    --verbose \
     "$BACKUP_PATH" >> "$LOG_FILE" 2>&1; then
     log "Backup complete."
 else
@@ -136,7 +131,6 @@ OUTER_EOF
 
     # Replace placeholders in backup script
     sed -i '' "s|%%PASSWORD_FILE%%|$PASSWORD_FILE|g" "$BACKUP_SCRIPT"
-    sed -i '' "s|%%RESTIC_SERVER%%|$RESTIC_SERVER|g" "$BACKUP_SCRIPT"
     sed -i '' "s|%%RESTIC_BIN%%|$RESTIC_BIN|g" "$BACKUP_SCRIPT"
     sed -i '' "s|%%RESTIC_HOSTNAME%%|$RESTIC_HOSTNAME|g" "$BACKUP_SCRIPT"
     sed -i '' "s|%%EXCLUDE_FILE%%|$EXCLUDE_FILE|g" "$BACKUP_SCRIPT"
