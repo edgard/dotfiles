@@ -54,7 +54,7 @@ cask "appcleaner"
 cask "ghostty"
 cask "kdenlive"
 cask "rectangle"
-cask "steermouse"
+cask "linearmouse"
 cask "visual-studio-code"
 cask "vlc"
 
