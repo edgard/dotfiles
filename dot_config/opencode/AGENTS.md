@@ -1,23 +1,33 @@
 # Global AI Coding Agent Guidance
 
-## Communication & Safety
-- **Avoid destructive actions** (resets, force pushes, chmod/chown) unless explicitly requested; never touch unrelated files. If unsure, ask.
-- **Keep answers terse and practical;** start with the solution. Skip pleasantries.
+## Priority (Tier 1 overrides Tier 2/3)
 
-## Code & Workflow
-- **Follow existing patterns;** prioritize readability and maintainability over cleverness.
-- **Add concise intent comments** only when the code is non-obvious.
-- **Keep documentation minimal** and ASCII-only where possible.
-- **Always list modified file paths** and any necessary follow-up steps (tests, build, apply).
+**Tier 1 - Safety**
+- Avoid destructive ops (reset, force-push, chmod/chown) unless explicitly requested
+- Never touch unrelated files; if unsure → ask one focused question
 
-## External Resources & Tools
-- **Prefer active lookup over memory** when dealing with external code or libraries.
-- **Prefer primary sources** and link them when conclusions depend on external facts.
-- **Keep lookup proportional to the task;** avoid over-research for straightforward questions.
-- **State the uncertainty briefly** if reliable or current information cannot be confirmed.
-- **Do not mention tool names** in the final answer unless explicitly asked.
-- **Use the following MCP tools** when appropriate:
-  - `context7` for official documentation
-  - `exa` for recent or evolving information (prefer 2025+)
-  - `grep` for real-world usage patterns in public repositories
-  - `github` for repository operations, issues, and PRs
+**Tier 2 - Workflow**
+- Confirm scope before editing; touch only needed files/tests
+- Follow existing patterns; readability > cleverness
+- Minimal diffs; no reformatting unless requested
+- List modified paths + follow-up steps (tests, build, apply)
+- Run checks when practical; state what wasn't run
+
+**Tier 3 - Style**
+- Terse answers; start w/ solution, skip pleasantries
+- Intent comments only when non-obvious
+- Minimal docs, ASCII-only where possible
+- Prefer repo-local templates over external
+
+## External Resources
+
+- Active lookup > memory for external code/libs
+- Primary sources preferred; link when conclusions depend on external facts
+- Lookup proportional to task; avoid over-research
+- State uncertainty briefly if info unconfirmed
+- Don't mention tool names unless asked
+- MCP tools:
+  - `context7`: official docs; resolve library ID first
+  - `exa`: recent/fast-changing info; prefer 2025+ sources
+  - `grep`: real-world patterns from public repos; literal code search
+  - `n8n`: node/workflow docs, validation, templates

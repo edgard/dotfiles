@@ -27,7 +27,6 @@ brew "k3d"
 
 cask "affinity"
 cask "bambu-studio"
-cask "codex"
 cask "discord"
 cask "telegram"
 
