@@ -3,18 +3,18 @@
 Brewfile and system update manager.
 
 Usage:
-  update [--profile {work,home}]          # Update system (default)
-  update cleanup [--profile {work,home}]  # Clean up unused packages
-  update install [--profile {work,home}]  # Install packages from Brewfiles
+  update [--profile <profile>]          # Update system (default)
+  update cleanup [--profile <profile>]  # Clean up unused packages
+  update install [--profile <profile>]  # Install packages from Brewfiles
+  update secrets [--profile <profile>]  # Fetch secrets from Bitwarden
 
 Profiles:
-  - work: Adds work-specific packages on top of common (default via $BREW_PROFILE or 'home')
-  - home: Adds home-specific packages on top of common
-
-Environment:
-  BREW_PROFILE  Profile to use when not specified via --profile (work|home)
+  - Loads Brewfile.common + Brewfile.<profile> from extras/
+  - Default profile: reads from chezmoi config or 'home'
 """
+import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -26,8 +26,98 @@ from typing import Optional, List, Dict
 
 # Default directory for additional Brewfiles
 EXTRAS_DIR = Path.home() / '.local' / 'share' / 'chezmoi' / 'extras'
+# Chezmoi config file
+CHEZMOI_CONFIG = Path.home() / '.config' / 'chezmoi' / 'chezmoi.toml'
+# Secrets directory
+SECRETS_DIR = Path.home() / '.config' / 'local'
 # Order of sections in merged Brewfile
 SECTION_ORDER = ('tap', 'brew', 'cask', 'mas')
+
+
+def get_chezmoi_profile() -> str:
+    """Read profile from chezmoi config file."""
+    if not CHEZMOI_CONFIG.is_file():
+        return 'home'
+    content = CHEZMOI_CONFIG.read_text()
+    match = re.search(r'^\s*profile\s*=\s*["\']?(\w+)["\']?', content, re.MULTILINE)
+    return match.group(1) if match else 'home'
+
+
+def fetch_secrets(profile: str = 'home') -> None:
+    """Fetch secrets from Bitwarden and write attachments to secrets dir."""
+    if not shutil.which("bw"):
+        sys.stderr.write("Error: Bitwarden CLI not found.\n")
+        sys.exit(1)
+
+    bw_item = f"_chezmoi_{profile}"
+    print(f"Fetching secrets from Bitwarden ({bw_item})...")
+
+    # Login/unlock Bitwarden (shell redirection preserves TTY for prompt)
+    login_check = subprocess.run(
+        ["bw", "login", "--check"],
+        capture_output=True
+    )
+    with tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix='.txt') as f:
+        session_file = f.name
+
+    try:
+        if login_check.returncode != 0:
+            result = subprocess.run(
+                f'bw login --raw > "{session_file}"',
+                shell=True
+            )
+            if result.returncode != 0:
+                sys.stderr.write("Error: Bitwarden login failed.\n")
+                sys.exit(1)
+        else:
+            result = subprocess.run(
+                f'bw unlock --raw > "{session_file}"',
+                shell=True
+            )
+            if result.returncode != 0:
+                sys.stderr.write("Error: Bitwarden unlock failed.\n")
+                sys.exit(1)
+        bw_session = Path(session_file).read_text().strip()
+    finally:
+        Path(session_file).unlink(missing_ok=True)
+
+    env = {**os.environ, "BW_SESSION": bw_session}
+
+    # Sync vault
+    if subprocess.run(["bw", "sync"], env=env).returncode != 0:
+        sys.stderr.write("Error: Bitwarden sync failed.\n")
+        sys.exit(1)
+
+    # Get item
+    result = subprocess.run(
+        ["bw", "get", "item", bw_item],
+        env=env, capture_output=True, text=True
+    )
+    if result.returncode != 0:
+        sys.stderr.write(f"Error: Failed to get Bitwarden item: {bw_item}\n")
+        sys.exit(1)
+
+    item = json.loads(result.stdout)
+    item_id = item["id"]
+    attachments = item.get("attachments", [])
+
+    if attachments:
+        SECRETS_DIR.mkdir(parents=True, exist_ok=True)
+        for att in attachments:
+            att_id = att["id"]
+            att_name = att["fileName"]
+            print(f"  Writing {att_name}...")
+            subprocess.run(
+                ["bw", "get", "attachment", att_id, "--itemid", item_id,
+                 "--output", str(SECRETS_DIR / att_name)],
+                env=env, check=True
+            )
+    else:
+        print(f"  No attachments found on {bw_item}")
+
+    # Lock vault
+    subprocess.run(["bw", "lock"], env=env)
+    print("Secrets updated.")
 
 
 def get_merged_brewfile(base_dir: Optional[Path] = None, profile: str = 'home') -> Path:
@@ -210,19 +300,21 @@ def main():
     # Global options
     parser.add_argument(
         "--profile",
-        choices=["work", "home"],
-        default=os.environ.get("BREW_PROFILE", "home"),
-        help="Select Brewfile profile to use (default: env BREW_PROFILE or 'home')",
+        default=get_chezmoi_profile(),
+        help="Select Brewfile profile to use (default: from chezmoi config)",
     )
     sub = parser.add_subparsers(dest="command")
     sub.add_parser("cleanup", help="Clean up unused Homebrew packages")
     sub.add_parser("install", help="Install packages from Brewfiles")
+    sub.add_parser("secrets", help="Fetch secrets from Bitwarden")
     args = parser.parse_args()
 
     if args.command == "cleanup":
         brew_cleanup(profile=args.profile)
     elif args.command == "install":
         brew_install(profile=args.profile)
+    elif args.command == "secrets":
+        fetch_secrets(profile=args.profile)
     else:
         update_system(profile=args.profile)
 

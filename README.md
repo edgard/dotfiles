@@ -1,52 +1,43 @@
 # dotfiles
 
-## Install dotfiles
+Dotfiles managed with [chezmoi](https://www.chezmoi.io/). Supports multiple profiles.
 
-    curl -fsLS chezmoi.io/get | sh -s - -b ~/.local/bin init --apply --verbose --force git@github.com:edgard/dotfiles.git
+## Installation
 
-## Brewfile profiles
-
-- Profiles: `common` (always), plus `work` or `home`.
-- Usage examples:
-  - `update install --profile work` installs common + work
-  - `update install --profile home` installs common + home
-- You can set `BREW_PROFILE=work` (or `home`) to avoid passing `--profile` each time.
-
-## Local overrides
-
-All per-machine overrides live under `~/.config/local` (not tracked by chezmoi).
-
-- Zsh: any `~/.config/local/*.zsh` files are sourced after the base config, in lexicographic order (e.g., `10-path.zsh`, `20-env.zsh`, `30-aliases.zsh`).
-- Git: `~/.config/local/gitconfig` is included from the global git config for machine-specific settings.
-
-Examples:
-
-```zsh
-# ~/.config/local/10-path.zsh
-path=("${HOME}/.config/local/bin" "${HOME}/.poetry/bin" "${path[@]}")
+```bash
+curl -fsLS chezmoi.io/get | sh -s -- -b ~/.local/bin init --apply edgard/dotfiles
 ```
 
-```zsh
-# ~/.config/local/20-env.zsh
-export BREW_PROFILE=home
-export DOCKER_HOST=unix:///Users/edgard/.colima/default/docker.sock
+## Usage
+
+```bash
+update                  # Update everything (dotfiles, packages)
+update install          # Install Homebrew packages from Brewfiles
+update cleanup          # Remove unused Homebrew packages
+update secrets          # Fetch profile files from Bitwarden
 ```
 
-```zsh
-# ~/.config/local/30-aliases.zsh
-alias kctx='kubectx my-work-cluster'
+## Configuration
+
+### Profile Files (Bitwarden)
+
+Create a **Secure Note** named `_chezmoi_<profile>` (e.g., `_chezmoi_home`) and add machine-specific files as attachments. These will be downloaded to `~/.config/local/`.
+
+Login and fetch:
+
+```bash
+bw login
+update secrets
 ```
 
-```ini
-# ~/.config/local/gitconfig
-[user]
-    name = Jane Doe
-    email = jane@work.example
+### Local Overrides
+
+Any `*.zsh` files in `~/.config/local/` are sourced by zsh.
+
+## Troubleshooting
+
+Re-run bootstrap scripts:
+
+```bash
+chezmoi state delete-bucket --bucket=scriptState
 ```
-
-## Shell history (Atuin)
-
-1. Create or sign into your Atuin account: `atuin register` (or `atuin login` if you already have credentials).
-1. Import previous history so nothing is lost: `atuin import auto` reads whichever shell history files it finds.
-1. Trigger the first sync with `atuin sync`.
-1. Remove `~/.zsh_history`

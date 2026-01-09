@@ -12,6 +12,8 @@ tap "buo/cask-upgrade"
 ##############################################################################
 
 brew "atuin"
+brew "bitwarden-cli"
+brew "chezmoi"
 brew "direnv"
 brew "fd"
 brew "go-task"
