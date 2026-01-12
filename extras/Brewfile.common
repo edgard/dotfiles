@@ -59,6 +59,7 @@ cask "rectangle"
 cask "linearmouse"
 cask "visual-studio-code"
 cask "vlc"
+cask "zed"
 
 ##############################################################################
 # Mac App Store Applications

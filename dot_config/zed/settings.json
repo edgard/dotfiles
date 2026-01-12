@@ -1,0 +1,72 @@
+{
+  // === Theme & Appearance ===
+  "theme": "Catppuccin Frappé",
+  "icon_theme": "Catppuccin Frappé",
+
+  // === Fonts ===
+  // UI
+  "ui_font_family": ".SystemUIFont",
+  "ui_font_size": 15,
+  "ui_font_weight": 500,
+
+  // Editor
+  "buffer_font_family": "Iosevka Custom",
+  "buffer_font_size": 16,
+  "buffer_font_weight": 400,
+  "buffer_line_height": { "custom": 1.5 },
+  "buffer_font_features": { "calt": false },
+
+  // === Editor Behavior ===
+  "base_keymap": "VSCode",
+  "format_on_save": "off",
+  "ensure_final_newline_on_save": true,
+  "remove_trailing_whitespace_on_save": true,
+  "drag_and_drop_selection": { "enabled": false },
+
+  // === Editor Visuals ===
+  "colorize_brackets": true,
+  "rounded_selection": false,
+  "show_whitespaces": "boundary",
+  "show_wrap_guides": true,
+  "wrap_guides": [80],
+  "minimap": { "show": "never" },
+
+  // === UI Panels & Bars ===
+  "toolbar": { "breadcrumbs": false, "quick_actions": false },
+  "tabs": { "file_icons": true, "git_status": true },
+  "preview_tabs": { "enabled": false },
+  "status_bar": { "line_endings_button": true },
+  "title_bar": {
+    "show_onboarding_banner": false,
+    "show_user_picture": false,
+    "show_sign_in": false,
+    "show_user_menu": false,
+  },
+  "project_panel": {
+    "folder_icons": false,
+    "file_icons": true,
+    "entry_spacing": "standard",
+  },
+  "collaboration_panel": { "button": false },
+
+  // === Git ===
+  "git": { "inline_blame": { "enabled": false } },
+  "git_panel": { "fallback_branch_name": "master" },
+
+  // === Terminal ===
+  "terminal": { "font_size": 16, "line_height": "standard" },
+
+  // === Session & Startup ===
+  "restore_on_startup": "empty_tab",
+  "session": { "trust_all_worktrees": true },
+
+  // === Features & Privacy ===
+  "disable_ai": true,
+  "telemetry": { "diagnostics": false, "metrics": false },
+
+  // === Extensions ===
+  "auto_install_extensions": {
+    "catppuccin": true,
+    "catppuccin-icons": true,
+  },
+}

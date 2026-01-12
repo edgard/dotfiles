@@ -2,19 +2,8 @@
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": false,
   "theme": "catppuccin-frappe",
-  "model": "github-copilot/claude-sonnet-4.5",
+  "model": "github-copilot/claude-opus-4.5",
   "small_model": "github-copilot/gpt-5-mini",
-  "agent": {
-    "build": {
-      "model": "github-copilot/claude-sonnet-4.5"
-    },
-    "plan": {
-      "model": "github-copilot/claude-opus-4.5"
-    }
-  },
-  "permission": {
-    "external_directory": "deny"
-  },
   "mcp": {
     "metamcp": {
       "type": "remote",

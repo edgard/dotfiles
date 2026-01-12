@@ -17,8 +17,8 @@ fi
 
 export MANROFFOPT='-c'
 
-if (( $+commands[code] )); then
-    export EDITOR='code -w'
+if (( $+commands[zed] )); then
+    export EDITOR='zed -w'
 elif (( $+commands[nvim] )); then
     export EDITOR=nvim
 elif (( $+commands[vim] )); then
