@@ -8,13 +8,14 @@
   "ui_font_family": ".SystemUIFont",
   "ui_font_size": 15,
   "ui_font_weight": 500,
-
   // Editor
   "buffer_font_family": "Iosevka Custom",
   "buffer_font_size": 16,
   "buffer_font_weight": 400,
   "buffer_line_height": { "custom": 1.5 },
   "buffer_font_features": { "calt": false },
+  // Terminal
+  "terminal": { "line_height": { "custom": 1.0 } },
 
   // === Editor Behavior ===
   "base_keymap": "VSCode",
@@ -53,20 +54,23 @@
   "git": { "inline_blame": { "enabled": false } },
   "git_panel": { "fallback_branch_name": "master" },
 
-  // === Terminal ===
-  "terminal": { "font_size": 16, "line_height": "standard" },
+  // === AI & Predictions ===
+  "disable_ai": true,
 
   // === Session & Startup ===
   "restore_on_startup": "empty_tab",
   "session": { "trust_all_worktrees": true },
 
-  // === Features & Privacy ===
-  "disable_ai": true,
+  // === Privacy ===
   "telemetry": { "diagnostics": false, "metrics": false },
 
   // === Extensions ===
   "auto_install_extensions": {
     "catppuccin": true,
     "catppuccin-icons": true,
+    "toml": true,
+    "git-firefly": true,
+    "dockerfile": true,
+    "make": true,
   },
 }
