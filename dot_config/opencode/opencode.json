@@ -5,12 +5,11 @@
   "model": "github-copilot/claude-opus-4.5",
   "small_model": "github-copilot/gpt-5-mini",
   "mcp": {
-    "metamcp": {
+    "litellm": {
       "type": "remote",
-      "url": "https://metamcp.edgard.org/metamcp/coding/mcp",
-      "oauth": false,
+      "url": "https://litellm.edgard.org/mcp/",
       "headers": {
-        "Authorization": "Bearer {env:METAMCP_API_KEY}"
+        "x-litellm-api-key": "Bearer {env:LITELLM_API_KEY}"
       }
     }
   }
