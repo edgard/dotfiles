@@ -1,6 +1,5 @@
 ---
 description: "Research-backed prompt optimizer: Apply Stanford/Anthropic patterns + achieve 30-50% token reduction with 100% semantic preservation"
-model: github-copilot/claude-opus-4.5
 ---
 
 <target_file> $ARGUMENTS </target_file>
