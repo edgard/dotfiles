@@ -28,6 +28,8 @@
 - Don't mention tool names unless asked
 - MCP tools:
   - `context7`: official docs; resolve library ID first
-  - `exa`: recent/fast-changing info; prefer 2025+ sources
-  - `grep`: real-world patterns from public repos; literal code search
-  - `n8n`: node/workflow docs, validation, templates
+  - `exa`: web search; recent info or libs missing from Context7
+  - `grep`: grep.app; find public usage examples via literal string matching
+  - `github`: GitHub API; issues, PRs, specific repo & symbol search
+  - `kubernetes`: cluster ops; resources, logs, helm charts
+  - `n8n`: node docs, workflow validation, template search

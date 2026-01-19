@@ -9,13 +9,13 @@
       "type": "remote",
       "url": "https://mcp.context7.com/mcp"
     },
-    "grep": {
-      "type": "remote",
-      "url": "https://mcp.grep.app"
-    },
     "exa": {
       "type": "remote",
       "url": "https://mcp.exa.ai/mcp?tools=web_search_exa,deep_search_exa,crawling"
+    },
+    "grep": {
+      "type": "remote",
+      "url": "https://mcp.grep.app"
     },
     "github": {
       "type": "remote",
