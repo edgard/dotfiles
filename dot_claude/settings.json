@@ -1,0 +1,6 @@
+{
+  "model": "opusplan",
+  "permissions": { "defaultMode": "acceptEdits" },
+  "enableAllProjectMcpServers": true,
+  "attribution": { "commit": "", "pr": "" }
+}

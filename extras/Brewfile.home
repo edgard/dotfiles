@@ -12,7 +12,6 @@ brew "restic"
 ##############################################################################
 
 brew "opentofu"
-brew "opencode"
 
 ##############################################################################
 # Container & Kubernetes Tools
@@ -27,6 +26,7 @@ brew "talosctl"
 
 cask "affinity"
 cask "bambu-studio"
+cask "claude-code"
 cask "discord"
 cask "telegram"
 
