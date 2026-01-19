@@ -57,7 +57,6 @@ cask "ghostty"
 cask "kdenlive"
 cask "rectangle"
 cask "linearmouse"
-cask "visual-studio-code"
 cask "vlc"
 cask "zed"
 
