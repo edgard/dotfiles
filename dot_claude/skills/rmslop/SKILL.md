@@ -1,22 +1,29 @@
 ---
 description: Remove AI code slop from the current branch
+context: fork
+disable-model-invocation: true
+model: sonnet
 ---
 
 # Remove AI Code Slop
 
-Check the diff against the default branch and remove all AI-generated slop introduced in this branch.
+Remove all AI-generated slop introduced in this branch compared to base.
 
-## Arguments
+## Scope
 
-$ARGUMENTS
+- Identify and remove AI-generated code patterns
+- Edit files to clean up slop
+- DO NOT commit changes (user commits after)
+- DO NOT push or create PRs
+- Focus only on cleanup
 
 ## Instructions
 
-1. **Gather context**:
-   - Get default branch: `git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'`
-   - See commits: `git log --oneline <default-branch>..HEAD`
-   - See files changed: `git diff <default-branch>...HEAD --stat`
-   - Get full diff: `git diff <default-branch>...HEAD`
+1. **Analyze branch changes**:
+   - Get base: `git rev-parse --abbrev-ref origin/HEAD` (or assume main/master)
+   - Commits: `git log --oneline <base>..HEAD`
+   - Files: `git diff <base>...HEAD --stat`
+   - Full diff: `git diff <base>...HEAD`
 
 2. **Identify and remove slop**:
 
@@ -38,12 +45,19 @@ $ARGUMENTS
    - Preserve all legitimate functionality
 
 4. **Verify changes**:
-   - Review the diff to ensure nothing important was removed
+   - Review the diff: `git diff`
    - Run tests if available to verify nothing broke
 
 ## Output
 
-Report at the end with a 1-3 sentence summary of what you changed.
+Display 1-3 sentence summary of what slop was removed and which files were affected.
+
+## Constraints
+
+- NEVER commit changes automatically
+- NEVER push or create PRs
+- Only edit files - let user review and commit
+- Preserve all legitimate functionality
 
 ## Examples of Slop
 
