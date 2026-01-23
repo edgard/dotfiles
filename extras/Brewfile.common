@@ -54,9 +54,10 @@ brew "kubernetes-cli"
 
 cask "appcleaner"
 cask "ghostty"
+cask "google-chrome"
 cask "kdenlive"
-cask "rectangle"
 cask "linearmouse"
+cask "rectangle"
 cask "vlc"
 cask "zed"
 
