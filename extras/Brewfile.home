@@ -24,7 +24,6 @@ brew "talosctl"
 # macOS Applications (Casks)
 ##############################################################################
 
-cask "affinity"
 cask "bambu-studio"
 cask "claude-code"
 cask "codex"
@@ -34,7 +33,3 @@ cask "telegram"
 ##############################################################################
 # Mac App Store Applications
 ##############################################################################
-
-mas "Keynote", id: 409183694
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
