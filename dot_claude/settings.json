@@ -1,0 +1,9 @@
+{
+  "model": "opusplan",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "includeCoAuthoredBy": false,
+  "enableAllProjectMcpServers": true
+}
