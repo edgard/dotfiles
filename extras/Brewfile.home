@@ -26,7 +26,7 @@ brew "talosctl"
 
 cask "bambu-studio"
 cask "claude-code"
-cask "codex"
+cask "conductor"
 cask "discord"
 cask "telegram"
 
