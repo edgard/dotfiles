@@ -3,10 +3,13 @@
 Brewfile and system update manager.
 
 Usage:
-  update [--profile <profile>]          # Update system (default)
-  update cleanup [--profile <profile>]  # Clean up unused packages
-  update install [--profile <profile>]  # Install packages from Brewfiles
-  update secrets [--profile <profile>]  # Fetch secrets from Bitwarden
+  update [--profile <profile>] [-y]          # Update system (default)
+  update cleanup [--profile <profile>] [-y]  # Clean up unused packages
+  update install [--profile <profile>]       # Install packages from Brewfiles
+  update secrets [--profile <profile>]       # Fetch secrets from Bitwarden
+
+Options:
+  -y, --yes  Skip confirmation prompts (auto-confirm cleanup)
 
 Profiles:
   - Loads Brewfile.common + Brewfile.<profile> from extras/
@@ -52,34 +55,42 @@ def fetch_secrets(profile: str = 'home') -> None:
     bw_item = f"_chezmoi_{profile}"
     print(f"Fetching secrets from Bitwarden ({bw_item})...")
 
-    # Login/unlock Bitwarden (shell redirection preserves TTY for prompt)
+    # Login/unlock Bitwarden
     login_check = subprocess.run(
         ["bw", "login", "--check"],
         capture_output=True
     )
-    with tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix='.txt') as f:
-        session_file = f.name
 
     try:
-        if login_check.returncode != 0:
-            result = subprocess.run(
-                f'bw login --raw > "{session_file}"',
-                shell=True
-            )
-            if result.returncode != 0:
-                sys.stderr.write("Error: Bitwarden login failed.\n")
-                sys.exit(1)
-        else:
-            result = subprocess.run(
-                f'bw unlock --raw > "{session_file}"',
-                shell=True
-            )
-            if result.returncode != 0:
-                sys.stderr.write("Error: Bitwarden unlock failed.\n")
-                sys.exit(1)
-        bw_session = Path(session_file).read_text().strip()
-    finally:
-        Path(session_file).unlink(missing_ok=True)
+        tty = open("/dev/tty", "r")
+    except OSError:
+        tty = None
+
+    if login_check.returncode != 0:
+        result = subprocess.run(
+            ["bw", "login", "--raw"],
+            stdin=tty,
+            stdout=subprocess.PIPE,
+            text=True
+        )
+        if result.returncode != 0:
+             sys.stderr.write("Warning: Bitwarden login failed. Skipping secrets.\n")
+             return
+        bw_session = result.stdout.strip()
+    else:
+        result = subprocess.run(
+            ["bw", "unlock", "--raw"],
+            stdin=tty,
+            stdout=subprocess.PIPE,
+            text=True
+        )
+        if result.returncode != 0:
+             sys.stderr.write("Warning: Bitwarden unlock failed. Skipping secrets.\n")
+             return
+        bw_session = result.stdout.strip()
+
+    if tty is not None:
+        tty.close()
 
     env = {**os.environ, "BW_SESSION": bw_session}
 
@@ -162,7 +173,7 @@ def get_merged_brewfile(base_dir: Optional[Path] = None, profile: str = 'home') 
     return temp_path
 
 
-def brew_cleanup(brewfiles_dir: Optional[Path] = None, profile: str = 'home') -> None:
+def brew_cleanup(brewfiles_dir: Optional[Path] = None, profile: str = 'home', auto_confirm: bool = False) -> None:
     extras = Path(brewfiles_dir or EXTRAS_DIR)
     if not extras.is_dir():
         sys.stderr.write(f"Error: Brewfiles directory not found: {extras}\n")
@@ -183,15 +194,16 @@ def brew_cleanup(brewfiles_dir: Optional[Path] = None, profile: str = 'home') ->
         # Detect removable packages (lines starting with 'Would ')
         to_remove = [l for l in lines if l.startswith("Would ")]
         if to_remove:
-            if input("\nRemove these packages? [y/N] ").strip().lower().startswith('y'):
+            should_remove = auto_confirm or input("\nRemove these packages? [y/N] ").strip().lower().startswith('y')
+            if should_remove:
                 try:
                     subprocess.run(
-                        ["brew", "bundle", "cleanup", "--file", str(merged), "--zap", "--force"],
+                         ["brew", "bundle", "cleanup", "--file", str(merged), "--zap", "--force"], 
                         check=True
                     )
                     print("Cleanup completed.")
-                except subprocess.CalledProcessError:
-                    sys.stderr.write("Error: Cleanup failed.\n")
+                except subprocess.CalledProcessError as e:
+                    sys.stderr.write(f"Error: Cleanup failed: {e}\n")
                     sys.exit(1)
             else:
                 print("Cleanup canceled.")
@@ -266,7 +278,7 @@ def update_system(profile: str = 'home') -> None:
                         "brew", "cu", "-y", "-q", "--cleanup", "--no-brew-update"
                     ], check=True)
                 brew_install(profile=profile, skip_update=True)
-                brew_cleanup(profile=profile)
+                brew_cleanup(profile=profile, auto_confirm=True)
                 subprocess.run(["brew", "cleanup", "-s"], check=True)
             elif cmd == "apt":
                 subprocess.run(["sudo", "apt", "update"], check=True)
@@ -303,6 +315,12 @@ def main():
         default=get_chezmoi_profile(),
         help="Select Brewfile profile to use (default: from chezmoi config)",
     )
+    parser.add_argument(
+        "-y", "--yes",
+        action="store_true",
+        dest="auto_confirm",
+        help="Skip confirmation prompts (auto-confirm cleanup)",
+    )
     sub = parser.add_subparsers(dest="command")
     sub.add_parser("cleanup", help="Clean up unused Homebrew packages")
     sub.add_parser("install", help="Install packages from Brewfiles")
@@ -310,7 +328,7 @@ def main():
     args = parser.parse_args()
 
     if args.command == "cleanup":
-        brew_cleanup(profile=args.profile)
+        brew_cleanup(profile=args.profile, auto_confirm=args.auto_confirm)
     elif args.command == "install":
         brew_install(profile=args.profile)
     elif args.command == "secrets":

@@ -31,6 +31,7 @@ brew "gh"
 brew "go"
 brew "jq"
 brew "node"
+brew "pre-commit"
 brew "prettier"
 brew "shellcheck"
 brew "yamlfmt"
@@ -53,11 +54,13 @@ brew "kubernetes-cli"
 ##############################################################################
 
 cask "appcleaner"
+cask "bruno"
 cask "ghostty"
+cask "google-chrome"
 cask "kdenlive"
-cask "rectangle"
+cask "krita"
 cask "linearmouse"
-cask "visual-studio-code"
+cask "rectangle"
 cask "vlc"
 cask "zed"
 
@@ -66,4 +69,3 @@ cask "zed"
 ##############################################################################
 
 mas "Amphetamine", id: 937984704
-mas "Bitwarden", id: 1352778147

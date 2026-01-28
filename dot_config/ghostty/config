@@ -5,7 +5,7 @@
 # Terminal Type
 ##############################################################################
 
-term = xterm-256color
+term = xterm-ghostty
 
 ##############################################################################
 # Font
@@ -46,8 +46,8 @@ unfocused-split-opacity = 0.95
 # Shell Integration
 ##############################################################################
 
-shell-integration = none
-shell-integration-features = false
+shell-integration = zsh
+shell-integration-features = no-cursor,sudo,ssh-env,ssh-terminfo
 
 ##############################################################################
 # Catppuccin Frappé Color Palette
@@ -74,5 +74,5 @@ background = 303446
 foreground = c6d0f5
 cursor-color = f2d5cf
 cursor-text = 303446
-selection-background = 414559
-selection-foreground = c6d0f5
+selection-background = cell-foreground
+selection-foreground = cell-background

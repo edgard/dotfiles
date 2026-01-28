@@ -67,6 +67,7 @@ setopt NO_HUP         # Don't send HUP signal to background jobs on shell exit
 bindkey -e
 KEYTIMEOUT=1
 
+source "${HOME}/.zsh/00-ghostty.zsh"
 source "${HOME}/.zsh/01-path.zsh"
 source "${HOME}/.zsh/02-env.zsh"
 source "${HOME}/.zsh/03-aliases.zsh"
