@@ -62,7 +62,6 @@ cask "krita"
 cask "linearmouse"
 cask "rectangle"
 cask "vlc"
-cask "zed"
 
 ##############################################################################
 # Mac App Store Applications

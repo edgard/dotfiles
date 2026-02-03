@@ -25,9 +25,10 @@ brew "talosctl"
 ##############################################################################
 
 cask "bambu-studio"
+cask "codex"
 cask "discord"
-cask "droid"
 cask "telegram"
+cask "visual-studio-code"
 
 ##############################################################################
 # Mac App Store Applications
