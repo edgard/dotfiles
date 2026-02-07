@@ -1,4 +1,11 @@
-{{- $profile := promptStringOnce . "profile" "Profile (home/work)" -}}
+{{- $choices := list "home" "work" -}}
+{{- $profile := promptChoiceOnce . "profile" "Profile" $choices "home" -}}
+
+[diff]
+exclude = ["scripts"]
+
+[status]
+exclude = ["scripts"]
 
 [data]
 profile = {{ $profile | quote }}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Clean AI Slop"
+  short_description: "Clean AI-generated code issues in branch"
+  default_prompt: "Clean AI-generated code slop from the current branch with minimal diffs, preserve behavior, and summarize affected files and risk; do not commit, push, or open a PR."

@@ -27,8 +27,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional, List, Dict
 
-# Default directory for additional Brewfiles
-EXTRAS_DIR = Path.home() / '.local' / 'share' / 'chezmoi' / 'extras'
+# Fallback directories for additional Brewfiles
+DEFAULT_EXTRAS_DIRS = (
+    Path.home() / '.local' / 'share' / 'chezmoi' / 'extras',
+)
 # Chezmoi config file
 CHEZMOI_CONFIG = Path.home() / '.config' / 'chezmoi' / 'chezmoi.toml'
 # Secrets directory
@@ -46,6 +48,40 @@ def get_chezmoi_profile() -> str:
     return match.group(1) if match else 'home'
 
 
+def get_extras_dir() -> Path:
+    """Resolve extras directory from env/chezmoi, then fallback path."""
+    env_source = os.environ.get("CHEZMOI_SOURCE_DIR")
+    if env_source:
+        env_extras = Path(env_source).expanduser() / "extras"
+        if env_extras.is_dir():
+            return env_extras
+
+    if shutil.which("chezmoi"):
+        result = subprocess.run(
+            ["chezmoi", "source-path"],
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode == 0:
+            chezmoi_extras = Path(result.stdout.strip()).expanduser() / "extras"
+            if chezmoi_extras.is_dir():
+                return chezmoi_extras
+
+    for extras_dir in DEFAULT_EXTRAS_DIRS:
+        if extras_dir.is_dir():
+            return extras_dir
+
+    return DEFAULT_EXTRAS_DIRS[0]
+
+
+def run_chezmoi_checks() -> None:
+    """Run post-update health checks for chezmoi-managed files."""
+    print("Running chezmoi doctor...")
+    subprocess.run(["chezmoi", "doctor"], check=True)
+    print("Running chezmoi verify (excluding scripts)...")
+    subprocess.run(["chezmoi", "verify", "--exclude=scripts"], check=True)
+
+
 def fetch_secrets(profile: str = 'home') -> None:
     """Fetch secrets from Bitwarden and write attachments to secrets dir."""
     if not shutil.which("bw"):
@@ -55,44 +91,42 @@ def fetch_secrets(profile: str = 'home') -> None:
     bw_item = f"_chezmoi_{profile}"
     print(f"Fetching secrets from Bitwarden ({bw_item})...")
 
-    # Login/unlock Bitwarden
-    login_check = subprocess.run(
-        ["bw", "login", "--check"],
-        capture_output=True
-    )
+    env = dict(os.environ)
+    managed_session = False
 
-    try:
-        tty = open("/dev/tty", "r")
-    except OSError:
-        tty = None
-
-    if login_check.returncode != 0:
-        result = subprocess.run(
-            ["bw", "login", "--raw"],
-            stdin=tty,
-            stdout=subprocess.PIPE,
-            text=True
+    # Reuse existing session when available. Otherwise, try to login/unlock.
+    if not env.get("BW_SESSION"):
+        login_check = subprocess.run(
+            ["bw", "login", "--check"],
+            capture_output=True,
         )
-        if result.returncode != 0:
-             sys.stderr.write("Warning: Bitwarden login failed. Skipping secrets.\n")
-             return
-        bw_session = result.stdout.strip()
-    else:
-        result = subprocess.run(
-            ["bw", "unlock", "--raw"],
-            stdin=tty,
-            stdout=subprocess.PIPE,
-            text=True
-        )
-        if result.returncode != 0:
-             sys.stderr.write("Warning: Bitwarden unlock failed. Skipping secrets.\n")
-             return
-        bw_session = result.stdout.strip()
+        auth_cmd = ["bw", "login", "--raw"] if login_check.returncode != 0 else ["bw", "unlock", "--raw"]
 
-    if tty is not None:
-        tty.close()
+        try:
+            tty = open("/dev/tty", "r")
+        except OSError:
+            tty = None
 
-    env = {**os.environ, "BW_SESSION": bw_session}
+        if tty is None:
+            sys.stderr.write("Warning: Bitwarden auth requires a TTY. Skipping secrets.\n")
+            return
+
+        try:
+            result = subprocess.run(
+                auth_cmd,
+                stdin=tty,
+                stdout=subprocess.PIPE,
+                text=True,
+            )
+        finally:
+            tty.close()
+
+        if result.returncode != 0:
+            sys.stderr.write("Warning: Bitwarden auth failed. Skipping secrets.\n")
+            return
+
+        env["BW_SESSION"] = result.stdout.strip()
+        managed_session = True
 
     # Sync vault
     if subprocess.run(["bw", "sync"], env=env).returncode != 0:
@@ -127,7 +161,8 @@ def fetch_secrets(profile: str = 'home') -> None:
         print(f"  No attachments found on {bw_item}")
 
     # Lock vault
-    subprocess.run(["bw", "lock"], env=env)
+    if managed_session:
+        subprocess.run(["bw", "lock"], env=env)
     print("Secrets updated.")
 
 
@@ -137,7 +172,7 @@ def get_merged_brewfile(base_dir: Optional[Path] = None, profile: str = 'home') 
     - Always includes Brewfile.common
     - Includes Brewfile.<profile> (work or home)
     """
-    base = Path(base_dir or EXTRAS_DIR).expanduser().resolve()
+    base = Path(base_dir or get_extras_dir()).expanduser().resolve()
     # Collect candidate brewfiles
     brewfiles: List[Path] = [base / 'Brewfile.common', base / f'Brewfile.{profile}']
     temp_path = Path(tempfile.gettempdir()) / f'brewfile_merged_{os.getpid()}.brew'
@@ -174,7 +209,7 @@ def get_merged_brewfile(base_dir: Optional[Path] = None, profile: str = 'home') 
 
 
 def brew_cleanup(brewfiles_dir: Optional[Path] = None, profile: str = 'home', auto_confirm: bool = False) -> None:
-    extras = Path(brewfiles_dir or EXTRAS_DIR)
+    extras = Path(brewfiles_dir or get_extras_dir())
     if not extras.is_dir():
         sys.stderr.write(f"Error: Brewfiles directory not found: {extras}\n")
         sys.exit(1)
@@ -221,7 +256,7 @@ def brew_install(
     profile: str = 'home',
     skip_update: bool = False,
 ) -> None:
-    extras = Path(brewfiles_dir or EXTRAS_DIR)
+    extras = Path(brewfiles_dir or get_extras_dir())
     if not extras.is_dir():
         sys.stderr.write(f"Error: Brewfiles directory not found: {extras}\n")
         sys.exit(1)
@@ -270,6 +305,7 @@ def update_system(profile: str = 'home') -> None:
         try:
             if cmd == "chezmoi":
                 subprocess.run(["chezmoi", "update"], check=True)
+                run_chezmoi_checks()
             elif cmd == "brew":
                 subprocess.run(["brew", "update"], check=True)
                 subprocess.run(["brew", "upgrade"], check=True)

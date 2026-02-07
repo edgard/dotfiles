@@ -22,27 +22,18 @@ function _setup_homebrew() {
 _setup_homebrew
 unfunction _setup_homebrew
 
-local brew_prefix
-
-if (( $+commands[brew] )) && brew_prefix=$(brew --prefix go 2>/dev/null); then
+if (( $+commands[go] )); then
     export GOPATH="${GOPATH:-${HOME}/.go}"
     path+=("${GOPATH}/bin")
 fi
 
-if (( $+commands[brew] )) && brew_prefix=$(brew --prefix node 2>/dev/null); then
+if (( $+commands[node] )); then
     export NPM_CONFIG_PREFIX="${NPM_CONFIG_PREFIX:-${HOME}/.npm-global}"
     path+=("${NPM_CONFIG_PREFIX}/bin")
 fi
 
-if (( $+commands[brew] )) && brew_prefix=$(brew --prefix krew 2>/dev/null); then
+if [[ -d "${HOME}/.krew/bin" ]]; then
     path+=("${HOME}/.krew/bin")
 fi
 
-local -a user_paths=(
-    "${HOME}/.local/bin"
-)
-for user_path in "${user_paths[@]}"; do
-    [[ -d "$user_path" ]] && path+=("$user_path")
-done
-
-unset brew_prefix user_path user_paths
+[[ -d "${HOME}/.local/bin" ]] && path+=("${HOME}/.local/bin")

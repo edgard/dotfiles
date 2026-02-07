@@ -21,7 +21,7 @@ update secrets          # Fetch profile files from Bitwarden
 
 ### Profile Files (Bitwarden)
 
-Create a **Secure Note** named `_chezmoi_<profile>` (e.g., `_chezmoi_home`) and add machine-specific files as attachments. These will be downloaded to `~/.config/local/`.
+Create a **Secure Note** named `_chezmoi_<profile>` (e.g., `_chezmoi_home`) and add machine-specific files as attachments. `update secrets` downloads these attachments to `~/.config/local/`.
 
 Login and fetch:
 
@@ -39,5 +39,6 @@ Any `*.zsh` files in `~/.config/local/` are sourced by zsh.
 Re-run bootstrap scripts:
 
 ```bash
-chezmoi state delete-bucket --bucket=scriptState
+chezmoi state delete-bucket --bucket=scriptState  # run_once_ scripts
+chezmoi state delete-bucket --bucket=entryState   # run_onchange_ scripts
 ```

@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 # shellcheck disable=all
 
-alias history='atuin history list --cmd-only'
+(( $+commands[atuin] )) && alias history='atuin history list --cmd-only'
 alias ls='ls -F -G'
 
 (( $+commands[kubectl] )) && alias k='kubectl'

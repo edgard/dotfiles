@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install Xcode CLI, Homebrew, and packages (macOS only)
+# Install Xcode CLI and Homebrew (macOS only)
 set -euo pipefail
 
 # Skip if not macOS
@@ -9,6 +9,10 @@ echo "==> Installing dependencies..."
 
 # --- Xcode CLI Tools ---
 if ! xcode-select -p &>/dev/null; then
+    if [[ ! -t 0 ]]; then
+        echo "Error: Xcode Command Line Tools are required and bootstrap must run in an interactive terminal." >&2
+        exit 1
+    fi
     echo "==> Installing Xcode Command Line Tools..."
     xcode-select --install
     echo "Complete the installation prompt, then press Enter..."
@@ -31,20 +35,3 @@ if ! command -v brew &>/dev/null; then
     echo "Error: Homebrew installation failed" >&2
     exit 1
 fi
-
-# --- Homebrew packages ---
-echo "==> Installing Homebrew packages..."
-brewfile_common="{{ .chezmoi.sourceDir }}/extras/Brewfile.common"
-brewfile_profile="{{ .chezmoi.sourceDir }}/extras/Brewfile.{{ .profile }}"
-
-if [[ ! -f "$brewfile_common" ]]; then
-    echo "Error: Brewfile.common not found" >&2
-    exit 1
-fi
-if [[ ! -f "$brewfile_profile" ]]; then
-    echo "Error: Brewfile.{{ .profile }} not found" >&2
-    exit 1
-fi
-
-brew bundle --file="$brewfile_common"
-brew bundle --file="$brewfile_profile"
