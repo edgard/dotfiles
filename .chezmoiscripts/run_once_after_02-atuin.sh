@@ -9,6 +9,10 @@ echo "==> Setting up Atuin..."
 
 # Login only if session file doesn't exist (not logged in)
 if [[ ! -f "${XDG_DATA_HOME:-$HOME/.local/share}/atuin/session" ]]; then
+    if [[ ! -t 0 ]]; then
+        echo "==> Atuin login skipped (non-interactive shell). Run 'atuin login' later."
+        exit 0
+    fi
     echo "==> Logging in to Atuin..."
     if ! atuin login </dev/tty; then
         echo "==> Atuin login skipped. Run 'atuin login' to enable sync."

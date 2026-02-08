@@ -169,7 +169,7 @@ else
         echo -e "${RED}Error: Repository ${REPO} not found or not accessible${NC}" >&2
         exit 1
     fi
-    log "${GREEN}✓ Repository verified${NC}"
+    log "${GREEN}Repository verified${NC}"
 fi
 
 # Step 2: Repository Settings
@@ -196,7 +196,7 @@ else
         -f squash_merge_commit_title=PR_TITLE \
         -f squash_merge_commit_message=PR_BODY 2>&1)
     log_verbose "$result"
-    log "${GREEN}✓ Repository settings applied${NC}"
+    log "${GREEN}Repository settings applied${NC}"
 fi
 
 # Step 3: Security Settings
@@ -214,38 +214,38 @@ else
         -f security_and_analysis[secret_scanning][status]=enabled \
         -f security_and_analysis[secret_scanning_push_protection][status]=enabled 2>&1)
     log_verbose "$result"
-    log "${GREEN}✓ Secret scanning and push protection enabled${NC}"
+    log "${GREEN}Secret scanning and push protection enabled${NC}"
 
     # Disable Dependabot security updates (acceptable to fail on some repos)
     if ! result=$(gh api "repos/${REPO}" -X PATCH \
         -f security_and_analysis[dependabot_security_updates][status]=disabled 2>&1); then
         if [[ "$result" == *"Dependabot"*"not"* ]] || [[ "$result" == *"not supported"* ]] || [[ "$result" == *"not available"* ]]; then
-            log "${YELLOW}⚠ Dependabot security updates not available for this repository${NC}"
+            log "${YELLOW}Warning: Dependabot security updates not available for this repository${NC}"
         else
             echo -e "${RED}Error: Failed to configure Dependabot: ${result}${NC}" >&2
             exit 1
         fi
     else
         log_verbose "$result"
-        log "${GREEN}✓ Dependabot security updates disabled${NC}"
+        log "${GREEN}Dependabot security updates disabled${NC}"
     fi
 
     # Enable vulnerability alerts (acceptable to fail on some repos)
     if ! result=$(gh api "repos/${REPO}/vulnerability-alerts" -X PUT 2>&1); then
         if [[ "$result" == *"not supported"* ]] || [[ "$result" == *"not available"* ]]; then
-            log "${YELLOW}⚠ Vulnerability alerts not available for this repository${NC}"
+            log "${YELLOW}Warning: Vulnerability alerts not available for this repository${NC}"
         else
             echo -e "${RED}Error: Failed to enable vulnerability alerts: ${result}${NC}" >&2
             exit 1
         fi
     else
-        log "${GREEN}✓ Vulnerability alerts enabled${NC}"
+        log "${GREEN}Vulnerability alerts enabled${NC}"
     fi
 
     # Enable private vulnerability reporting
     result=$(gh api "repos/${REPO}/private-vulnerability-reporting" -X PUT 2>&1)
     log_verbose "$result"
-    log "${GREEN}✓ Private vulnerability reporting enabled${NC}"
+    log "${GREEN}Private vulnerability reporting enabled${NC}"
 fi
 
 # Step 4: Code Scanning Default Setup
@@ -255,7 +255,7 @@ if [[ "$DRY_RUN" == true ]]; then
 else
     if ! result=$(gh api "repos/${REPO}/code-scanning/default-setup" -X PATCH -f state=configured 2>&1); then
         if [[ "$result" == *"Advanced Security"* ]] || [[ "$result" == *"not supported"* ]] || [[ "$result" == *"no supported languages"* ]] || [[ "$result" == *"enable GitHub Advanced Security"* ]]; then
-            log "${YELLOW}⚠ Code scanning not available for this repository${NC}"
+            log "${YELLOW}Warning: Code scanning not available for this repository${NC}"
         else
             echo -e "${RED}Error: Failed to configure code scanning: ${result}${NC}" >&2
             exit 1
@@ -263,9 +263,9 @@ else
     else
         log_verbose "$result"
         if echo "$result" | grep -q "run_url"; then
-            log "${GREEN}✓ Code scanning default setup enabled (scan initiated)${NC}"
+            log "${GREEN}Code scanning default setup enabled (scan initiated)${NC}"
         else
-            log "${GREEN}✓ Code scanning default setup enabled${NC}"
+            log "${GREEN}Code scanning default setup enabled${NC}"
         fi
     fi
 fi
@@ -282,13 +282,13 @@ else
         -f default_workflow_permissions=write \
         -F can_approve_pull_request_reviews=true 2>&1)
     log_verbose "$result"
-    log "${GREEN}✓ Actions workflow permissions configured${NC}"
+    log "${GREEN}Actions workflow permissions configured${NC}"
 
     result=$(gh api "repos/${REPO}/actions/permissions" -X PUT \
         -f enabled=true \
         -f allowed_actions=all 2>&1)
     log_verbose "$result"
-    log "${GREEN}✓ Actions enabled (all actions allowed)${NC}"
+    log "${GREEN}Actions enabled (all actions allowed)${NC}"
 fi
 
 # Step 6: Branch Protection Ruleset
@@ -335,7 +335,7 @@ else
             -f rules="${RULES}" 2>&1)
     fi
     log_verbose "$result"
-    log "${GREEN}✓ Branch protection ruleset applied${NC}"
+    log "${GREEN}Branch protection ruleset applied${NC}"
 fi
 
 # Step 7: Topics Check (optional)
@@ -349,7 +349,7 @@ if [[ "$SKIP_TOPICS" == false ]]; then
             log "${BLUE}  No topics set. You may want to add topics with:${NC}"
             log "${BLUE}    gh repo edit ${REPO} --add-topic topic1,topic2${NC}"
         else
-            log "${GREEN}✓ Repository has ${TOPICS} topic(s)${NC}"
+            log "${GREEN}Repository has ${TOPICS} topic(s)${NC}"
         fi
     fi
 else
@@ -359,15 +359,15 @@ fi
 # Summary
 log "\n${GREEN}=== Repository standardization complete! ===${NC}"
 log "${BLUE}Applied settings:${NC}"
-log "  • Default branch: master"
-log "  • Merge strategies: squash + rebase (no merge commits)"
-log "  • Features: issues enabled, wiki/projects/discussions disabled"
-log "  • Security: secret scanning, push protection, vulnerability alerts"
-log "  • Private vulnerability reporting: enabled"
-log "  • Code scanning: default setup configured"
-log "  • Actions: enabled (all actions), write permissions, can approve PRs"
-log "  • Branch protection: prevent deletion, force push, require linear history, require PR"
+log "  - Default branch: master"
+log "  - Merge strategies: squash + rebase (no merge commits)"
+log "  - Features: issues enabled, wiki/projects/discussions disabled"
+log "  - Security: secret scanning, push protection, vulnerability alerts"
+log "  - Private vulnerability reporting: enabled"
+log "  - Code scanning: default setup configured"
+log "  - Actions: enabled (all actions), write permissions, can approve PRs"
+log "  - Branch protection: prevent deletion, force push, require linear history, require PR"
 if [[ "$WITH_CI" == true ]]; then
-    log "  • CI status checks: ${CI_CONTEXTS} (strict)"
+    log "  - CI status checks: ${CI_CONTEXTS} (strict)"
 fi
-log "  • Bypass: repository admins can bypass protection rules"
+log "  - Bypass: repository admins can bypass protection rules"
