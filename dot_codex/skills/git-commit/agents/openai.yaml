@@ -1,0 +1,4 @@
+interface:
+  display_name: "Git Commit"
+  short_description: "Create rationale-first Conventional Commits"
+  default_prompt: "Review staged changes, derive or confirm the motivation, and create a Conventional Commits v1.0.0 message that focuses on why the change is needed before running git commit."

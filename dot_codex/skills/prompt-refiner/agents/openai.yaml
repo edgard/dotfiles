@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prompt Refiner"
+  short_description: "Refine draft prompts with OpenAI best practices"
+  default_prompt: "Refine my draft prompt for clarity, structure, and output requirements."
