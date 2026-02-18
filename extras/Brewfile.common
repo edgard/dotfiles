@@ -8,36 +8,43 @@
 tap "buo/cask-upgrade"
 
 ##############################################################################
+# Essential Tools
+##############################################################################
+
+brew "fd"
+brew "jq"
+brew "ripgrep"
+brew "tree"
+brew "watch"
+brew "wget"
+brew "yq"
+
+##############################################################################
 # CLI Tools
 ##############################################################################
 
 brew "atuin"
 brew "bitwarden-cli"
 brew "chezmoi"
-brew "direnv"
-brew "fd"
-brew "go-task"
 brew "mas"
-brew "ripgrep"
 brew "starship"
 brew "typst"
-brew "watch"
 brew "zoxide"
 
 ##############################################################################
 # Development Tools
 ##############################################################################
 
+brew "direnv"
 brew "gh"
+brew "go-task"
 brew "go"
-brew "jq"
 brew "node"
 brew "pre-commit"
 brew "prettier"
 brew "shellcheck"
 brew "yamlfmt"
 brew "yamllint"
-brew "yq"
 
 ##############################################################################
 # Container & Kubernetes Tools
@@ -46,6 +53,7 @@ brew "yq"
 brew "colima"
 brew "docker"
 brew "helm"
+brew "k9s"
 brew "krew"
 brew "kubectx"
 brew "kubernetes-cli"
