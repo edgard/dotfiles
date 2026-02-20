@@ -48,7 +48,7 @@ defaults write NSGlobalDomain com.apple.keyboard.fnState -bool true # Use F1, F2
 # Trackpad and Mouse
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true # Enable tap to click
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1         # Enable tap to click for current user
-defaults write com.apple.swipescrolldirection -bool false                             # Use traditional scrolling direction
+defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false              # Use traditional scrolling direction
 
 ###############################################################################
 # Display and Screen
@@ -106,9 +106,9 @@ defaults write com.apple.WindowManager GloballyEnabled -bool false # Disable Sta
 defaults write com.apple.dock "expose-group-apps" -bool true # Group windows by application in Mission Control
 defaults write com.apple.dock mru-spaces -bool false         # Don't automatically rearrange Spaces based on most recent use
 
-# Launchpad
-defaults write com.apple.dock springboard-rows -int 7        # Set Launchpad rows to 7
-defaults write com.apple.dock springboard-columns -int 9     # Set Launchpad columns to 9
+# Apps (formerly Launchpad)
+defaults write com.apple.dock springboard-rows -int 7        # Set Apps grid rows to 7
+defaults write com.apple.dock springboard-columns -int 9     # Set Apps grid columns to 9
 
 ###############################################################################
 # Network and Storage
