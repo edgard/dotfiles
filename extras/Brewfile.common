@@ -36,6 +36,7 @@ brew "zoxide"
 ##############################################################################
 
 brew "direnv"
+brew "elixir"
 brew "gh"
 brew "go-task"
 brew "go"
