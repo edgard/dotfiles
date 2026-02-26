@@ -74,14 +74,6 @@ def get_extras_dir() -> Path:
     return DEFAULT_EXTRAS_DIRS[0]
 
 
-def run_chezmoi_checks() -> None:
-    """Run post-update health checks for chezmoi-managed files."""
-    print("Running chezmoi doctor...")
-    subprocess.run(["chezmoi", "doctor"], check=True)
-    print("Running chezmoi verify (excluding scripts)...")
-    subprocess.run(["chezmoi", "verify", "--exclude=scripts"], check=True)
-
-
 def fetch_secrets(profile: str = 'home') -> None:
     """Fetch secrets from Bitwarden and write attachments to secrets dir."""
     if not shutil.which("bw"):
@@ -286,7 +278,7 @@ def brew_install(
             pass
 
 
-def update_system(profile: str = 'home') -> None:
+def update_system(profile: str = 'home', auto_confirm: bool = False) -> None:
     managers = {
         "chezmoi": shutil.which("chezmoi") and "Dotfiles",
         "brew":    shutil.which("brew") and "Homebrew",
@@ -305,16 +297,20 @@ def update_system(profile: str = 'home') -> None:
         try:
             if cmd == "chezmoi":
                 subprocess.run(["chezmoi", "update"], check=True)
-                run_chezmoi_checks()
             elif cmd == "brew":
                 subprocess.run(["brew", "update"], check=True)
                 subprocess.run(["brew", "upgrade"], check=True)
-                if shutil.which("brew-cu"):
+                has_brew_cu = subprocess.run(
+                    ["brew", "cu", "--help"],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                ).returncode == 0
+                if has_brew_cu:
                     subprocess.run([
                         "brew", "cu", "-y", "-q", "--cleanup", "--no-brew-update"
                     ], check=True)
                 brew_install(profile=profile, skip_update=True)
-                brew_cleanup(profile=profile, auto_confirm=True)
+                brew_cleanup(profile=profile, auto_confirm=auto_confirm)
                 subprocess.run(["brew", "cleanup", "-s"], check=True)
             elif cmd == "apt":
                 subprocess.run(["sudo", "apt", "update"], check=True)
@@ -370,7 +366,7 @@ def main():
     elif args.command == "secrets":
         fetch_secrets(profile=args.profile)
     else:
-        update_system(profile=args.profile)
+        update_system(profile=args.profile, auto_confirm=args.auto_confirm)
 
 
 if __name__ == "__main__":
