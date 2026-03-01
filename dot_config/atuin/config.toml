@@ -4,9 +4,10 @@ dialect = "uk"
 auto_sync = true
 update_check = false
 enter_accept = false
-style = "auto"
-inline_height = 14
-inline_height_shell_up_key_binding = 1
+style = "compact"
+inline_height = 11
+inline_height_shell_up_key_binding = 11
+auto_hide_height = 0
 show_help = false
 filter_mode_shell_up_key_binding = "session"
 show_preview = false
@@ -23,3 +24,6 @@ records = true
 
 [theme]
 name = "catppuccin-frappe-mauve"
+
+[ui]
+columns = ["time", "command"]

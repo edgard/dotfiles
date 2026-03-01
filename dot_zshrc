@@ -65,7 +65,7 @@ setopt NO_BG_NICE     # Don't run background jobs at a lower priority
 setopt NO_HUP         # Don't send HUP signal to background jobs on shell exit
 
 bindkey -e
-KEYTIMEOUT=1
+KEYTIMEOUT=20
 
 source "${HOME}/.zsh/00-ghostty.zsh"
 source "${HOME}/.zsh/01-path.zsh"
