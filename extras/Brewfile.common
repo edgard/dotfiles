@@ -79,6 +79,3 @@ cask "vlc"
 mas "Amphetamine", id: 937984704
 mas "Bitwarden", id: 1352778147
 mas "iMovie", id: 408981434
-mas "Keynote", id: 361285480
-mas "Numbers", id: 361304891
-mas "Pages", id: 361309726
