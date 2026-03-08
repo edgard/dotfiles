@@ -19,6 +19,21 @@ update secrets          # Fetch profile files from Bitwarden
 
 ## Configuration
 
+### AI Skills
+
+`chezmoi apply` installs skills via `npx skills` using manifest files:
+- `extras/skills.common`
+- `extras/skills.<profile>`
+
+Manifest format:
+
+```txt
+source|agents(comma-separated)|skill
+```
+
+Use `./...` sources for local paths relative to the chezmoi source directory.
+Skills are copied (`--copy`), not symlinked.
+
 ### Profile Files (Bitwarden)
 
 Create a **Secure Note** named `_chezmoi_<profile>` (e.g., `_chezmoi_home`) and add machine-specific files as attachments. `update secrets` downloads these attachments to `~/.config/local/`.

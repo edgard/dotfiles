@@ -1,0 +1,10 @@
+# format: source|agents(comma-separated)|skill
+./extras/skills|codex,cursor|clean-ai-code-slop
+./extras/skills|codex,cursor|git-commit
+./extras/skills|codex,cursor|prompt-refiner
+https://github.com/anthropics/skills|codex,cursor|frontend-design
+https://github.com/vercel-labs/agent-skills|codex,cursor|web-design-guidelines
+https://github.com/obra/superpowers|codex,cursor|test-driven-development
+https://github.com/obra/superpowers|codex,cursor|receiving-code-review
+https://github.com/404kidwiz/claude-supercode-skills|codex,cursor|elixir-expert
+https://github.com/jeffallan/claude-skills|codex,cursor|golang-pro

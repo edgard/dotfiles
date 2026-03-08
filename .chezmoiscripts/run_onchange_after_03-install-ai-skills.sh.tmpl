@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Re-run when either skills manifest changes.
+# skills.common hash: {{ include "extras/skills.common" | sha256sum }}
+# skills.{{ .profile }} hash: {{ include (printf "extras/skills.%s" .profile) | sha256sum }}
+
+if ! command -v npx &>/dev/null; then
+    echo "==> Skipping AI skills (npx not installed)"
+    exit 0
+fi
+
+source_dir="{{ .chezmoi.sourceDir }}"
+
+install_from_line() {
+    local source="$1"
+    local agents="$2"
+    local skill="$3"
+
+    if [[ "$source" == ./* ]]; then
+        source="$source_dir/${source#./}"
+    fi
+
+    local cmd=(npx -y skills@latest add "$source" -g --copy -y -s "$skill")
+    IFS=',' read -r -a agent_list <<<"$agents"
+
+    for agent in "${agent_list[@]}"; do
+        agent="$(echo "$agent" | xargs)"
+        [[ -n "$agent" ]] && cmd+=(-a "$agent")
+    done
+
+    if ! "${cmd[@]}" </dev/null; then
+        echo "==> Warning: failed to install skills from '$source'"
+    fi
+}
+
+install_from_manifest() {
+    local manifest="$1"
+    [[ -f "$manifest" ]] || return 0
+
+    while IFS='|' read -r source agents skill; do
+        source="${source%%#*}"
+        source="$(echo "$source" | xargs)"
+        agents="$(echo "${agents%%#*}" | xargs)"
+        skill="$(echo "${skill%%#*}" | xargs)"
+        [[ -z "$source" ]] && continue
+        [[ -z "$agents" ]] && continue
+        [[ -z "$skill" ]] && continue
+        install_from_line "$source" "$agents" "$skill"
+    done <"$manifest"
+}
+
+echo "==> Installing AI skills..."
+install_from_manifest "$source_dir/extras/skills.common"
+install_from_manifest "$source_dir/extras/skills.{{ .profile }}"
