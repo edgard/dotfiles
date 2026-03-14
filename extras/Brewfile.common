@@ -35,6 +35,7 @@ brew "zoxide"
 # Development Tools
 ##############################################################################
 
+brew "bats-core"
 brew "direnv"
 brew "elixir"
 brew "gh"
