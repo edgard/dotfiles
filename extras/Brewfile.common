@@ -57,8 +57,10 @@ brew "docker"
 brew "helm"
 brew "k9s"
 brew "krew"
+brew "kubeconform"
 brew "kubectx"
 brew "kubernetes-cli"
+brew "pluto"
 
 ##############################################################################
 # macOS Applications (Casks)
