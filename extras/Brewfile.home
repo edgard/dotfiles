@@ -28,7 +28,7 @@ cask "bambu-studio"
 cask "codex"
 cask "codex-app"
 cask "discord"
-cask "telegram"
+cask "telegram-desktop"
 cask "visual-studio-code"
 
 ##############################################################################
