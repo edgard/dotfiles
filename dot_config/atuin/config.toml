@@ -3,27 +3,33 @@ sync_frequency = "10m"
 dialect = "uk"
 auto_sync = true
 update_check = false
-enter_accept = false
-style = "compact"
-inline_height = 11
-inline_height_shell_up_key_binding = 11
+style = "auto"
+inline_height = 0
+inline_height_shell_up_key_binding = 0
 auto_hide_height = 0
 show_help = false
 filter_mode_shell_up_key_binding = "session"
 show_preview = false
-search_mode = "fulltext"
-search_mode_shell_up_key_binding = "fulltext"
+search_mode = "daemon-fuzzy"
+search_mode_shell_up_key_binding = "daemon-fuzzy"
 show_tabs = false
 secrets_filter = false
 
-[keys]
-scroll_exits = false
+[keymap.emacs]
+"enter" = "accept"
+"shift-enter" = "return-selection"
+"tab" = "cycle-filter-mode"
+"shift-tab" = "cycle-search-mode"
+"esc" = "exit"
+"up" = "select-previous"
+"down" = "select-next"
 
 [sync]
 records = true
 
+[daemon]
+enabled = true
+autostart = true
+
 [theme]
 name = "catppuccin-frappe-mauve"
-
-[ui]
-columns = ["time", "command"]
