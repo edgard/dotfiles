@@ -17,9 +17,8 @@ secrets_filter = false
 
 [keymap.emacs]
 "enter" = "accept"
-"shift-enter" = "return-selection"
-"tab" = "cycle-filter-mode"
-"shift-tab" = "cycle-search-mode"
+"tab" = "return-selection"
+"shift-tab" = "cycle-filter-mode"
 "esc" = "exit"
 "up" = "select-previous"
 "down" = "select-next"
