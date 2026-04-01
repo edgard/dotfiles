@@ -69,12 +69,6 @@ KEYTIMEOUT=20
 
 source "${HOME}/.zsh/00-ghostty.zsh"
 source "${HOME}/.zsh/01-path.zsh"
-
-if (( $+commands[atuin] )); then
-    eval "$(atuin hex init zsh)" 2>/dev/null || print -P "%F{yellow}Warning: Failed to initialize atuin hex%f" >&2
-    eval "$(atuin init zsh)" 2>/dev/null || print -P "%F{yellow}Warning: Failed to initialize atuin%f" >&2
-fi
-
 source "${HOME}/.zsh/02-env.zsh"
 source "${HOME}/.zsh/03-aliases.zsh"
 source "${HOME}/.zsh/04-local.zsh"
