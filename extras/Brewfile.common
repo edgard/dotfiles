@@ -53,6 +53,7 @@ brew "yamllint"
 ##############################################################################
 
 brew "colima"
+brew "conftest"
 brew "docker"
 brew "helm"
 brew "k9s"
