@@ -9,6 +9,7 @@ tap "cue-lang/tap"
 tap "kudobuilder/tap"
 tap "kyverno/chainsaw", "https://github.com/kyverno/chainsaw"
 tap "nike-inc/nike"
+tap "nike-service-platform/tap"
 tap "upbound/tap"
 tap "vmware-tanzu/carvel"
 
@@ -32,6 +33,7 @@ brew "ijq"
 brew "terraform-docs"
 brew "tfenv"
 brew "tflint"
+brew "uv"
 
 ##############################################################################
 # Container & Kubernetes Tools
@@ -39,14 +41,16 @@ brew "tflint"
 
 brew "argo"
 brew "argocd"
+brew "crossplane"
 brew "kind"
+brew "kubelogin"
 brew "kustomize"
 brew "kuttl"
 brew "kyverno/chainsaw/chainsaw"
 brew "operator-sdk"
 brew "upbound/tap/up"
 brew "velero"
-brew "vendir"
+brew "vmware-tanzu/carvel/vendir"
 
 ##############################################################################
 # macOS Applications (Casks)
@@ -54,6 +58,7 @@ brew "vendir"
 
 cask "cursor"
 cask "cursor-cli"
+cask "nike-service-platform/tap/spfadm"
 
 ##############################################################################
 # Mac App Store Applications

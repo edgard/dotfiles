@@ -54,6 +54,7 @@ brew "yamllint"
 
 brew "colima"
 brew "conftest"
+brew "crane"
 brew "docker"
 brew "helm"
 brew "k9s"
@@ -62,6 +63,13 @@ brew "kubeconform"
 brew "kubectx"
 brew "kubernetes-cli"
 brew "pluto"
+
+##############################################################################
+# Kubernetes Krew Plugins
+##############################################################################
+krew "blame"
+krew "neat"
+krew "resource-capacity"
 
 ##############################################################################
 # macOS Applications (Casks)
