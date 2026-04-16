@@ -33,6 +33,15 @@ export VISUAL="${EDITOR}"
 export CLICOLOR=1
 export LSCOLORS='ExGxFxDxCxegedabagacad'
 
+if (( $+commands[fzf] )); then
+    export FZF_DEFAULT_OPTS="--no-scrollbar --info=right --pointer='▌' --color=bg+:#414559,bg:#303446,spinner:#ca9ee6,hl:#e78284 --color=fg:#c6d0f5,header:#e78284,info:#949cbb,pointer:#ca9ee6 --color=marker:#ca9ee6,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284"
+    if (( $+commands[fd] )); then
+        export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+        export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+    fi
+fi
+
 if (( $+commands[direnv] )); then
     export DIRENV_LOG_FORMAT=""
     eval "$(direnv hook zsh)" 2>/dev/null || print -P "%F{yellow}Warning: Failed to initialize direnv hook%f" >&2
