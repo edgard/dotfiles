@@ -58,7 +58,7 @@ brew "vmware-tanzu/carvel/vendir"
 
 cask "cursor"
 cask "cursor-cli"
-cask "nike-service-platform/tap/spfadm"
+cask "nike-service-platform/tap/spork"
 
 ##############################################################################
 # Mac App Store Applications
