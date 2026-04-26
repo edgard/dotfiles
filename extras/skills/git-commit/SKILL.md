@@ -10,9 +10,6 @@ Create high-signal commit messages and execute commits using Conventional Commit
 ## Workflow
 
 1. Inspect commit scope.
-- Run `git status --short`.
-- Run `git diff --staged --stat` and `git diff --staged`.
-- If nothing is staged, stop and ask whether to stage files first.
 
 2. Identify rationale before writing.
 - Derive the problem, intent, or risk reduction from the conversation and staged diff.
