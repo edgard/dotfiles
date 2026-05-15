@@ -82,7 +82,6 @@ cask "ghostty"
 cask "google-chrome"
 cask "krita"
 cask "linearmouse"
-cask "rectangle"
 cask "vlc"
 
 ##############################################################################
