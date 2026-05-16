@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Re-run when macOS configuration changes.
+# config-osx.sh hash: {{ include "extras/config-osx.sh" | sha256sum }}
+
+[[ "$(uname)" == "Darwin" ]] || { echo "==> Skipping macOS configuration (not macOS)"; exit 0; }
+
+config_script="{{ .chezmoi.sourceDir }}/extras/config-osx.sh"
+if [[ ! -f "$config_script" ]]; then
+    echo "Error: macOS config script not found: $config_script" >&2
+    exit 1
+fi
+
+echo "==> Applying macOS configuration..."
+bash "$config_script"
