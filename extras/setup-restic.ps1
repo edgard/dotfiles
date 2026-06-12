@@ -6,7 +6,7 @@
     This script installs and configures restic backup for Windows.
 
     It:
-      1. Stores credentials securely (restricted file permissions)
+      1. Stores credentials securely in a SYSTEM/Administrators-only runtime directory
       2. Creates exclude file
       3. Installs a Task Scheduler task (runs as SYSTEM, hidden from user)
 
@@ -44,12 +44,53 @@ $BACKUP_PATHS = @(
     "$TARGET_HOME\Documents"
 )
 
-$CONFIG_DIR = "$TARGET_HOME\AppData\Local\restic"
-$PASSWORD_FILE = "$CONFIG_DIR\password"
-$EXCLUDE_FILE = "$CONFIG_DIR\excludes.txt"
-$BACKUP_SCRIPT = "$CONFIG_DIR\restic-backup.ps1"
-$LOG_FILE = "$CONFIG_DIR\restic-backup.log"
+$CONFIG_DIR = Join-Path $env:ProgramData "restic-backup"
+$CACHE_DIR = Join-Path $CONFIG_DIR "cache"
+$PASSWORD_FILE = Join-Path $CONFIG_DIR "password"
+$EXCLUDE_FILE = Join-Path $CONFIG_DIR "excludes.txt"
+$BACKUP_SCRIPT = Join-Path $CONFIG_DIR "restic-backup.ps1"
+$LOG_FILE = Join-Path $CONFIG_DIR "restic-backup.log"
 $TASK_NAME = "ResticBackup"
+
+function Set-ResticRuntimeAcl {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+        [switch]$IsDirectory
+    )
+
+    if (-not (Test-Path -LiteralPath $Path)) { return }
+
+    $acl = Get-Acl -LiteralPath $Path
+    $acl.SetAccessRuleProtection($true, $false)
+
+    $rights = [System.Security.AccessControl.FileSystemRights]::FullControl
+    $accessType = [System.Security.AccessControl.AccessControlType]::Allow
+
+    if ($IsDirectory) {
+        $inheritFlags = [System.Security.AccessControl.InheritanceFlags]"ContainerInherit,ObjectInherit"
+        $propagationFlags = [System.Security.AccessControl.PropagationFlags]::None
+    } else {
+        $inheritFlags = [System.Security.AccessControl.InheritanceFlags]::None
+        $propagationFlags = [System.Security.AccessControl.PropagationFlags]::None
+    }
+
+    foreach ($identity in @("NT AUTHORITY\SYSTEM", "BUILTIN\Administrators")) {
+        $rule = New-Object System.Security.AccessControl.FileSystemAccessRule($identity, $rights, $inheritFlags, $propagationFlags, $accessType)
+        $acl.SetAccessRule($rule)
+    }
+
+    Set-Acl -LiteralPath $Path -AclObject $acl
+}
+
+function Set-ResticEnvironment {
+    $env:USERPROFILE = "$env:SystemRoot\System32\Config\SystemProfile"
+    $env:RESTIC_CACHE_DIR = $CACHE_DIR
+    $env:RESTIC_PASSWORD_FILE = $PASSWORD_FILE
+    $env:RESTIC_REST_USERNAME = "restic"
+    $env:RESTIC_REST_PASSWORD = (Get-Content -Path $PASSWORD_FILE -Raw).Trim()
+    $env:RESTIC_REPOSITORY = "rest:http://restic.edgard.org:8000/"
+}
 
 function Install-ResticBackup {
     # Check for Restic CLI and get full path
@@ -60,21 +101,20 @@ function Install-ResticBackup {
     }
     $RESTIC_BIN = $resticCmd.Source
 
-    # Create config directory
-    Write-Host "==> Creating config directory..." -ForegroundColor Green
-    if (-not (Test-Path $CONFIG_DIR)) {
-        New-Item -Path $CONFIG_DIR -ItemType Directory -Force | Out-Null
+    # Create SYSTEM/Administrators-only runtime directory
+    Write-Host "==> Creating runtime directory..." -ForegroundColor Green
+    New-Item -Path $CONFIG_DIR -ItemType Directory -Force | Out-Null
+    New-Item -Path $CACHE_DIR -ItemType Directory -Force | Out-Null
+    if (-not (Test-Path -LiteralPath $LOG_FILE)) {
+        New-Item -Path $LOG_FILE -ItemType File -Force | Out-Null
     }
-
-    # Grant SYSTEM read access to config directory (needed for scheduled task)
-    $acl = Get-Acl $CONFIG_DIR
-    $systemRule = New-Object System.Security.AccessControl.FileSystemAccessRule("NT AUTHORITY\SYSTEM", "ReadAndExecute", "ContainerInherit,ObjectInherit", "None", "Allow")
-    $acl.AddAccessRule($systemRule)
-    Set-Acl -Path $CONFIG_DIR -AclObject $acl
+    Set-ResticRuntimeAcl -Path $CONFIG_DIR -IsDirectory
+    Set-ResticRuntimeAcl -Path $CACHE_DIR -IsDirectory
+    Set-ResticRuntimeAcl -Path $LOG_FILE
 
     # Retrieve or prompt for password
     if (Test-Path $PASSWORD_FILE) {
-        $env:RESTIC_PASSWORD = (Get-Content -Path $PASSWORD_FILE -Raw).Trim()
+        Write-Host "Using existing password file at $PASSWORD_FILE"
     } else {
         $pass = Read-Host "Enter Restic Repository Password" -AsSecureString
         $plainPass = [System.Net.NetworkCredential]::new("", $pass).Password
@@ -82,13 +122,12 @@ function Install-ResticBackup {
         if (-not $plainPass) { Write-Error "Password required."; exit 1 }
 
         $plainPass | Set-Content -Path $PASSWORD_FILE -NoNewline
+        Set-ResticRuntimeAcl -Path $PASSWORD_FILE
         Write-Host "Password saved to $PASSWORD_FILE" -ForegroundColor Gray
-
-        $env:RESTIC_PASSWORD = $plainPass
     }
 
-    $env:RESTIC_PASSWORD = (Get-Content -Path $PASSWORD_FILE -Raw).Trim()
-    $env:RESTIC_REPOSITORY = "rest:http://restic:$($env:RESTIC_PASSWORD)@restic.edgard.org:8000/"
+    Set-ResticRuntimeAcl -Path $PASSWORD_FILE
+    Set-ResticEnvironment
 
     # Create exclude file
     Write-Host "==> Creating exclude patterns..." -ForegroundColor Green
@@ -103,6 +142,7 @@ __pycache__
 Thumbs.db
 desktop.ini
 "@ | Set-Content -Path $EXCLUDE_FILE -Encoding UTF8
+    Set-ResticRuntimeAcl -Path $EXCLUDE_FILE
     Write-Host "Exclude file created at $EXCLUDE_FILE"
 
     # Create backup script
@@ -113,12 +153,17 @@ desktop.ini
 `$PASSWORD_FILE = "$PASSWORD_FILE"
 `$RESTIC_BIN = "$RESTIC_BIN"
 `$HOSTNAME = "$RESTIC_HOSTNAME"
+`$CACHE_DIR = "$CACHE_DIR"
 `$EXCLUDE_FILE = "$EXCLUDE_FILE"
 `$LOG_FILE = "$LOG_FILE"
 `$BACKUP_PATH = "$TARGET_HOME\Documents"
 
-`$env:RESTIC_PASSWORD = (Get-Content -Path `$PASSWORD_FILE -Raw).Trim()
-`$env:RESTIC_REPOSITORY = "rest:http://restic:`$(`$env:RESTIC_PASSWORD)@restic.edgard.org:8000/"
+`$env:USERPROFILE = "`$env:SystemRoot\System32\Config\SystemProfile"
+`$env:RESTIC_CACHE_DIR = `$CACHE_DIR
+`$env:RESTIC_PASSWORD_FILE = `$PASSWORD_FILE
+`$env:RESTIC_REST_USERNAME = "restic"
+`$env:RESTIC_REST_PASSWORD = (Get-Content -Path `$PASSWORD_FILE -Raw).Trim()
+`$env:RESTIC_REPOSITORY = "rest:http://restic.edgard.org:8000/"
 
 function Log {
     param([string]`$Message)
@@ -147,6 +192,7 @@ if (`$exitCode -ne 0) {
 Log "Backup complete."
 "@
     $backupScriptContent | Set-Content -Path $BACKUP_SCRIPT -Encoding UTF8
+    Set-ResticRuntimeAcl -Path $BACKUP_SCRIPT
     Write-Host "Backup script created at $BACKUP_SCRIPT"
 
     # Create scheduled task (runs as SYSTEM, hidden)
@@ -198,8 +244,12 @@ Log "Backup complete."
     Write-Host "  Get-Content '$LOG_FILE' -Tail 50              # View backup log"
     Write-Host ""
     Write-Host "For other restic commands, run as Administrator:" -ForegroundColor Cyan
-    Write-Host "  `$env:RESTIC_PASSWORD = Get-Content '$PASSWORD_FILE' -Raw"
-    Write-Host "  `$env:RESTIC_REPOSITORY = `"rest:http://restic:`$(`$env:RESTIC_PASSWORD)@restic.edgard.org:8000/`""
+    Write-Host "  `$env:USERPROFILE = `"`$env:SystemRoot\System32\Config\SystemProfile`""
+    Write-Host "  `$env:RESTIC_CACHE_DIR = '$CACHE_DIR'"
+    Write-Host "  `$env:RESTIC_PASSWORD_FILE = '$PASSWORD_FILE'"
+    Write-Host "  `$env:RESTIC_REST_USERNAME = 'restic'"
+    Write-Host "  `$env:RESTIC_REST_PASSWORD = (Get-Content '$PASSWORD_FILE' -Raw).Trim()"
+    Write-Host "  `$env:RESTIC_REPOSITORY = 'rest:http://restic.edgard.org:8000/'"
     Write-Host "  restic snapshots --host $RESTIC_HOSTNAME      # List snapshots for this host"
     Write-Host "  restic snapshots                              # List all snapshots"
     Write-Host "  restic forget SNAPSHOT_ID --prune             # Delete a snapshot"
