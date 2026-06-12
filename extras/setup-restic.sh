@@ -17,7 +17,7 @@ set -e
 # password. It will be stored in a file with restricted permissions.
 #
 # This script:
-#   1. Stores credentials securely (restricted file permissions)
+#   1. Stores credentials securely in a root-owned runtime directory
 #   2. Creates exclude file
 #   3. Installs a launchd daemon for scheduled backups (runs as root, hidden)
 # -----------------------------------------------------------------------------
@@ -37,12 +37,49 @@ BACKUP_PATHS=(
     "$TARGET_HOME/Documents"
 )
 
-CONFIG_DIR="$TARGET_HOME/Library/Application Support/restic"
+CONFIG_DIR="/Library/Application Support/restic-backup"
+CACHE_DIR="$CONFIG_DIR/cache"
 PASSWORD_FILE="$CONFIG_DIR/password"
 EXCLUDE_FILE="$CONFIG_DIR/excludes.txt"
 BACKUP_SCRIPT="$CONFIG_DIR/restic-backup"
-LOG_FILE="$TARGET_HOME/Library/Logs/restic-backup.log"
+LOG_FILE="/Library/Logs/restic-backup.log"
 PLIST_FILE="/Library/LaunchDaemons/com.restic.backup.plist"
+
+configure_restic_environment() {
+    export HOME="/var/root"
+    export RESTIC_CACHE_DIR="$CACHE_DIR"
+    export RESTIC_PASSWORD_FILE="$PASSWORD_FILE"
+    export RESTIC_REST_USERNAME="restic"
+
+    RESTIC_REST_PASSWORD="$(cat "$PASSWORD_FILE")"
+    export RESTIC_REST_PASSWORD
+    export RESTIC_REPOSITORY="rest:http://restic.edgard.org:8000/"
+}
+
+secure_runtime_permissions() {
+    chown root:wheel "$CONFIG_DIR" "$CACHE_DIR"
+    chmod 700 "$CONFIG_DIR" "$CACHE_DIR"
+
+    if [ -f "$PASSWORD_FILE" ]; then
+        chown root:wheel "$PASSWORD_FILE"
+        chmod 600 "$PASSWORD_FILE"
+    fi
+
+    if [ -f "$EXCLUDE_FILE" ]; then
+        chown root:wheel "$EXCLUDE_FILE"
+        chmod 644 "$EXCLUDE_FILE"
+    fi
+
+    if [ -f "$BACKUP_SCRIPT" ]; then
+        chown root:wheel "$BACKUP_SCRIPT"
+        chmod 700 "$BACKUP_SCRIPT"
+    fi
+
+    if [ -f "$LOG_FILE" ]; then
+        chown root:wheel "$LOG_FILE"
+        chmod 640 "$LOG_FILE"
+    fi
+}
 
 install() {
     # Check for Restic CLI and get full path
@@ -52,16 +89,16 @@ install() {
     fi
     RESTIC_BIN=$(command -v restic)
 
-    # Create config directory and ensure log directory exists
-    echo "==> Creating config directory..."
-    mkdir -p "$CONFIG_DIR"
+    # Create root-owned runtime directories and log file.
+    echo "==> Creating runtime directory..."
+    mkdir -p "$CONFIG_DIR" "$CACHE_DIR"
     mkdir -p "$(dirname "$LOG_FILE")"
-    chmod 700 "$CONFIG_DIR"
-    chown -R "$TARGET_USER" "$CONFIG_DIR"
+    touch "$LOG_FILE"
+    secure_runtime_permissions
 
     # Retrieve or prompt for password
     if [ -f "$PASSWORD_FILE" ]; then
-        RESTIC_PASSWORD=$(cat "$PASSWORD_FILE")
+        echo "Using existing password file at $PASSWORD_FILE"
     else
         read -rsp "Enter Restic Repository Password: " RESTIC_PASSWORD
         echo ""
@@ -72,12 +109,11 @@ install() {
         fi
 
         printf '%s' "$RESTIC_PASSWORD" > "$PASSWORD_FILE"
-        chmod 600 "$PASSWORD_FILE"
+        secure_runtime_permissions
         echo "Password saved to $PASSWORD_FILE"
     fi
 
-    export RESTIC_PASSWORD
-    export RESTIC_REPOSITORY="rest:http://restic:${RESTIC_PASSWORD}@restic.edgard.org:8000/"
+    configure_restic_environment
 
     # Create exclude file
     echo "==> Creating exclude patterns..."
@@ -90,7 +126,7 @@ __pycache__
 *.tmp
 *.temp
 EOF
-    chmod 644 "$EXCLUDE_FILE"
+    secure_runtime_permissions
     echo "Exclude file created at $EXCLUDE_FILE"
 
     # Create backup script
@@ -101,13 +137,18 @@ EOF
 PASSWORD_FILE="%%PASSWORD_FILE%%"
 RESTIC_BIN="%%RESTIC_BIN%%"
 RESTIC_HOSTNAME="%%RESTIC_HOSTNAME%%"
+CACHE_DIR="%%CACHE_DIR%%"
 EXCLUDE_FILE="%%EXCLUDE_FILE%%"
 LOG_FILE="%%LOG_FILE%%"
 BACKUP_PATH="%%BACKUP_PATH%%"
 
-RESTIC_PASSWORD="$(cat "$PASSWORD_FILE")"
-export RESTIC_PASSWORD
-export RESTIC_REPOSITORY="rest:http://restic:${RESTIC_PASSWORD}@restic.edgard.org:8000/"
+export HOME="/var/root"
+export RESTIC_CACHE_DIR="$CACHE_DIR"
+export RESTIC_PASSWORD_FILE="$PASSWORD_FILE"
+export RESTIC_REST_USERNAME="restic"
+RESTIC_REST_PASSWORD="$(cat "$PASSWORD_FILE")"
+export RESTIC_REST_PASSWORD
+export RESTIC_REPOSITORY="rest:http://restic.edgard.org:8000/"
 
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
@@ -133,11 +174,12 @@ OUTER_EOF
     sed -i '' "s|%%PASSWORD_FILE%%|$PASSWORD_FILE|g" "$BACKUP_SCRIPT"
     sed -i '' "s|%%RESTIC_BIN%%|$RESTIC_BIN|g" "$BACKUP_SCRIPT"
     sed -i '' "s|%%RESTIC_HOSTNAME%%|$RESTIC_HOSTNAME|g" "$BACKUP_SCRIPT"
+    sed -i '' "s|%%CACHE_DIR%%|$CACHE_DIR|g" "$BACKUP_SCRIPT"
     sed -i '' "s|%%EXCLUDE_FILE%%|$EXCLUDE_FILE|g" "$BACKUP_SCRIPT"
     sed -i '' "s|%%LOG_FILE%%|$LOG_FILE|g" "$BACKUP_SCRIPT"
     sed -i '' "s|%%BACKUP_PATH%%|$TARGET_HOME/Documents|g" "$BACKUP_SCRIPT"
 
-    chmod 755 "$BACKUP_SCRIPT"
+    secure_runtime_permissions
     echo "Backup script created at $BACKUP_SCRIPT"
 
     # Create launchd daemon (runs as root, hidden from user)
@@ -212,8 +254,12 @@ EOF
     echo "  tail -f \"$LOG_FILE\"                        # View backup log"
     echo ""
     echo "For other restic commands, set environment and run with sudo -E:"
-    echo "  export RESTIC_PASSWORD=\$(sudo cat \"$PASSWORD_FILE\")"
-    echo "  export RESTIC_REPOSITORY=\"rest:http://restic:\${RESTIC_PASSWORD}@restic.edgard.org:8000/\""
+    echo "  export HOME=\"/var/root\""
+    echo "  export RESTIC_CACHE_DIR=\"$CACHE_DIR\""
+    echo "  export RESTIC_PASSWORD_FILE=\"$PASSWORD_FILE\""
+    echo "  export RESTIC_REST_USERNAME=\"restic\""
+    echo "  export RESTIC_REST_PASSWORD=\$(sudo cat \"$PASSWORD_FILE\")"
+    echo "  export RESTIC_REPOSITORY=\"rest:http://restic.edgard.org:8000/\""
     echo "  sudo -E restic snapshots --host $RESTIC_HOSTNAME   # List snapshots for this host"
     echo "  sudo -E restic snapshots                           # List all snapshots"
     echo "  sudo -E restic forget SNAPSHOT_ID --prune          # Delete a snapshot"
