@@ -1,29 +1,19 @@
 <#
 .SYNOPSIS
-    Restic Setup Script for Windows
+    Backrest Setup Script for Windows
 
 .DESCRIPTION
-    This script installs and configures restic backup for Windows.
-
-    It:
-      1. Stores credentials securely in a SYSTEM/Administrators-only runtime directory
-      2. Creates exclude file
-      3. Installs a Task Scheduler task (runs as SYSTEM, hidden from user)
+    Installs and configures Backrest for Windows using the existing shared
+    restic repository password file and a SYSTEM startup task.
 
 .PARAMETER Action
-    The action to perform: install or uninstall
+    install or uninstall
 
 .EXAMPLE
     .\setup-restic.ps1 install
 
 .EXAMPLE
     .\setup-restic.ps1 uninstall
-
-.NOTES
-    Run this script as Administrator.
-
-    Install Restic first:
-      winget install restic.restic
 #>
 
 #Requires -RunAsAdministrator
@@ -36,23 +26,28 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# Configuration
+$BACKREST_VERSION = "1.13.0"
+$BACKREST_TAG = "v$BACKREST_VERSION"
 $RESTIC_HOSTNAME = $env:COMPUTERNAME.ToLower()
 $TARGET_HOME = [Environment]::GetFolderPath('UserProfile')
 
-$BACKUP_PATHS = @(
-    "$TARGET_HOME\Documents"
-)
-
 $CONFIG_DIR = Join-Path $env:ProgramData "restic-backup"
-$CACHE_DIR = Join-Path $CONFIG_DIR "cache"
 $PASSWORD_FILE = Join-Path $CONFIG_DIR "password"
 $EXCLUDE_FILE = Join-Path $CONFIG_DIR "excludes.txt"
-$BACKUP_SCRIPT = Join-Path $CONFIG_DIR "restic-backup.ps1"
-$LOG_FILE = Join-Path $CONFIG_DIR "restic-backup.log"
-$TASK_NAME = "ResticBackup"
+$BACKREST_DIR = Join-Path $CONFIG_DIR "backrest"
+$BACKREST_DATA = Join-Path $BACKREST_DIR "data"
+$BACKREST_CONFIG_DIR = Join-Path $BACKREST_DIR "config"
+$BACKREST_CONFIG = Join-Path $BACKREST_CONFIG_DIR "config.json"
+$BACKREST_CACHE = Join-Path $BACKREST_DIR "cache"
+$BACKREST_TMP = Join-Path $BACKREST_DIR "tmp"
+$BACKREST_BIN = Join-Path $BACKREST_DIR "backrest.exe"
+$BACKREST_SCRIPT = Join-Path $BACKREST_DIR "run-backrest.ps1"
+$LOG_FILE = Join-Path $CONFIG_DIR "backrest.log"
+$TASK_NAME = "BackrestBackup"
+$OLD_TASK_NAME = "ResticBackup"
+$OLD_BACKUP_SCRIPT = Join-Path $CONFIG_DIR "restic-backup.ps1"
 
-function Set-ResticRuntimeAcl {
+function Set-BackrestRuntimeAcl {
     param(
         [Parameter(Mandatory = $true)]
         [string]$Path,
@@ -83,53 +78,36 @@ function Set-ResticRuntimeAcl {
     Set-Acl -LiteralPath $Path -AclObject $acl
 }
 
-function Set-ResticEnvironment {
-    $env:USERPROFILE = "$env:SystemRoot\System32\Config\SystemProfile"
-    $env:RESTIC_CACHE_DIR = $CACHE_DIR
-    $env:RESTIC_PASSWORD_FILE = $PASSWORD_FILE
-    $env:RESTIC_REST_USERNAME = "restic"
-    $env:RESTIC_REST_PASSWORD = (Get-Content -Path $PASSWORD_FILE -Raw).Trim()
-    $env:RESTIC_REPOSITORY = "rest:http://restic.edgard.org:8000/"
+function Install-BackrestBinary {
+    $arch = if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") { "arm64" } else { "x86_64" }
+    $asset = "backrest_Windows_$arch.zip"
+    $tmp = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString())
+    New-Item -Path $tmp -ItemType Directory -Force | Out-Null
+
+    try {
+        $zipPath = Join-Path $tmp "backrest.zip"
+        $checksumsPath = Join-Path $tmp "checksums.txt"
+        $url = "https://github.com/garethgeorge/backrest/releases/download/$BACKREST_TAG/$asset"
+        $checksumsUrl = "https://github.com/garethgeorge/backrest/releases/download/$BACKREST_TAG/backrest_$($BACKREST_VERSION)_checksums.txt"
+        Write-Host "==> Installing Backrest $BACKREST_TAG..." -ForegroundColor Green
+        Invoke-WebRequest -Uri $url -OutFile $zipPath
+        Invoke-WebRequest -Uri $checksumsUrl -OutFile $checksumsPath
+        $expected = Get-Content -Path $checksumsPath |
+            Where-Object { $_ -match "\s$([regex]::Escape($asset))$" } |
+            ForEach-Object { ($_ -split "\s+")[0].ToLowerInvariant() } |
+            Select-Object -First 1
+        $actual = (Get-FileHash -Algorithm SHA256 -Path $zipPath).Hash.ToLowerInvariant()
+        if (-not $expected -or $actual -ne $expected) {
+            throw "Backrest checksum verification failed for $asset"
+        }
+        Expand-Archive -Path $zipPath -DestinationPath $tmp -Force
+        Copy-Item -Path (Join-Path $tmp "backrest.exe") -Destination $BACKREST_BIN -Force
+    } finally {
+        Remove-Item -Path $tmp -Recurse -Force -ErrorAction SilentlyContinue
+    }
 }
 
-function Install-ResticBackup {
-    # Check for Restic CLI and get full path
-    $resticCmd = Get-Command restic -ErrorAction SilentlyContinue
-    if (-not $resticCmd) {
-        Write-Error "Restic not found. Please install: winget install restic.restic"
-        exit 1
-    }
-    $RESTIC_BIN = $resticCmd.Source
-
-    # Create SYSTEM/Administrators-only runtime directory
-    Write-Host "==> Creating runtime directory..." -ForegroundColor Green
-    New-Item -Path $CONFIG_DIR -ItemType Directory -Force | Out-Null
-    New-Item -Path $CACHE_DIR -ItemType Directory -Force | Out-Null
-    if (-not (Test-Path -LiteralPath $LOG_FILE)) {
-        New-Item -Path $LOG_FILE -ItemType File -Force | Out-Null
-    }
-    Set-ResticRuntimeAcl -Path $CONFIG_DIR -IsDirectory
-    Set-ResticRuntimeAcl -Path $CACHE_DIR -IsDirectory
-    Set-ResticRuntimeAcl -Path $LOG_FILE
-
-    # Retrieve or prompt for password
-    if (Test-Path $PASSWORD_FILE) {
-        Write-Host "Using existing password file at $PASSWORD_FILE"
-    } else {
-        $pass = Read-Host "Enter Restic Repository Password" -AsSecureString
-        $plainPass = [System.Net.NetworkCredential]::new("", $pass).Password
-
-        if (-not $plainPass) { Write-Error "Password required."; exit 1 }
-
-        $plainPass | Set-Content -Path $PASSWORD_FILE -NoNewline
-        Set-ResticRuntimeAcl -Path $PASSWORD_FILE
-        Write-Host "Password saved to $PASSWORD_FILE" -ForegroundColor Gray
-    }
-
-    Set-ResticRuntimeAcl -Path $PASSWORD_FILE
-    Set-ResticEnvironment
-
-    # Create exclude file
+function Write-BackrestExcludes {
     Write-Host "==> Creating exclude patterns..." -ForegroundColor Green
     @"
 `$RECYCLE.BIN
@@ -142,149 +120,129 @@ __pycache__
 Thumbs.db
 desktop.ini
 "@ | Set-Content -Path $EXCLUDE_FILE -Encoding UTF8
-    Set-ResticRuntimeAcl -Path $EXCLUDE_FILE
-    Write-Host "Exclude file created at $EXCLUDE_FILE"
+}
 
-    # Create backup script
-    Write-Host "==> Creating backup script..." -ForegroundColor Green
-    $backupScriptContent = @"
-# Restic Backup Script for Windows (runs as SYSTEM)
-
-`$PASSWORD_FILE = "$PASSWORD_FILE"
-`$RESTIC_BIN = "$RESTIC_BIN"
-`$HOSTNAME = "$RESTIC_HOSTNAME"
-`$CACHE_DIR = "$CACHE_DIR"
-`$EXCLUDE_FILE = "$EXCLUDE_FILE"
-`$LOG_FILE = "$LOG_FILE"
-`$BACKUP_PATH = "$TARGET_HOME\Documents"
+function Write-BackrestLauncher {
+    Write-Host "==> Creating Backrest launcher..." -ForegroundColor Green
+    $content = @"
+`$ErrorActionPreference = "Stop"
 
 `$env:USERPROFILE = "`$env:SystemRoot\System32\Config\SystemProfile"
-`$env:RESTIC_CACHE_DIR = `$CACHE_DIR
-`$env:RESTIC_PASSWORD_FILE = `$PASSWORD_FILE
+`$env:BACKREST_CONFIG = "$BACKREST_CONFIG"
+`$env:BACKREST_DATA = "$BACKREST_DATA"
+`$env:BACKREST_PORT = "127.0.0.1:9898"
+`$env:RESTIC_PASSWORD = (Get-Content -Path "$PASSWORD_FILE" -Raw).Trim()
+`$env:RESTIC_PASSWORD_FILE = "$PASSWORD_FILE"
 `$env:RESTIC_REST_USERNAME = "restic"
-`$env:RESTIC_REST_PASSWORD = (Get-Content -Path `$PASSWORD_FILE -Raw).Trim()
+`$env:RESTIC_REST_PASSWORD = (Get-Content -Path "$PASSWORD_FILE" -Raw).Trim()
 `$env:RESTIC_REPOSITORY = "rest:http://restic.edgard.org:8000/"
+`$env:TMPDIR = "$BACKREST_TMP"
+`$env:XDG_CACHE_HOME = "$BACKREST_CACHE"
 
-function Log {
-    param([string]`$Message)
-    `$timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    "`$timestamp - `$Message" | Out-File -FilePath `$LOG_FILE -Append
-}
-
-Log "Starting backup..."
-
-`$backupOutput = & `$RESTIC_BIN backup ``
-    --host `$HOSTNAME ``
-    --tag documents ``
-    --exclude-file `$EXCLUDE_FILE ``
-    --exclude-caches ``
-    --verbose ``
-    `$BACKUP_PATH 2>&1
-
-`$backupOutput | Out-File -FilePath `$LOG_FILE -Append
-`$exitCode = `$LASTEXITCODE
-
-if (`$exitCode -ne 0) {
-    Log "Backup failed with exit code `$exitCode"
-    exit `$exitCode
-}
-
-Log "Backup complete."
+& "$BACKREST_BIN" *>> "$LOG_FILE"
 "@
-    $backupScriptContent | Set-Content -Path $BACKUP_SCRIPT -Encoding UTF8
-    Set-ResticRuntimeAcl -Path $BACKUP_SCRIPT
-    Write-Host "Backup script created at $BACKUP_SCRIPT"
+    $content | Set-Content -Path $BACKREST_SCRIPT -Encoding UTF8
+}
 
-    # Create scheduled task (runs as SYSTEM, hidden)
-    Write-Host "==> Creating scheduled task..." -ForegroundColor Green
+function Remove-OldResticScheduler {
+    $existingTask = Get-ScheduledTask -TaskName $OLD_TASK_NAME -ErrorAction SilentlyContinue
+    if ($existingTask) {
+        Write-Host "==> Removing old restic scheduled task..." -ForegroundColor Green
+        Unregister-ScheduledTask -TaskName $OLD_TASK_NAME -Confirm:$false
+    }
+
+    if (Test-Path -LiteralPath $OLD_BACKUP_SCRIPT) {
+        Remove-Item -LiteralPath $OLD_BACKUP_SCRIPT -Force
+    }
+}
+
+function Install-BackrestBackup {
+    Write-Host "==> Creating runtime directories..." -ForegroundColor Green
+    foreach ($path in @($CONFIG_DIR, $BACKREST_DIR, $BACKREST_DATA, $BACKREST_CONFIG_DIR, $BACKREST_CACHE, $BACKREST_TMP)) {
+        New-Item -Path $path -ItemType Directory -Force | Out-Null
+    }
+    if (-not (Test-Path -LiteralPath $LOG_FILE)) {
+        New-Item -Path $LOG_FILE -ItemType File -Force | Out-Null
+    }
+
+    if (Test-Path -LiteralPath $PASSWORD_FILE) {
+        Write-Host "Using existing repository password file at $PASSWORD_FILE"
+    } else {
+        $pass = Read-Host "Enter Restic Repository Password" -AsSecureString
+        $plainPass = [System.Net.NetworkCredential]::new("", $pass).Password
+
+        if (-not $plainPass) { Write-Error "Password required."; exit 1 }
+
+        $plainPass | Set-Content -Path $PASSWORD_FILE -NoNewline
+        Write-Host "Password saved to $PASSWORD_FILE" -ForegroundColor Gray
+    }
+
+    Install-BackrestBinary
+    Write-BackrestExcludes
+    Write-BackrestLauncher
+
+    foreach ($path in @($CONFIG_DIR, $BACKREST_DIR, $BACKREST_DATA, $BACKREST_CONFIG_DIR, $BACKREST_CACHE, $BACKREST_TMP)) {
+        Set-BackrestRuntimeAcl -Path $path -IsDirectory
+    }
+    foreach ($path in @($PASSWORD_FILE, $EXCLUDE_FILE, $BACKREST_BIN, $BACKREST_SCRIPT, $LOG_FILE)) {
+        Set-BackrestRuntimeAcl -Path $path
+    }
+
+    Remove-OldResticScheduler
+
     $existingTask = Get-ScheduledTask -TaskName $TASK_NAME -ErrorAction SilentlyContinue
     if ($existingTask) {
         Unregister-ScheduledTask -TaskName $TASK_NAME -Confirm:$false
     }
 
-    $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$BACKUP_SCRIPT`""
-    $trigger = New-ScheduledTaskTrigger -Daily -At 3:00AM
+    Write-Host "==> Creating Backrest startup task..." -ForegroundColor Green
+    $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$BACKREST_SCRIPT`""
+    $trigger = New-ScheduledTaskTrigger -AtStartup
     $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -DontStopOnIdleEnd -Priority 7
     $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
 
-    Register-ScheduledTask -TaskName $TASK_NAME -Action $action -Trigger $trigger -Settings $settings -Principal $principal -Description "Daily Restic backup at 3:00 AM (runs as SYSTEM)"
-    Write-Host "Scheduled task '$TASK_NAME' created (runs daily at 3:00 AM as SYSTEM, hidden)."
-
-    # Run initial backup via scheduled task
-    Write-Host "==> Running initial backup..." -ForegroundColor Green
-    $skipInitial = $false
-    foreach ($path in $BACKUP_PATHS) {
-        if (Test-Path $path) {
-            try {
-                $snapshotsJson = & $RESTIC_BIN snapshots --host $RESTIC_HOSTNAME --path $path --json 2>&1
-                $snapshots = $snapshotsJson | ConvertFrom-Json -ErrorAction SilentlyContinue
-                if ($snapshots -and @($snapshots).Count -gt 0) {
-                    Write-Host "Snapshots already exist for $path, skipping initial backup."
-                    $skipInitial = $true
-                }
-            } catch {
-                # No snapshots or error parsing, continue to create
-            }
-        }
-    }
-
-    if (-not $skipInitial) {
-        Write-Host "Triggering scheduled task for initial backup..."
-        Start-ScheduledTask -TaskName $TASK_NAME
-        Write-Host "Initial backup started. Check log for progress: Get-Content '$LOG_FILE' -Tail 50 -Wait"
-    }
+    Register-ScheduledTask -TaskName $TASK_NAME -Action $action -Trigger $trigger -Settings $settings -Principal $principal -Description "Backrest backup service (runs as SYSTEM)"
+    Start-ScheduledTask -TaskName $TASK_NAME
 
     Write-Host ""
     Write-Host "==> Setup complete!" -ForegroundColor Green
     Write-Host ""
-    Write-Host "The backup runs daily at 3:00 AM as SYSTEM (hidden from user)." -ForegroundColor Cyan
-    Write-Host ""
-    Write-Host "Useful commands:" -ForegroundColor Cyan
-    Write-Host "  & '$BACKUP_SCRIPT'                            # Run backup manually"
-    Write-Host "  Get-Content '$LOG_FILE' -Tail 50              # View backup log"
-    Write-Host ""
-    Write-Host "For other restic commands, run as Administrator:" -ForegroundColor Cyan
-    Write-Host "  `$env:USERPROFILE = `"`$env:SystemRoot\System32\Config\SystemProfile`""
-    Write-Host "  `$env:RESTIC_CACHE_DIR = '$CACHE_DIR'"
-    Write-Host "  `$env:RESTIC_PASSWORD_FILE = '$PASSWORD_FILE'"
-    Write-Host "  `$env:RESTIC_REST_USERNAME = 'restic'"
-    Write-Host "  `$env:RESTIC_REST_PASSWORD = (Get-Content '$PASSWORD_FILE' -Raw).Trim()"
-    Write-Host "  `$env:RESTIC_REPOSITORY = 'rest:http://restic.edgard.org:8000/'"
-    Write-Host "  restic snapshots --host $RESTIC_HOSTNAME      # List snapshots for this host"
-    Write-Host "  restic snapshots                              # List all snapshots"
-    Write-Host "  restic forget SNAPSHOT_ID --prune             # Delete a snapshot"
+    Write-Host "Backrest is running locally at http://127.0.0.1:9898" -ForegroundColor Cyan
+    Write-Host "Use instance ID: $RESTIC_HOSTNAME"
+    Write-Host "Create a Documents plan after pairing with the homelab Backrest server:"
+    Write-Host "  Path: $TARGET_HOME\Documents"
+    Write-Host "  Exclude file: $EXCLUDE_FILE"
+    Write-Host "  Schedule: 0 3 * * *"
+    Write-Host "  Repository: shared repo received from homelab"
+    Write-Host "Logs: Get-Content '$LOG_FILE' -Tail 50 -Wait"
 }
 
-function Uninstall-ResticBackup {
-    Write-Host "==> Uninstalling restic backup..." -ForegroundColor Green
+function Uninstall-BackrestBackup {
+    Write-Host "==> Uninstalling Backrest backup..." -ForegroundColor Green
 
-    # Remove scheduled task
     $existingTask = Get-ScheduledTask -TaskName $TASK_NAME -ErrorAction SilentlyContinue
     if ($existingTask) {
-        Write-Host "Removing scheduled task..."
         Unregister-ScheduledTask -TaskName $TASK_NAME -Confirm:$false
     }
 
-    # Remove config directory
-    if (Test-Path $CONFIG_DIR) {
-        Write-Host "Removing config directory..."
-        Remove-Item -Path $CONFIG_DIR -Recurse -Force
+    Remove-OldResticScheduler
+
+    if (Test-Path -LiteralPath $CONFIG_DIR) {
+        Remove-Item -LiteralPath $CONFIG_DIR -Recurse -Force
     }
 
     Write-Host ""
     Write-Host "==> Uninstall complete!" -ForegroundColor Green
     Write-Host ""
-    Write-Host "Note: Restic binary was not removed. To remove it: winget uninstall restic.restic" -ForegroundColor Cyan
     Write-Host "Note: Remote backups were not deleted." -ForegroundColor Cyan
 }
 
-# Main
 if (-not $Action) {
     Write-Host "Usage: .\setup-restic.ps1 [install|uninstall]"
     exit 1
 }
 
 switch ($Action) {
-    "install" { Install-ResticBackup }
-    "uninstall" { Uninstall-ResticBackup }
+    "install" { Install-BackrestBackup }
+    "uninstall" { Uninstall-BackrestBackup }
 }

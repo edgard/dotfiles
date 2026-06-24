@@ -1,64 +1,51 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 # -----------------------------------------------------------------------------
-# Restic Setup Script for macOS
+# Backrest Setup Script for macOS
 #
 # USAGE:
-#   sudo ./setup-restic.sh install    # Install and configure restic backup
-#   sudo ./setup-restic.sh uninstall  # Remove restic backup configuration
-#
-# INSTALLATION INSTRUCTIONS:
-#
-# Install Restic:
-#   brew install restic
-#
-# The first time you run this script, it will prompt you for the repository
-# password. It will be stored in a file with restricted permissions.
+#   sudo ./setup-restic.sh install
+#   sudo ./setup-restic.sh uninstall
 #
 # This script:
-#   1. Stores credentials securely in a root-owned runtime directory
-#   2. Creates exclude file
-#   3. Installs a launchd daemon for scheduled backups (runs as root, hidden)
+#   1. Installs the pinned Backrest release
+#   2. Reuses the existing restic repository password file
+#   3. Creates exclude patterns for the Documents backup plan
+#   4. Installs a root launchd daemon for Backrest
+#   5. Removes the old plain-restic launchd scheduler
 # -----------------------------------------------------------------------------
 
-# Require root
 if [ "$EUID" -ne 0 ]; then
     echo "Please run as root: sudo $0 [install|uninstall]"
     exit 1
 fi
 
-# Configuration
+BACKREST_VERSION="1.13.0"
+BACKREST_TAG="v$BACKREST_VERSION"
 RESTIC_HOSTNAME=$(hostname -s | tr '[:upper:]' '[:lower:]')
 TARGET_USER="${SUDO_USER:-$USER}"
 TARGET_HOME=$(eval echo "~$TARGET_USER")
 
-BACKUP_PATHS=(
-    "$TARGET_HOME/Documents"
-)
-
 CONFIG_DIR="/Library/Application Support/restic-backup"
-CACHE_DIR="$CONFIG_DIR/cache"
 PASSWORD_FILE="$CONFIG_DIR/password"
 EXCLUDE_FILE="$CONFIG_DIR/excludes.txt"
-BACKUP_SCRIPT="$CONFIG_DIR/restic-backup"
-LOG_FILE="/Library/Logs/restic-backup.log"
-PLIST_FILE="/Library/LaunchDaemons/com.restic.backup.plist"
-
-configure_restic_environment() {
-    export HOME="/var/root"
-    export RESTIC_CACHE_DIR="$CACHE_DIR"
-    export RESTIC_PASSWORD_FILE="$PASSWORD_FILE"
-    export RESTIC_REST_USERNAME="restic"
-
-    RESTIC_REST_PASSWORD="$(cat "$PASSWORD_FILE")"
-    export RESTIC_REST_PASSWORD
-    export RESTIC_REPOSITORY="rest:http://restic.edgard.org:8000/"
-}
+BACKREST_DIR="$CONFIG_DIR/backrest"
+BACKREST_DATA="$BACKREST_DIR/data"
+BACKREST_CONFIG_DIR="$BACKREST_DIR/config"
+BACKREST_CONFIG="$BACKREST_CONFIG_DIR/config.json"
+BACKREST_CACHE="$BACKREST_DIR/cache"
+BACKREST_TMP="$BACKREST_DIR/tmp"
+BACKREST_BIN="/usr/local/bin/backrest"
+BACKREST_WRAPPER="$BACKREST_DIR/run-backrest"
+LOG_FILE="/Library/Logs/backrest.log"
+PLIST_FILE="/Library/LaunchDaemons/com.backrest.backup.plist"
+OLD_PLIST_FILE="/Library/LaunchDaemons/com.restic.backup.plist"
+OLD_BACKUP_SCRIPT="$CONFIG_DIR/restic-backup"
 
 secure_runtime_permissions() {
-    chown root:wheel "$CONFIG_DIR" "$CACHE_DIR"
-    chmod 700 "$CONFIG_DIR" "$CACHE_DIR"
+    chown root:wheel "$CONFIG_DIR" "$BACKREST_DIR" "$BACKREST_DATA" "$BACKREST_CONFIG_DIR" "$BACKREST_CACHE" "$BACKREST_TMP"
+    chmod 700 "$CONFIG_DIR" "$BACKREST_DIR" "$BACKREST_DATA" "$BACKREST_CONFIG_DIR" "$BACKREST_CACHE" "$BACKREST_TMP"
 
     if [ -f "$PASSWORD_FILE" ]; then
         chown root:wheel "$PASSWORD_FILE"
@@ -70,9 +57,9 @@ secure_runtime_permissions() {
         chmod 644 "$EXCLUDE_FILE"
     fi
 
-    if [ -f "$BACKUP_SCRIPT" ]; then
-        chown root:wheel "$BACKUP_SCRIPT"
-        chmod 700 "$BACKUP_SCRIPT"
+    if [ -f "$BACKREST_WRAPPER" ]; then
+        chown root:wheel "$BACKREST_WRAPPER"
+        chmod 700 "$BACKREST_WRAPPER"
     fi
 
     if [ -f "$LOG_FILE" ]; then
@@ -81,43 +68,45 @@ secure_runtime_permissions() {
     fi
 }
 
-install() {
-    # Check for Restic CLI and get full path
-    if ! command -v restic >/dev/null 2>&1; then
-        echo "Restic not found. Please install: brew install restic"
+install_backrest_binary() {
+    local machine arch asset tmp expected actual
+
+    machine=$(uname -m)
+    case "$machine" in
+        arm64)
+            arch="arm64"
+            ;;
+        x86_64)
+            arch="x86_64"
+            ;;
+        *)
+            echo "Unsupported macOS architecture: $machine"
+            exit 1
+            ;;
+    esac
+
+    asset="backrest_Darwin_${arch}.tar.gz"
+    tmp=$(mktemp -d)
+
+    echo "==> Installing Backrest $BACKREST_TAG..."
+    mkdir -p "$(dirname "$BACKREST_BIN")"
+    curl -fsSL "https://github.com/garethgeorge/backrest/releases/download/${BACKREST_TAG}/${asset}" -o "$tmp/backrest.tar.gz"
+    curl -fsSL "https://github.com/garethgeorge/backrest/releases/download/${BACKREST_TAG}/backrest_${BACKREST_VERSION}_checksums.txt" -o "$tmp/checksums.txt"
+    expected=$(awk -v asset="$asset" '$2 == asset {print $1}' "$tmp/checksums.txt")
+    actual=$(shasum -a 256 "$tmp/backrest.tar.gz" | awk '{print $1}')
+    if [ -z "$expected" ] || [ "$actual" != "$expected" ]; then
+        echo "Backrest checksum verification failed for $asset"
+        rm -rf "$tmp"
         exit 1
     fi
-    RESTIC_BIN=$(command -v restic)
+    tar -xzf "$tmp/backrest.tar.gz" -C "$tmp"
+    install -m 0755 "$tmp/backrest" "$BACKREST_BIN"
+    rm -rf "$tmp"
+}
 
-    # Create root-owned runtime directories and log file.
-    echo "==> Creating runtime directory..."
-    mkdir -p "$CONFIG_DIR" "$CACHE_DIR"
-    mkdir -p "$(dirname "$LOG_FILE")"
-    touch "$LOG_FILE"
-    secure_runtime_permissions
-
-    # Retrieve or prompt for password
-    if [ -f "$PASSWORD_FILE" ]; then
-        echo "Using existing password file at $PASSWORD_FILE"
-    else
-        read -rsp "Enter Restic Repository Password: " RESTIC_PASSWORD
-        echo ""
-
-        if [ -z "$RESTIC_PASSWORD" ]; then
-            echo "Password cannot be empty."
-            exit 1
-        fi
-
-        printf '%s' "$RESTIC_PASSWORD" > "$PASSWORD_FILE"
-        secure_runtime_permissions
-        echo "Password saved to $PASSWORD_FILE"
-    fi
-
-    configure_restic_environment
-
-    # Create exclude file
+write_excludes() {
     echo "==> Creating exclude patterns..."
-    cat > "$EXCLUDE_FILE" << 'EOF'
+    cat > "$EXCLUDE_FILE" <<'EOF'
 .DS_Store
 .Trash
 .venv
@@ -126,88 +115,63 @@ __pycache__
 *.tmp
 *.temp
 EOF
-    secure_runtime_permissions
-    echo "Exclude file created at $EXCLUDE_FILE"
-
-    # Create backup script
-    echo "==> Creating backup script..."
-    cat > "$BACKUP_SCRIPT" << 'OUTER_EOF'
-#!/bin/bash
-
-PASSWORD_FILE="%%PASSWORD_FILE%%"
-RESTIC_BIN="%%RESTIC_BIN%%"
-RESTIC_HOSTNAME="%%RESTIC_HOSTNAME%%"
-CACHE_DIR="%%CACHE_DIR%%"
-EXCLUDE_FILE="%%EXCLUDE_FILE%%"
-LOG_FILE="%%LOG_FILE%%"
-BACKUP_PATH="%%BACKUP_PATH%%"
-
-export HOME="/var/root"
-export RESTIC_CACHE_DIR="$CACHE_DIR"
-export RESTIC_PASSWORD_FILE="$PASSWORD_FILE"
-export RESTIC_REST_USERNAME="restic"
-RESTIC_REST_PASSWORD="$(cat "$PASSWORD_FILE")"
-export RESTIC_REST_PASSWORD
-export RESTIC_REPOSITORY="rest:http://restic.edgard.org:8000/"
-
-log() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
 }
 
-log "Starting backup..."
+write_wrapper() {
+    echo "==> Creating Backrest wrapper..."
+    cat > "$BACKREST_WRAPPER" <<EOF
+#!/bin/bash
+set -euo pipefail
 
-if "$RESTIC_BIN" backup \
-    --host "$RESTIC_HOSTNAME" \
-    --tag documents \
-    --exclude-file "$EXCLUDE_FILE" \
-    --exclude-caches \
-    --verbose \
-    "$BACKUP_PATH" >> "$LOG_FILE" 2>&1; then
-    log "Backup complete."
-else
-    log "Backup failed with exit code $?"
-    exit 1
-fi
-OUTER_EOF
+export HOME="/var/root"
+export BACKREST_CONFIG="$BACKREST_CONFIG"
+export BACKREST_DATA="$BACKREST_DATA"
+export BACKREST_PORT="127.0.0.1:9898"
+export RESTIC_PASSWORD="\$(cat "$PASSWORD_FILE")"
+export RESTIC_PASSWORD_FILE="$PASSWORD_FILE"
+export RESTIC_REST_USERNAME="restic"
+export RESTIC_REST_PASSWORD="\$(cat "$PASSWORD_FILE")"
+export RESTIC_REPOSITORY="rest:http://restic.edgard.org:8000/"
+export TMPDIR="$BACKREST_TMP"
+export XDG_CACHE_HOME="$BACKREST_CACHE"
 
-    # Replace placeholders in backup script
-    sed -i '' "s|%%PASSWORD_FILE%%|$PASSWORD_FILE|g" "$BACKUP_SCRIPT"
-    sed -i '' "s|%%RESTIC_BIN%%|$RESTIC_BIN|g" "$BACKUP_SCRIPT"
-    sed -i '' "s|%%RESTIC_HOSTNAME%%|$RESTIC_HOSTNAME|g" "$BACKUP_SCRIPT"
-    sed -i '' "s|%%CACHE_DIR%%|$CACHE_DIR|g" "$BACKUP_SCRIPT"
-    sed -i '' "s|%%EXCLUDE_FILE%%|$EXCLUDE_FILE|g" "$BACKUP_SCRIPT"
-    sed -i '' "s|%%LOG_FILE%%|$LOG_FILE|g" "$BACKUP_SCRIPT"
-    sed -i '' "s|%%BACKUP_PATH%%|$TARGET_HOME/Documents|g" "$BACKUP_SCRIPT"
+exec "$BACKREST_BIN"
+EOF
+}
 
-    secure_runtime_permissions
-    echo "Backup script created at $BACKUP_SCRIPT"
+remove_old_restic_scheduler() {
+    if [ -f "$OLD_PLIST_FILE" ]; then
+        echo "==> Removing old restic launchd daemon..."
+        launchctl unload "$OLD_PLIST_FILE" 2>/dev/null || true
+        rm -f "$OLD_PLIST_FILE"
+    fi
 
-    # Create launchd daemon (runs as root, hidden from user)
-    echo "==> Creating launchd daemon..."
-    cat > "$PLIST_FILE" << EOF
+    if [ -f "$OLD_BACKUP_SCRIPT" ]; then
+        rm -f "$OLD_BACKUP_SCRIPT"
+    fi
+}
+
+write_launchd_daemon() {
+    echo "==> Creating Backrest launchd daemon..."
+    cat > "$PLIST_FILE" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.restic.backup</string>
+    <string>com.backrest.backup</string>
     <key>ProgramArguments</key>
     <array>
-        <string>$BACKUP_SCRIPT</string>
+        <string>$BACKREST_WRAPPER</string>
     </array>
-    <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>
-        <integer>3</integer>
-        <key>Minute</key>
-        <integer>0</integer>
-    </dict>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
     <key>StandardOutPath</key>
     <string>$LOG_FILE</string>
     <key>StandardErrorPath</key>
     <string>$LOG_FILE</string>
-    <key>RunAtLoad</key>
-    <false/>
     <key>Nice</key>
     <integer>10</integer>
     <key>LowPriorityIO</key>
@@ -219,87 +183,79 @@ OUTER_EOF
 EOF
     chmod 644 "$PLIST_FILE"
     chown root:wheel "$PLIST_FILE"
+}
 
-    # Load the daemon
+install_backrest() {
+    echo "==> Creating runtime directories..."
+    mkdir -p "$CONFIG_DIR" "$BACKREST_DATA" "$BACKREST_CONFIG_DIR" "$BACKREST_CACHE" "$BACKREST_TMP"
+    mkdir -p "$(dirname "$LOG_FILE")"
+    touch "$LOG_FILE"
+
+    if [ -f "$PASSWORD_FILE" ]; then
+        echo "Using existing repository password file at $PASSWORD_FILE"
+    else
+        read -rsp "Enter Restic Repository Password: " RESTIC_PASSWORD
+        echo ""
+
+        if [ -z "$RESTIC_PASSWORD" ]; then
+            echo "Password cannot be empty."
+            exit 1
+        fi
+
+        printf '%s' "$RESTIC_PASSWORD" > "$PASSWORD_FILE"
+        echo "Password saved to $PASSWORD_FILE"
+    fi
+
+    install_backrest_binary
+    write_excludes
+    write_wrapper
+    secure_runtime_permissions
+    remove_old_restic_scheduler
+    write_launchd_daemon
+
     launchctl unload "$PLIST_FILE" 2>/dev/null || true
     launchctl load "$PLIST_FILE"
-    echo "Launchd daemon installed and loaded."
-
-    # Run initial backup via scheduled task
-    echo "==> Running initial backup..."
-    SKIP_INITIAL=false
-    for path in "${BACKUP_PATHS[@]}"; do
-        if [ -d "$path" ]; then
-            SNAPSHOT_OUTPUT=$("$RESTIC_BIN" snapshots --host "$RESTIC_HOSTNAME" --path "$path" --json 2>/dev/null || echo "[]")
-            if [ "$SNAPSHOT_OUTPUT" != "[]" ] && [ "$SNAPSHOT_OUTPUT" != "null" ] && [ -n "$SNAPSHOT_OUTPUT" ]; then
-                echo "Snapshots already exist for $path, skipping initial backup."
-                SKIP_INITIAL=true
-            fi
-        fi
-    done
-
-    if [ "$SKIP_INITIAL" = false ]; then
-        echo "Triggering scheduled task for initial backup..."
-        launchctl kickstart system/com.restic.backup
-        echo "Initial backup started. Check log for progress: tail -f $LOG_FILE"
-    fi
 
     echo ""
     echo "==> Setup complete!"
     echo ""
-    echo "The backup runs daily at 3:00 AM as root (hidden from user)."
+    echo "Backrest is running locally at http://127.0.0.1:9898"
+    echo "Use instance ID: $RESTIC_HOSTNAME"
+    echo "Create a Documents plan after pairing with the homelab Backrest server:"
+    echo "  Path: $TARGET_HOME/Documents"
+    echo "  Exclude file: $EXCLUDE_FILE"
+    echo "  Schedule: 0 3 * * *"
+    echo "  Repository: shared repo received from homelab"
     echo ""
-    echo "Useful commands:"
-    echo "  sudo \"$BACKUP_SCRIPT\"                      # Run backup manually"
-    echo "  tail -f \"$LOG_FILE\"                        # View backup log"
-    echo ""
-    echo "For other restic commands, set environment and run with sudo -E:"
-    echo "  export HOME=\"/var/root\""
-    echo "  export RESTIC_CACHE_DIR=\"$CACHE_DIR\""
-    echo "  export RESTIC_PASSWORD_FILE=\"$PASSWORD_FILE\""
-    echo "  export RESTIC_REST_USERNAME=\"restic\""
-    echo "  export RESTIC_REST_PASSWORD=\$(sudo cat \"$PASSWORD_FILE\")"
-    echo "  export RESTIC_REPOSITORY=\"rest:http://restic.edgard.org:8000/\""
-    echo "  sudo -E restic snapshots --host $RESTIC_HOSTNAME   # List snapshots for this host"
-    echo "  sudo -E restic snapshots                           # List all snapshots"
-    echo "  sudo -E restic forget SNAPSHOT_ID --prune          # Delete a snapshot"
+    echo "Grant Full Disk Access to $BACKREST_BIN if macOS blocks Documents access."
+    echo "Logs: tail -f \"$LOG_FILE\""
 }
 
-uninstall() {
-    echo "==> Uninstalling restic backup..."
+uninstall_backrest() {
+    echo "==> Uninstalling Backrest backup..."
 
-    # Unload and remove launchd daemon
     if [ -f "$PLIST_FILE" ]; then
-        echo "Removing launchd daemon..."
         launchctl unload "$PLIST_FILE" 2>/dev/null || true
         rm -f "$PLIST_FILE"
     fi
 
-    # Remove config directory
-    if [ -d "$CONFIG_DIR" ]; then
-        echo "Removing config directory..."
-        rm -rf "$CONFIG_DIR"
-    fi
-
-    # Remove log file
-    if [ -f "$LOG_FILE" ]; then
-        echo "Removing log file..."
-        rm -f "$LOG_FILE"
-    fi
+    remove_old_restic_scheduler
+    rm -rf "$CONFIG_DIR"
+    rm -f "$LOG_FILE"
 
     echo ""
     echo "==> Uninstall complete!"
     echo ""
-    echo "Note: Restic binary was not removed. To remove it: brew uninstall restic"
+    echo "Note: Backrest binary was not removed: $BACKREST_BIN"
     echo "Note: Remote backups were not deleted."
 }
 
 case "${1:-}" in
     install)
-        install
+        install_backrest
         ;;
     uninstall)
-        uninstall
+        uninstall_backrest
         ;;
     *)
         echo "Usage: sudo $0 [install|uninstall]"
