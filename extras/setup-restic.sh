@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 # -----------------------------------------------------------------------------
 # Restic Setup Script for macOS
@@ -7,6 +7,8 @@ set -e
 # USAGE:
 #   sudo ./setup-restic.sh install    # Install and configure restic backup
 #   sudo ./setup-restic.sh uninstall  # Remove restic backup configuration
+#   sudo ./setup-restic.sh run        # Run backup now
+#   sudo ./setup-restic.sh status     # Show scheduler status and recent logs
 #
 # INSTALLATION INSTRUCTIONS:
 #
@@ -24,7 +26,7 @@ set -e
 
 # Require root
 if [ "$EUID" -ne 0 ]; then
-    echo "Please run as root: sudo $0 [install|uninstall]"
+    echo "Please run as root: sudo $0 [install|uninstall|run|status]"
     exit 1
 fi
 
@@ -133,6 +135,7 @@ EOF
     echo "==> Creating backup script..."
     cat > "$BACKUP_SCRIPT" << 'OUTER_EOF'
 #!/bin/bash
+set -euo pipefail
 
 PASSWORD_FILE="%%PASSWORD_FILE%%"
 RESTIC_BIN="%%RESTIC_BIN%%"
@@ -156,7 +159,7 @@ log() {
 
 log "Starting backup..."
 
-if "$RESTIC_BIN" backup \
+if "$RESTIC_BIN" --retry-lock 30m backup \
     --host "$RESTIC_HOSTNAME" \
     --tag documents \
     --exclude-file "$EXCLUDE_FILE" \
@@ -230,7 +233,7 @@ EOF
     SKIP_INITIAL=false
     for path in "${BACKUP_PATHS[@]}"; do
         if [ -d "$path" ]; then
-            SNAPSHOT_OUTPUT=$("$RESTIC_BIN" snapshots --host "$RESTIC_HOSTNAME" --path "$path" --json 2>/dev/null || echo "[]")
+            SNAPSHOT_OUTPUT=$("$RESTIC_BIN" --retry-lock 30m snapshots --host "$RESTIC_HOSTNAME" --path "$path" --json 2>/dev/null || echo "[]")
             if [ "$SNAPSHOT_OUTPUT" != "[]" ] && [ "$SNAPSHOT_OUTPUT" != "null" ] && [ -n "$SNAPSHOT_OUTPUT" ]; then
                 echo "Snapshots already exist for $path, skipping initial backup."
                 SKIP_INITIAL=true
@@ -260,9 +263,8 @@ EOF
     echo "  export RESTIC_REST_USERNAME=\"restic\""
     echo "  export RESTIC_REST_PASSWORD=\$(sudo cat \"$PASSWORD_FILE\")"
     echo "  export RESTIC_REPOSITORY=\"rest:http://restic.edgard.org:8000/\""
-    echo "  sudo -E restic snapshots --host $RESTIC_HOSTNAME   # List snapshots for this host"
-    echo "  sudo -E restic snapshots                           # List all snapshots"
-    echo "  sudo -E restic forget SNAPSHOT_ID --prune          # Delete a snapshot"
+    echo "  sudo -E restic --retry-lock 30m snapshots --host $RESTIC_HOSTNAME   # List snapshots for this host"
+    echo "  sudo -E restic --retry-lock 30m snapshots                           # List all snapshots"
 }
 
 uninstall() {
@@ -294,6 +296,27 @@ uninstall() {
     echo "Note: Remote backups were not deleted."
 }
 
+run_backup() {
+    if [ ! -x "$BACKUP_SCRIPT" ]; then
+        echo "Backup script not found at $BACKUP_SCRIPT. Run install first."
+        exit 1
+    fi
+
+    "$BACKUP_SCRIPT"
+}
+
+status() {
+    echo "==> launchd status"
+    launchctl print system/com.restic.backup || true
+    echo ""
+    echo "==> Recent logs"
+    if [ -f "$LOG_FILE" ]; then
+        tail -n 50 "$LOG_FILE"
+    else
+        echo "No log file found at $LOG_FILE"
+    fi
+}
+
 case "${1:-}" in
     install)
         install
@@ -301,8 +324,14 @@ case "${1:-}" in
     uninstall)
         uninstall
         ;;
+    run)
+        run_backup
+        ;;
+    status)
+        status
+        ;;
     *)
-        echo "Usage: sudo $0 [install|uninstall]"
+        echo "Usage: sudo $0 [install|uninstall|run|status]"
         exit 1
         ;;
 esac
