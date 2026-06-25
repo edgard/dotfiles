@@ -11,13 +11,19 @@
       3. Installs a Task Scheduler task (runs as SYSTEM, hidden from user)
 
 .PARAMETER Action
-    The action to perform: install or uninstall
+    The action to perform: install, uninstall, run, or status
 
 .EXAMPLE
     .\setup-restic.ps1 install
 
 .EXAMPLE
     .\setup-restic.ps1 uninstall
+
+.EXAMPLE
+    .\setup-restic.ps1 run
+
+.EXAMPLE
+    .\setup-restic.ps1 status
 
 .NOTES
     Run this script as Administrator.
@@ -30,7 +36,7 @@
 
 param(
     [Parameter(Position = 0)]
-    [ValidateSet("install", "uninstall")]
+    [ValidateSet("install", "uninstall", "run", "status")]
     [string]$Action
 )
 
@@ -173,7 +179,7 @@ function Log {
 
 Log "Starting backup..."
 
-`$backupOutput = & `$RESTIC_BIN backup ``
+`$backupOutput = & `$RESTIC_BIN --retry-lock 30m backup ``
     --host `$HOSTNAME ``
     --tag documents ``
     --exclude-file `$EXCLUDE_FILE ``
@@ -216,7 +222,7 @@ Log "Backup complete."
     foreach ($path in $BACKUP_PATHS) {
         if (Test-Path $path) {
             try {
-                $snapshotsJson = & $RESTIC_BIN snapshots --host $RESTIC_HOSTNAME --path $path --json 2>&1
+                $snapshotsJson = & $RESTIC_BIN --retry-lock 30m snapshots --host $RESTIC_HOSTNAME --path $path --json 2>&1
                 $snapshots = $snapshotsJson | ConvertFrom-Json -ErrorAction SilentlyContinue
                 if ($snapshots -and @($snapshots).Count -gt 0) {
                     Write-Host "Snapshots already exist for $path, skipping initial backup."
@@ -240,7 +246,7 @@ Log "Backup complete."
     Write-Host "The backup runs daily at 3:00 AM as SYSTEM (hidden from user)." -ForegroundColor Cyan
     Write-Host ""
     Write-Host "Useful commands:" -ForegroundColor Cyan
-    Write-Host "  & '$BACKUP_SCRIPT'                            # Run backup manually"
+    Write-Host "  .\setup-restic.ps1 run                        # Run backup manually"
     Write-Host "  Get-Content '$LOG_FILE' -Tail 50              # View backup log"
     Write-Host ""
     Write-Host "For other restic commands, run as Administrator:" -ForegroundColor Cyan
@@ -250,9 +256,8 @@ Log "Backup complete."
     Write-Host "  `$env:RESTIC_REST_USERNAME = 'restic'"
     Write-Host "  `$env:RESTIC_REST_PASSWORD = (Get-Content '$PASSWORD_FILE' -Raw).Trim()"
     Write-Host "  `$env:RESTIC_REPOSITORY = 'rest:http://restic.edgard.org:8000/'"
-    Write-Host "  restic snapshots --host $RESTIC_HOSTNAME      # List snapshots for this host"
-    Write-Host "  restic snapshots                              # List all snapshots"
-    Write-Host "  restic forget SNAPSHOT_ID --prune             # Delete a snapshot"
+    Write-Host "  restic --retry-lock 30m snapshots --host $RESTIC_HOSTNAME  # List snapshots for this host"
+    Write-Host "  restic --retry-lock 30m snapshots                         # List all snapshots"
 }
 
 function Uninstall-ResticBackup {
@@ -278,13 +283,41 @@ function Uninstall-ResticBackup {
     Write-Host "Note: Remote backups were not deleted." -ForegroundColor Cyan
 }
 
+function Invoke-ResticBackup {
+    if (-not (Test-Path -LiteralPath $BACKUP_SCRIPT)) {
+        Write-Error "Backup script not found at $BACKUP_SCRIPT. Run install first."
+        exit 1
+    }
+
+    & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $BACKUP_SCRIPT
+}
+
+function Get-ResticBackupStatus {
+    $existingTask = Get-ScheduledTask -TaskName $TASK_NAME -ErrorAction SilentlyContinue
+    if ($existingTask) {
+        $existingTask | Format-List TaskName, State, LastRunTime, LastTaskResult, NextRunTime
+    } else {
+        Write-Host "Scheduled task '$TASK_NAME' is not installed." -ForegroundColor Yellow
+    }
+
+    Write-Host ""
+    Write-Host "Recent logs:" -ForegroundColor Cyan
+    if (Test-Path -LiteralPath $LOG_FILE) {
+        Get-Content -Path $LOG_FILE -Tail 50
+    } else {
+        Write-Host "No log file found at $LOG_FILE"
+    }
+}
+
 # Main
 if (-not $Action) {
-    Write-Host "Usage: .\setup-restic.ps1 [install|uninstall]"
+    Write-Host "Usage: .\setup-restic.ps1 [install|uninstall|run|status]"
     exit 1
 }
 
 switch ($Action) {
     "install" { Install-ResticBackup }
     "uninstall" { Uninstall-ResticBackup }
+    "run" { Invoke-ResticBackup }
+    "status" { Get-ResticBackupStatus }
 }
