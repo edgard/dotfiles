@@ -1,8 +1,5 @@
 # format: source|agents(comma-separated)|skill
 ./extras/skills|codex,cursor|clean-ai-code-slop
 ./extras/skills|codex,cursor|prompt-refiner
-./extras/skills|codex,cursor|git-commit
-https://github.com/microsoft/playwright-cli|codex,cursor|playwright-cli
-https://github.com/anthropics/skills|codex,cursor|pdf
 https://github.com/nextlevelbuilder/ui-ux-pro-max-skill|codex,cursor|ui-ux-pro-max
 https://github.com/jeffallan/claude-skills|codex,cursor|golang-pro
