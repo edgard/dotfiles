@@ -25,8 +25,7 @@ brew "talosctl"
 ##############################################################################
 
 cask "bambu-studio"
-cask "codex"
-cask "codex-app"
+cask "chatgpt"
 cask "discord"
 cask "telegram-desktop"
 cask "visual-studio-code"

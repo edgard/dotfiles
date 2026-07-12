@@ -29,7 +29,6 @@ brew "chezmoi"
 brew "fzf"
 brew "mas"
 brew "starship"
-brew "typst"
 brew "zoxide"
 
 ##############################################################################
@@ -37,7 +36,6 @@ brew "zoxide"
 ##############################################################################
 
 brew "actionlint"
-brew "bats-core"
 brew "direnv"
 brew "elixir"
 brew "gh"
@@ -78,12 +76,10 @@ krew "resource-capacity"
 ##############################################################################
 
 cask "appcleaner"
-cask "bruno"
 cask "ghostty"
 cask "google-chrome"
 cask "krita"
 cask "linearmouse"
-cask "vlc"
 
 ##############################################################################
 # Mac App Store Applications
