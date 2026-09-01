@@ -88,11 +88,6 @@ defaults write com.apple.finder WarnOnEmptyTrash -bool false                    
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false                      # Don't warn when changing file extensions
 defaults write com.apple.finder FXRemoveOldTrashItems -bool true                                # Remove items from Trash after 30 days
 
-# Disk Image Verification
-defaults write com.apple.frameworks.diskimages skip-verify -bool true                           # Skip verification of disk images
-defaults write com.apple.frameworks.diskimages skip-verify-locked -bool true                    # Skip verification of locked disk images
-defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true                    # Skip verification of remote disk images
-
 ###############################################################################
 # Dock and Mission Control
 ###############################################################################

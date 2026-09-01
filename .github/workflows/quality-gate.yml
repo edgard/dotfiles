@@ -1,0 +1,73 @@
+name: Validation
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  macos:
+    name: macOS validation
+    runs-on: macos-15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Install validation tools
+        run: |
+          brew update
+          brew install actionlint chezmoi go-task mise pre-commit shellcheck yamllint
+      - name: Run complete validation
+        run: task check
+      - name: Run local hooks
+        run: pre-commit run --all-files
+
+  windows:
+    name: Windows validation
+    runs-on: windows-2025
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Parse PowerShell sources
+        shell: pwsh
+        run: |
+          $files = @(
+            'extras/setup-restic.ps1',
+            'extras/restic/windows/repository.ps1.tmpl',
+            'extras/restic/windows/restic-backup.ps1.tmpl'
+          )
+          foreach ($file in $files) {
+            $tokens = $null
+            $errors = $null
+            [Management.Automation.Language.Parser]::ParseFile(
+              (Resolve-Path $file),
+              [ref]$tokens,
+              [ref]$errors
+            ) | Out-Null
+            if ($errors.Count -gt 0) {
+              $errors | Format-List | Out-String | Write-Error
+            }
+          }
+      - name: Run Restic contract tests
+        shell: bash
+        run: python -m unittest tests.test_restic_installers tests.test_restic_windows -v
+
+  quality-gate:
+    name: Quality Gate
+    if: always()
+    needs: [macos, windows]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Aggregate required jobs
+        env:
+          MACOS_RESULT: ${{ needs.macos.result }}
+          WINDOWS_RESULT: ${{ needs.windows.result }}
+        run: |
+          test "$MACOS_RESULT" = success
+          test "$WINDOWS_RESULT" = success

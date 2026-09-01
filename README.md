@@ -1,59 +1,97 @@
 # dotfiles
 
-Dotfiles managed with [chezmoi](https://www.chezmoi.io/). Supports multiple profiles.
+macOS dotfiles with an explicit split of responsibilities:
 
-## Installation
+- Chezmoi renders and applies files.
+- Homebrew installs applications, Mac App Store applications, and system tools.
+- mise installs Go, Node, Erlang, Elixir, and the profile-specific IaC runtime.
+- `update` is the only orchestrator for networked and interactive maintenance.
+
+The `home` profile installs OpenTofu; the `work` profile installs Terraform.
+Python tooling remains managed by `uv`.
+
+## Install
+
+Xcode Command Line Tools and Homebrew are the only implicit one-time
+prerequisites. Initialize Chezmoi and choose `home` or `work` when prompted:
 
 ```bash
 curl -fsLS chezmoi.io/get | sh -s -- -b ~/.local/bin init --apply edgard/dotfiles
+update --profile home bootstrap
 ```
 
-## Usage
+`bootstrap` reconciles packages, installs the locked mise toolset and pinned AI
+skills, optionally retrieves secrets, initializes Atuin, and applies macOS
+defaults. A locked or unavailable Bitwarden vault produces a warning and does
+not block the remaining bootstrap.
+
+## Maintenance
+
+```text
+update [--profile {home,work}] [--dry-run] [--yes] COMMAND
+
+bootstrap  packages -> tools -> skills -> optional secrets -> Atuin -> macOS
+all        dotfiles -> packages -> tools -> skills -> macOS
+dotfiles   pull and apply Chezmoi
+packages   update and reconcile the merged profile Brewfile
+tools      install the profile's committed mise lock
+skills     install commit-pinned sources with skills@1.5.23
+secrets    retrieve allowlisted Bitwarden attachments atomically
+macos      apply user-scoped macOS defaults
+cleanup    remove undeclared Homebrew content after confirmation
+doctor     run non-mutating health, drift, permission, and ownership checks
+```
+
+`update cleanup --zap` is required to remove associated application data.
+There is no automatic cleanup or automatic secret retrieval during routine
+updates.
+
+## Private files
+
+Create a Bitwarden Secure Note named `_chezmoi_home` or `_chezmoi_work` with
+only these attachments:
+
+- `gitconfig`
+- `secrets.zsh`
+
+They are atomically installed under `~/.config/local` with directory mode
+`0700` and file mode `0600`. For the home profile, `secrets.zsh` also contains
+the private Restic transport values:
+
+```zsh
+export RESTIC_REPOSITORY='rest:http://backup-host.example:8000/'
+export RESTIC_REST_USERNAME='restic'
+```
+
+The current HTTP endpoint is intentionally retained until the backup server gains TLS;
+the installers and `update doctor` warn about unencrypted transport.
+
+## Restic scheduler
+
+The installers preserve the existing Documents backup, daily 03:00 schedule,
+root/SYSTEM execution, password files, and remote snapshots:
 
 ```bash
-update                  # Update everything (dotfiles, packages)
-update install          # Install Homebrew packages from Brewfiles
-update cleanup          # Remove unused Homebrew packages
-update secrets          # Fetch profile files from Bitwarden
+sudo extras/setup-restic.sh install --repository "$RESTIC_REPOSITORY" \
+  --username "${RESTIC_REST_USERNAME:-restic}"
 ```
 
-## Configuration
-
-### AI Skills
-
-`chezmoi apply` installs skills via `npx skills` using manifest files:
-- `extras/skills.common`
-- `extras/skills.<profile>`
-
-Manifest format:
-
-```txt
-source|agents(comma-separated)|skill
+```powershell
+.\extras\setup-restic.ps1 install -Repository $env:RESTIC_REPOSITORY `
+  -RestUsername $env:RESTIC_REST_USERNAME
 ```
 
-Use `./...` sources for local paths relative to the chezmoi source directory.
-Skills are copied (`--copy`), not symlinked.
+Reinstalling replaces the scheduler and generated runtime configuration
+idempotently. Generated files contain the repository URL and username, never
+the repository password.
 
-### Profile Files (Bitwarden)
-
-Create a **Secure Note** named `_chezmoi_<profile>` (e.g., `_chezmoi_home`) and add machine-specific files as attachments. `update secrets` downloads these attachments to `~/.config/local/`.
-
-Login and fetch:
+## Development
 
 ```bash
-bw login
-update secrets
+task check
+pre-commit run --all-files
 ```
 
-### Local Overrides
-
-Any `*.zsh` files in `~/.config/local/` are sourced by zsh.
-
-## Troubleshooting
-
-Re-run bootstrap scripts:
-
-```bash
-chezmoi state delete-bucket --bucket=scriptState  # run_once_ scripts
-chezmoi state delete-bucket --bucket=entryState   # run_onchange_ scripts
-```
+`task check` validates Bash, Zsh, Python, PowerShell contracts, Actions,
+Brewfiles, tests, and isolated renders of both profiles. Pull requests require
+the single `Quality Gate` status check. The default branch is `main`.

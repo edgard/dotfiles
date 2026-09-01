@@ -55,6 +55,10 @@ if (( $+commands[atuin] )); then
     eval "$(atuin init zsh)" 2>/dev/null || print -P "%F{yellow}Warning: Failed to initialize atuin%f" >&2
 fi
 
+if (( $+commands[mise] )); then
+    eval "$(mise activate zsh)" 2>/dev/null || print -P "%F{yellow}Warning: Failed to activate mise%f" >&2
+fi
+
 if (( $+commands[starship] )); then
     eval "$(starship init zsh)" 2>/dev/null || print -P "%F{yellow}Warning: Failed to initialize starship prompt%f" >&2
 fi

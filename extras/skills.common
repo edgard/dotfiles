@@ -1,5 +1,5 @@
 # format: source|agents(comma-separated)|skill
 ./extras/skills|codex,cursor|clean-ai-code-slop
 ./extras/skills|codex,cursor|prompt-refiner
-https://github.com/nextlevelbuilder/ui-ux-pro-max-skill|codex,cursor|ui-ux-pro-max
-https://github.com/jeffallan/claude-skills|codex,cursor|golang-pro
+https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/tree/f23267105ad1f4ccd94af45d382584ad45b586f7|codex,cursor|ui-ux-pro-max
+https://github.com/jeffallan/claude-skills/tree/882ef55e377dbf9a4dbe496bb41ac6ccd0e555cf|codex,cursor|golang-pro

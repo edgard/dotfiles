@@ -2,12 +2,6 @@
 # Contains packages and apps used across profiles (macOS)
 
 ##############################################################################
-# Taps
-##############################################################################
-
-tap "buo/cask-upgrade"
-
-##############################################################################
 # Essential Tools
 ##############################################################################
 
@@ -29,6 +23,7 @@ brew "chezmoi"
 brew "fzf"
 brew "mas"
 brew "starship"
+brew "uv"
 brew "zoxide"
 
 ##############################################################################
@@ -37,11 +32,9 @@ brew "zoxide"
 
 brew "actionlint"
 brew "direnv"
-brew "elixir"
 brew "gh"
 brew "go-task"
-brew "go"
-brew "node"
+brew "mise"
 brew "pre-commit"
 brew "prettier"
 brew "shellcheck"

@@ -13,7 +13,11 @@ show_preview = false
 search_mode = "daemon-fuzzy"
 search_mode_shell_up_key_binding = "daemon-fuzzy"
 show_tabs = false
-secrets_filter = false
+secrets_filter = true
+history_filter = [
+  '(?i)^\s*export\s+[^=]*(token|secret|password|credential|api[_-]?key|restic)[^=]*=',
+  '(?i)^\s*(aws|gcloud|az|kubectl)\s+.*(token|secret|password|credential)',
+]
 
 [keymap.emacs]
 "enter" = "accept"
