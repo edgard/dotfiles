@@ -91,6 +91,19 @@ class DoctorTests(unittest.TestCase):
         self.assertTrue(root_protected)
 
 
+class MiseEnvironmentTests(unittest.TestCase):
+    def test_noninteractive_environment_prepends_mise_shims(self):
+        environment = update_manager.build_mise_environment(
+            {"PATH": "/usr/bin:/bin"}, Path("/tmp/profile.toml")
+        )
+
+        self.assertEqual(
+            environment["PATH"].split(os.pathsep)[0],
+            str(Path.home() / ".local" / "share" / "mise" / "shims"),
+        )
+        self.assertEqual(environment["MISE_GLOBAL_CONFIG_FILE"], "/tmp/profile.toml")
+
+
 class SkillTests(unittest.TestCase):
     def test_pinned_source_is_verified_locally_before_skills_cli(self):
         source = (
@@ -210,6 +223,27 @@ class PackageTests(unittest.TestCase):
             )
             with self.assertRaisesRegex(update_manager.UpdateError, "analysis failed"):
                 manager.cleanup()
+
+    def test_cleanup_accepts_homebrew_pending_changes_exit_status(self):
+        pending = (
+            "Would uninstall formulae:\n"
+            "go\n"
+            "Run `brew bundle cleanup --force` to make these changes.\n"
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            runner = FakeRunner(
+                [
+                    update_manager.CommandResult(["brew"], 1, "", pending),
+                    update_manager.CommandResult(["brew"], 0, "", ""),
+                ]
+            )
+            manager = update_manager.UpdateManager(
+                "home", runner, extras_dir=self.make_extras(directory), assume_yes=True
+            )
+
+            manager.cleanup()
+
+            self.assertIn("--force", runner.calls[-1][0])
 
 
 class SecretTests(unittest.TestCase):

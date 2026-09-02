@@ -39,6 +39,18 @@ class MiseProfileTests(unittest.TestCase):
         self.assertIn('[[tools.terraform]]', work)
         self.assertNotIn('[[tools.opentofu]]', work)
 
+    def test_node_cli_tools_are_owned_by_mise_not_homebrew(self):
+        brewfile = (ROOT / "extras" / "Brewfile.common").read_text()
+        self.assertNotIn('brew "bitwarden-cli"', brewfile)
+        self.assertNotIn('brew "prettier"', brewfile)
+        for profile in ("home", "work"):
+            config = (ROOT / "extras" / f"mise.{profile}.toml").read_text()
+            lock = (ROOT / "extras" / f"mise.{profile}.lock").read_text()
+            self.assertIn('bitwarden = "prefix:2026.8"', config)
+            self.assertIn('prettier = "prefix:3.9"', config)
+            self.assertIn('[[tools.bitwarden]]', lock)
+            self.assertIn('[[tools.prettier]]', lock)
+
     def test_project_local_version_files_are_enabled_for_managed_tools(self):
         for profile in ("home", "work"):
             config = (ROOT / "extras" / f"mise.{profile}.toml").read_text()
@@ -88,7 +100,7 @@ class MiseProfileTests(unittest.TestCase):
             ROOT / "extras" / "mise.home.toml"
         )
         paths = []
-        for tool in ("go", "node", "erl", "elixir", "tofu"):
+        for tool in ("go", "node", "erl", "elixir", "tofu", "bw", "prettier"):
             result = subprocess.run(
                 ["mise", "which", tool],
                 capture_output=True,

@@ -121,6 +121,20 @@ def inspect_restic_config(path: Path) -> tuple[Optional[str], bool, bool]:
     return None, "http://" in repository_line, False
 
 
+def build_mise_environment(
+    environment: Mapping[str, str], config_file: Path
+) -> dict[str, str]:
+    """Build an environment that works with mise outside an activated shell."""
+
+    result = dict(environment)
+    shims = str(Path.home() / ".local" / "share" / "mise" / "shims")
+    existing_path = result.get("PATH", "")
+    path_entries = [entry for entry in existing_path.split(os.pathsep) if entry and entry != shims]
+    result["PATH"] = os.pathsep.join((shims, *path_entries))
+    result["MISE_GLOBAL_CONFIG_FILE"] = str(config_file)
+    return result
+
+
 def _strip_comment(line: str) -> str:
     """Remove Brewfile comments while preserving # inside quoted values."""
 
@@ -388,8 +402,7 @@ class UpdateManager:
             raise UpdateError(f"mise configuration is missing: {config.name}")
         if not lock.is_file():
             raise UpdateError(f"mise lock is missing: {lock.name}")
-        environment = dict(self.runner.env)
-        environment["MISE_GLOBAL_CONFIG_FILE"] = str(config)
+        environment = build_mise_environment(self.runner.env, config)
         require_success(
             self.runner.run(["mise", "--locked", "install"], env=environment),
             "mise tool installation",
@@ -400,9 +413,11 @@ class UpdateManager:
         manifest = self.extras_dir / "skills.common"
         if not manifest.is_file():
             raise UpdateError("pinned skill manifest is missing")
-        environment = dict(getattr(self.runner, "env", os.environ))
+        environment = build_mise_environment(
+            getattr(self.runner, "env", os.environ),
+            self.extras_dir / f"mise.{self.profile}.toml",
+        )
         dry_run = bool(getattr(self.runner, "dry_run", False))
-        environment["MISE_GLOBAL_CONFIG_FILE"] = str(self.extras_dir / f"mise.{self.profile}.toml")
         for raw_line in manifest.read_text(encoding="utf-8").splitlines():
             line = raw_line.strip()
             if not line or line.startswith("#"):
@@ -520,9 +535,21 @@ class UpdateManager:
             analysis_command: list[object] = ["brew", "bundle", "cleanup", "--file", brewfile]
             if self.zap:
                 analysis_command.append("--zap")
-            analysis = require_success(self.runner.run(analysis_command), "Homebrew cleanup analysis")
+            analysis = self.runner.run(analysis_command)
+            analysis_output = "\n".join(
+                output for output in (analysis.stdout, analysis.stderr) if output
+            )
+            pending_changes = (
+                analysis.returncode == 1
+                and "Run `brew bundle cleanup --force` to make these changes."
+                in analysis_output
+            )
+            if analysis.returncode and not pending_changes:
+                require_success(analysis, "Homebrew cleanup analysis")
             if analysis.stdout:
                 print(analysis.stdout, end="")
+            if analysis.stderr:
+                print(analysis.stderr, end="", file=sys.stderr)
             if dry_run:
                 return
             if not self.assume_yes:
@@ -539,9 +566,9 @@ class UpdateManager:
     def doctor(self) -> None:
         failures: list[str] = []
         brewfile = build_merged_brewfile(self.extras_dir, self.profile)
-        mise_environment = dict(self.runner.env)
-        mise_environment["MISE_GLOBAL_CONFIG_FILE"] = str(
-            self.extras_dir / f"mise.{self.profile}.toml"
+        mise_environment = build_mise_environment(
+            self.runner.env,
+            self.extras_dir / f"mise.{self.profile}.toml",
         )
         try:
             checks: Iterable[tuple[Sequence[object], str, Optional[Mapping[str, str]]]] = (
@@ -632,8 +659,10 @@ class UpdateManager:
                 "elixir": "elixir",
                 "opentofu": "tofu",
                 "terraform": "terraform",
+                "bitwarden": "bw",
+                "prettier": "prettier",
             }
-            managed_tools = ["go", "node", "erlang", "elixir"]
+            managed_tools = ["go", "node", "erlang", "elixir", "bitwarden", "prettier"]
             managed_tools.append("opentofu" if self.profile == "home" else "terraform")
             for tool in managed_tools:
                 location = self.runner.run(
