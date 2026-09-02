@@ -9,6 +9,8 @@ macOS dotfiles with an explicit split of responsibilities:
 
 The `home` profile installs OpenTofu; the `work` profile installs Terraform.
 Python tooling remains managed by `uv`.
+Bitwarden CLI and Prettier are Homebrew-owned; the Homebrew Node dependency
+they require is the explicit exception to mise's runtime ownership.
 
 ## Install
 

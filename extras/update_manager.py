@@ -659,10 +659,8 @@ class UpdateManager:
                 "elixir": "elixir",
                 "opentofu": "tofu",
                 "terraform": "terraform",
-                "bitwarden": "bw",
-                "prettier": "prettier",
             }
-            managed_tools = ["go", "node", "erlang", "elixir", "bitwarden", "prettier"]
+            managed_tools = ["go", "node", "erlang", "elixir"]
             managed_tools.append("opentofu" if self.profile == "home" else "terraform")
             for tool in managed_tools:
                 location = self.runner.run(

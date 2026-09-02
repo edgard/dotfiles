@@ -2,16 +2,6 @@
 
 lockfile_version = 1
 
-[[tools.bitwarden]]
-version = "2026.8.0"
-backend = "aqua:bitwarden/clients"
-specifiers = ["prefix:2026.8"]
-
-[tools.bitwarden."platforms.macos-arm64"]
-checksum = "sha256:73414942357644605eefd3f4afaf0b41b71772ad6574e8e3c72e0b6d237104c8"
-url = "https://github.com/bitwarden/clients/releases/download/cli-v2026.8.0/bw-macos-arm64-2026.8.0.zip"
-url_api = "https://api.github.com/repos/bitwarden/clients/releases/assets/522478010"
-
 [[tools.elixir]]
 version = "1.20.4-otp-29"
 backend = "core:elixir"
@@ -48,11 +38,6 @@ specifiers = ["prefix:26"]
 [tools.node."platforms.macos-arm64"]
 checksum = "sha256:6e577fd0d9db776db82306629e441a9dace416702622aebdd171c9dfaa41f4d2"
 url = "https://nodejs.org/dist/v26.8.1/node-v26.8.1-darwin-arm64.tar.gz"
-
-[[tools.prettier]]
-version = "3.9.6"
-backend = "npm:prettier"
-specifiers = ["prefix:3.9"]
 
 [[tools.terraform]]
 version = "1.16.0"
