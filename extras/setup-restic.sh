@@ -1,337 +1,201 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
-# -----------------------------------------------------------------------------
-# Restic Setup Script for macOS
-#
-# USAGE:
-#   sudo ./setup-restic.sh install    # Install and configure restic backup
-#   sudo ./setup-restic.sh uninstall  # Remove restic backup configuration
-#   sudo ./setup-restic.sh run        # Run backup now
-#   sudo ./setup-restic.sh status     # Show scheduler status and recent logs
-#
-# INSTALLATION INSTRUCTIONS:
-#
-# Install Restic:
-#   brew install restic
-#
-# The first time you run this script, it will prompt you for the repository
-# password. It will be stored in a file with restricted permissions.
-#
-# This script:
-#   1. Stores credentials securely in a root-owned runtime directory
-#   2. Creates exclude file
-#   3. Installs a launchd daemon for scheduled backups (runs as root, hidden)
-# -----------------------------------------------------------------------------
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_DIR
+readonly TEMPLATE_DIR="${SCRIPT_DIR}/restic/macos"
+readonly CONFIG_DIR="/Library/Application Support/restic-backup"
+readonly CACHE_DIR="${CONFIG_DIR}/cache"
+readonly PASSWORD_FILE="${CONFIG_DIR}/password"
+readonly EXCLUDE_FILE="${CONFIG_DIR}/excludes.txt"
+readonly RUNTIME_CONFIG="${CONFIG_DIR}/repository.conf"
+readonly BACKUP_SCRIPT="${CONFIG_DIR}/restic-backup"
+readonly LOG_FILE="/Library/Logs/restic-backup.log"
+readonly PLIST_FILE="/Library/LaunchDaemons/com.restic.backup.plist"
 
-# Require root
-if [ "$EUID" -ne 0 ]; then
-    echo "Please run as root: sudo $0 [install|uninstall|run|status]"
-    exit 1
-fi
-
-# Configuration
-RESTIC_HOSTNAME=$(hostname -s | tr '[:upper:]' '[:lower:]')
-TARGET_USER="${SUDO_USER:-$USER}"
-TARGET_HOME=$(eval echo "~$TARGET_USER")
-
-BACKUP_PATHS=(
-    "$TARGET_HOME/Documents"
-)
-
-CONFIG_DIR="/Library/Application Support/restic-backup"
-CACHE_DIR="$CONFIG_DIR/cache"
-PASSWORD_FILE="$CONFIG_DIR/password"
-EXCLUDE_FILE="$CONFIG_DIR/excludes.txt"
-BACKUP_SCRIPT="$CONFIG_DIR/restic-backup"
-LOG_FILE="/Library/Logs/restic-backup.log"
-PLIST_FILE="/Library/LaunchDaemons/com.restic.backup.plist"
-
-configure_restic_environment() {
-    export HOME="/var/root"
-    export RESTIC_CACHE_DIR="$CACHE_DIR"
-    export RESTIC_PASSWORD_FILE="$PASSWORD_FILE"
-    export RESTIC_REST_USERNAME="restic"
-
-    RESTIC_REST_PASSWORD="$(cat "$PASSWORD_FILE")"
-    export RESTIC_REST_PASSWORD
-    export RESTIC_REPOSITORY="rest:http://restic.edgard.org:8000/"
+usage() {
+    cat <<EOF
+Usage:
+  sudo $0 install --repository URL [--username USER]
+  sudo $0 uninstall
+  sudo $0 run
+  sudo $0 status
+EOF
 }
 
-secure_runtime_permissions() {
+fail() {
+    echo "Error: $*" >&2
+    exit 1
+}
+
+warn_for_http() {
+    case "$1" in
+        rest:http://*|http://*)
+            echo "Warning: repository uses unencrypted HTTP transport." >&2
+            ;;
+    esac
+}
+
+validate_value() {
+    local label="$1"
+    local value="$2"
+    [ -n "$value" ] || fail "$label must not be empty"
+    case "$value" in
+        *$'\n'*|*$'\r'*) fail "$label must be a single line" ;;
+    esac
+}
+
+shell_quote() {
+    printf "'%s'" "$(printf '%s' "$1" | sed "s/'/'\\\\''/g")"
+}
+
+render_template() {
+    local source="$1"
+    local destination="$2"
+    shift 2
+    local contents
+    contents="$(<"$source")"
+    while [ "$#" -gt 0 ]; do
+        local key="$1"
+        local value="$2"
+        shift 2
+        contents="${contents//\{\{${key}\}\}/${value}}"
+    done
+    local temporary
+    temporary="$(mktemp "${destination}.XXXXXX")"
+    printf '%s\n' "$contents" > "$temporary"
+    mv -f "$temporary" "$destination"
+}
+
+secure_permissions() {
     chown root:wheel "$CONFIG_DIR" "$CACHE_DIR"
     chmod 700 "$CONFIG_DIR" "$CACHE_DIR"
-
-    if [ -f "$PASSWORD_FILE" ]; then
-        chown root:wheel "$PASSWORD_FILE"
-        chmod 600 "$PASSWORD_FILE"
-    fi
-
-    if [ -f "$EXCLUDE_FILE" ]; then
-        chown root:wheel "$EXCLUDE_FILE"
-        chmod 644 "$EXCLUDE_FILE"
-    fi
-
-    if [ -f "$BACKUP_SCRIPT" ]; then
-        chown root:wheel "$BACKUP_SCRIPT"
-        chmod 700 "$BACKUP_SCRIPT"
-    fi
-
-    if [ -f "$LOG_FILE" ]; then
-        chown root:wheel "$LOG_FILE"
-        chmod 640 "$LOG_FILE"
-    fi
+    [ ! -f "$PASSWORD_FILE" ] || { chown root:wheel "$PASSWORD_FILE"; chmod 600 "$PASSWORD_FILE"; }
+    [ ! -f "$RUNTIME_CONFIG" ] || { chown root:wheel "$RUNTIME_CONFIG"; chmod 644 "$RUNTIME_CONFIG"; }
+    [ ! -f "$EXCLUDE_FILE" ] || { chown root:wheel "$EXCLUDE_FILE"; chmod 644 "$EXCLUDE_FILE"; }
+    [ ! -f "$BACKUP_SCRIPT" ] || { chown root:wheel "$BACKUP_SCRIPT"; chmod 700 "$BACKUP_SCRIPT"; }
+    [ ! -f "$LOG_FILE" ] || { chown root:wheel "$LOG_FILE"; chmod 640 "$LOG_FILE"; }
 }
 
-install() {
-    # Check for Restic CLI and get full path
-    if ! command -v restic >/dev/null 2>&1; then
-        echo "Restic not found. Please install: brew install restic"
-        exit 1
-    fi
-    RESTIC_BIN=$(command -v restic)
+install_backup() {
+    local repository="$1"
+    local username="$2"
 
-    # Create root-owned runtime directories and log file.
-    echo "==> Creating runtime directory..."
-    mkdir -p "$CONFIG_DIR" "$CACHE_DIR"
-    mkdir -p "$(dirname "$LOG_FILE")"
+    [ "$EUID" -eq 0 ] || fail "install must run as root"
+    command -v restic >/dev/null 2>&1 || fail "restic is not installed"
+    local restic_bin
+    restic_bin="$(command -v restic)"
+    local target_user="${SUDO_USER:-${USER:-root}}"
+    local target_home
+    target_home="$(dscl . -read "/Users/${target_user}" NFSHomeDirectory 2>/dev/null | awk '{print $2}')"
+    [ -n "$target_home" ] || fail "could not determine the home directory for ${target_user}"
+    local hostname_short
+    hostname_short="$(hostname -s | tr '[:upper:]' '[:lower:]')"
+
+    mkdir -p "$CONFIG_DIR" "$CACHE_DIR" "$(dirname "$LOG_FILE")"
     touch "$LOG_FILE"
-    secure_runtime_permissions
-
-    # Retrieve or prompt for password
-    if [ -f "$PASSWORD_FILE" ]; then
-        echo "Using existing password file at $PASSWORD_FILE"
-    else
-        read -rsp "Enter Restic Repository Password: " RESTIC_PASSWORD
-        echo ""
-
-        if [ -z "$RESTIC_PASSWORD" ]; then
-            echo "Password cannot be empty."
-            exit 1
-        fi
-
-        printf '%s' "$RESTIC_PASSWORD" > "$PASSWORD_FILE"
-        secure_runtime_permissions
-        echo "Password saved to $PASSWORD_FILE"
+    if [ ! -f "$PASSWORD_FILE" ]; then
+        read -rsp "Enter Restic Repository Password: " repository_password
+        echo
+        [ -n "$repository_password" ] || fail "repository password cannot be empty"
+        (umask 077; printf '%s' "$repository_password" > "$PASSWORD_FILE")
+        unset repository_password
     fi
 
-    configure_restic_environment
-
-    # Create exclude file
-    echo "==> Creating exclude patterns..."
-    cat > "$EXCLUDE_FILE" << 'EOF'
-.DS_Store
-.Trash
-.venv
-node_modules
-__pycache__
-*.tmp
-*.temp
-EOF
-    secure_runtime_permissions
-    echo "Exclude file created at $EXCLUDE_FILE"
-
-    # Create backup script
-    echo "==> Creating backup script..."
-    cat > "$BACKUP_SCRIPT" << 'OUTER_EOF'
-#!/bin/bash
-set -euo pipefail
-
-PASSWORD_FILE="%%PASSWORD_FILE%%"
-RESTIC_BIN="%%RESTIC_BIN%%"
-RESTIC_HOSTNAME="%%RESTIC_HOSTNAME%%"
-CACHE_DIR="%%CACHE_DIR%%"
-EXCLUDE_FILE="%%EXCLUDE_FILE%%"
-LOG_FILE="%%LOG_FILE%%"
-BACKUP_PATH="%%BACKUP_PATH%%"
-
-export HOME="/var/root"
-export RESTIC_CACHE_DIR="$CACHE_DIR"
-export RESTIC_PASSWORD_FILE="$PASSWORD_FILE"
-export RESTIC_REST_USERNAME="restic"
-RESTIC_REST_PASSWORD="$(cat "$PASSWORD_FILE")"
-export RESTIC_REST_PASSWORD
-export RESTIC_REPOSITORY="rest:http://restic.edgard.org:8000/"
-
-log() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
-}
-
-log "Starting backup..."
-
-if "$RESTIC_BIN" --retry-lock 30m backup \
-    --host "$RESTIC_HOSTNAME" \
-    --tag documents \
-    --exclude-file "$EXCLUDE_FILE" \
-    --exclude-caches \
-    --verbose \
-    "$BACKUP_PATH" >> "$LOG_FILE" 2>&1; then
-    log "Backup complete."
-else
-    log "Backup failed with exit code $?"
-    exit 1
-fi
-OUTER_EOF
-
-    # Replace placeholders in backup script
-    sed -i '' "s|%%PASSWORD_FILE%%|$PASSWORD_FILE|g" "$BACKUP_SCRIPT"
-    sed -i '' "s|%%RESTIC_BIN%%|$RESTIC_BIN|g" "$BACKUP_SCRIPT"
-    sed -i '' "s|%%RESTIC_HOSTNAME%%|$RESTIC_HOSTNAME|g" "$BACKUP_SCRIPT"
-    sed -i '' "s|%%CACHE_DIR%%|$CACHE_DIR|g" "$BACKUP_SCRIPT"
-    sed -i '' "s|%%EXCLUDE_FILE%%|$EXCLUDE_FILE|g" "$BACKUP_SCRIPT"
-    sed -i '' "s|%%LOG_FILE%%|$LOG_FILE|g" "$BACKUP_SCRIPT"
-    sed -i '' "s|%%BACKUP_PATH%%|$TARGET_HOME/Documents|g" "$BACKUP_SCRIPT"
-
-    secure_runtime_permissions
-    echo "Backup script created at $BACKUP_SCRIPT"
-
-    # Create launchd daemon (runs as root, hidden from user)
-    echo "==> Creating launchd daemon..."
-    cat > "$PLIST_FILE" << EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.restic.backup</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>$BACKUP_SCRIPT</string>
-    </array>
-    <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>
-        <integer>3</integer>
-        <key>Minute</key>
-        <integer>0</integer>
-    </dict>
-    <key>StandardOutPath</key>
-    <string>$LOG_FILE</string>
-    <key>StandardErrorPath</key>
-    <string>$LOG_FILE</string>
-    <key>RunAtLoad</key>
-    <false/>
-    <key>Nice</key>
-    <integer>10</integer>
-    <key>LowPriorityIO</key>
-    <true/>
-    <key>ProcessType</key>
-    <string>Background</string>
-</dict>
-</plist>
-EOF
+    render_template "$TEMPLATE_DIR/repository.conf.tmpl" "$RUNTIME_CONFIG" \
+        REPOSITORY "$(shell_quote "$repository")" \
+        USERNAME "$(shell_quote "$username")"
+    render_template "$TEMPLATE_DIR/excludes.txt.tmpl" "$EXCLUDE_FILE"
+    render_template "$TEMPLATE_DIR/restic-backup.sh.tmpl" "$BACKUP_SCRIPT" \
+        PASSWORD_FILE "$(shell_quote "$PASSWORD_FILE")" \
+        RUNTIME_CONFIG "$(shell_quote "$RUNTIME_CONFIG")" \
+        RESTIC_BIN "$(shell_quote "$restic_bin")" \
+        HOSTNAME "$(shell_quote "$hostname_short")" \
+        CACHE_DIR "$(shell_quote "$CACHE_DIR")" \
+        EXCLUDE_FILE "$(shell_quote "$EXCLUDE_FILE")" \
+        LOG_FILE "$(shell_quote "$LOG_FILE")" \
+        BACKUP_PATH "$(shell_quote "$target_home/Documents")"
+    render_template "$TEMPLATE_DIR/com.restic.backup.plist.tmpl" "$PLIST_FILE" \
+        BACKUP_SCRIPT "$BACKUP_SCRIPT" \
+        LOG_FILE "$LOG_FILE"
     chmod 644 "$PLIST_FILE"
     chown root:wheel "$PLIST_FILE"
+    secure_permissions
 
-    # Load the daemon
-    launchctl unload "$PLIST_FILE" 2>/dev/null || true
-    launchctl load "$PLIST_FILE"
-    echo "Launchd daemon installed and loaded."
-
-    # Run initial backup via scheduled task
-    echo "==> Running initial backup..."
-    SKIP_INITIAL=false
-    for path in "${BACKUP_PATHS[@]}"; do
-        if [ -d "$path" ]; then
-            SNAPSHOT_OUTPUT=$("$RESTIC_BIN" --retry-lock 30m snapshots --host "$RESTIC_HOSTNAME" --path "$path" --json 2>/dev/null || echo "[]")
-            if [ "$SNAPSHOT_OUTPUT" != "[]" ] && [ "$SNAPSHOT_OUTPUT" != "null" ] && [ -n "$SNAPSHOT_OUTPUT" ]; then
-                echo "Snapshots already exist for $path, skipping initial backup."
-                SKIP_INITIAL=true
-            fi
-        fi
-    done
-
-    if [ "$SKIP_INITIAL" = false ]; then
-        echo "Triggering scheduled task for initial backup..."
+    launchctl bootout system/com.restic.backup >/dev/null 2>&1 || true
+    launchctl bootstrap system "$PLIST_FILE"
+    launchctl enable system/com.restic.backup
+    # Preserve the existing first-install behavior without duplicating backups.
+    # shellcheck source=/dev/null
+    source "$RUNTIME_CONFIG"
+    export RESTIC_REPOSITORY RESTIC_REST_USERNAME
+    IFS= read -r -d '' RESTIC_REST_PASSWORD < "$PASSWORD_FILE" || true
+    export RESTIC_REST_PASSWORD
+    if ! "$restic_bin" --retry-lock 30m snapshots \
+        --host "$hostname_short" \
+        --path "$target_home/Documents" \
+        --json 2>/dev/null | grep -q '"id"'; then
         launchctl kickstart system/com.restic.backup
-        echo "Initial backup started. Check log for progress: tail -f $LOG_FILE"
     fi
-
-    echo ""
-    echo "==> Setup complete!"
-    echo ""
-    echo "The backup runs daily at 3:00 AM as root (hidden from user)."
-    echo ""
-    echo "Useful commands:"
-    echo "  sudo \"$BACKUP_SCRIPT\"                      # Run backup manually"
-    echo "  tail -f \"$LOG_FILE\"                        # View backup log"
-    echo ""
-    echo "For other restic commands, set environment and run with sudo -E:"
-    echo "  export HOME=\"/var/root\""
-    echo "  export RESTIC_CACHE_DIR=\"$CACHE_DIR\""
-    echo "  export RESTIC_PASSWORD_FILE=\"$PASSWORD_FILE\""
-    echo "  export RESTIC_REST_USERNAME=\"restic\""
-    echo "  export RESTIC_REST_PASSWORD=\$(sudo cat \"$PASSWORD_FILE\")"
-    echo "  export RESTIC_REPOSITORY=\"rest:http://restic.edgard.org:8000/\""
-    echo "  sudo -E restic --retry-lock 30m snapshots --host $RESTIC_HOSTNAME   # List snapshots for this host"
-    echo "  sudo -E restic --retry-lock 30m snapshots                           # List all snapshots"
+    unset RESTIC_REST_PASSWORD
+    echo "Restic backup installed for ${repository} as ${username}; daily at 03:00."
 }
 
-uninstall() {
-    echo "==> Uninstalling restic backup..."
-
-    # Unload and remove launchd daemon
-    if [ -f "$PLIST_FILE" ]; then
-        echo "Removing launchd daemon..."
-        launchctl unload "$PLIST_FILE" 2>/dev/null || true
-        rm -f "$PLIST_FILE"
-    fi
-
-    # Remove config directory
+uninstall_backup() {
+    [ "$EUID" -eq 0 ] || fail "uninstall must run as root"
+    launchctl bootout system/com.restic.backup >/dev/null 2>&1 || true
+    rm -f "$PLIST_FILE"
     if [ -d "$CONFIG_DIR" ]; then
-        echo "Removing config directory..."
         rm -rf "$CONFIG_DIR"
     fi
-
-    # Remove log file
-    if [ -f "$LOG_FILE" ]; then
-        echo "Removing log file..."
-        rm -f "$LOG_FILE"
-    fi
-
-    echo ""
-    echo "==> Uninstall complete!"
-    echo ""
-    echo "Note: Restic binary was not removed. To remove it: brew uninstall restic"
-    echo "Note: Remote backups were not deleted."
+    rm -f "$LOG_FILE"
+    echo "Restic scheduler and local runtime configuration removed; remote backups were retained."
 }
 
-run_backup() {
-    if [ ! -x "$BACKUP_SCRIPT" ]; then
-        echo "Backup script not found at $BACKUP_SCRIPT. Run install first."
-        exit 1
-    fi
+action="${1:-}"
+[ -n "$action" ] || { usage >&2; exit 1; }
+shift
 
-    "$BACKUP_SCRIPT"
-}
-
-status() {
-    echo "==> launchd status"
-    launchctl print system/com.restic.backup || true
-    echo ""
-    echo "==> Recent logs"
-    if [ -f "$LOG_FILE" ]; then
-        tail -n 50 "$LOG_FILE"
-    else
-        echo "No log file found at $LOG_FILE"
-    fi
-}
-
-case "${1:-}" in
+case "$action" in
     install)
-        install
+        repository=""
+        username="restic"
+        while [ "$#" -gt 0 ]; do
+            case "$1" in
+                --repository)
+                    [ "$#" -ge 2 ] || fail "--repository requires a URL"
+                    repository="$2"
+                    shift 2
+                    ;;
+                --username)
+                    [ "$#" -ge 2 ] || fail "--username requires a value"
+                    username="$2"
+                    shift 2
+                    ;;
+                *) fail "unknown install option: $1" ;;
+            esac
+        done
+        [ -n "$repository" ] || fail "install requires --repository URL"
+        validate_value "repository" "$repository"
+        validate_value "username" "$username"
+        warn_for_http "$repository"
+        install_backup "$repository" "$username"
         ;;
     uninstall)
-        uninstall
+        [ "$#" -eq 0 ] || fail "uninstall takes no arguments"
+        uninstall_backup
         ;;
     run)
-        run_backup
+        [ "$#" -eq 0 ] || fail "run takes no arguments"
+        [ "$EUID" -eq 0 ] || fail "run must run as root"
+        [ -x "$BACKUP_SCRIPT" ] || fail "backup runtime is not installed"
+        "$BACKUP_SCRIPT"
         ;;
     status)
-        status
+        [ "$#" -eq 0 ] || fail "status takes no arguments"
+        [ "$EUID" -eq 0 ] || fail "status must run as root"
+        launchctl print system/com.restic.backup || true
+        [ ! -f "$LOG_FILE" ] || tail -n 50 "$LOG_FILE"
         ;;
-    *)
-        echo "Usage: sudo $0 [install|uninstall|run|status]"
-        exit 1
-        ;;
+    *) usage >&2; exit 1 ;;
 esac

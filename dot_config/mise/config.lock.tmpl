@@ -1,0 +1,7 @@
+{{- if eq .profile "home" -}}
+{{ include "extras/mise.home.lock" }}
+{{- else if eq .profile "work" -}}
+{{ include "extras/mise.work.lock" }}
+{{- else -}}
+{{ fail "profile must be home or work" }}
+{{- end -}}

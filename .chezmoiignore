@@ -1,4 +1,9 @@
 README.md
 LICENSE
+Taskfile.yml
+.pre-commit-config.yaml
+.yamllint.yml
+.github/
+tests/
 extras/
 extras/**

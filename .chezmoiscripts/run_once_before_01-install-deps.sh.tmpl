@@ -2,8 +2,10 @@
 # Install Xcode CLI and Homebrew (macOS only)
 set -euo pipefail
 
-# Skip if not macOS
-[[ "$(uname)" == "Darwin" ]] || { echo "==> Skipping macOS dependencies (not macOS)"; exit 0; }
+[[ "$(uname)" == "Darwin" ]] || {
+    echo "Error: these dotfiles support macOS only." >&2
+    exit 1
+}
 
 echo "==> Installing dependencies..."
 

@@ -26,14 +26,11 @@ brew "nike-inc/nike/cerberus-cli"
 ##############################################################################
 
 brew "cue-lang/tap/cue"
-brew "goenv"
 brew "golangci-lint"
 brew "hub"
 brew "ijq"
 brew "terraform-docs"
-brew "tfenv"
 brew "tflint"
-brew "uv"
 
 ##############################################################################
 # Container & Kubernetes Tools

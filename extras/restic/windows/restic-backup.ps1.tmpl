@@ -1,0 +1,33 @@
+$ErrorActionPreference = "Stop"
+$PasswordFile = {{PASSWORD_FILE}}
+$RepositoryConfig = {{REPOSITORY_CONFIG}}
+$ResticBin = {{RESTIC_BIN}}
+$ResticHostname = {{HOSTNAME}}
+$CacheDir = {{CACHE_DIR}}
+$ExcludeFile = {{EXCLUDE_FILE}}
+$LogFile = {{LOG_FILE}}
+$BackupPath = {{BACKUP_PATH}}
+
+. $RepositoryConfig
+$env:USERPROFILE = "$env:SystemRoot\System32\Config\SystemProfile"
+$env:RESTIC_CACHE_DIR = $CacheDir
+$env:RESTIC_PASSWORD_FILE = $PasswordFile
+$env:RESTIC_REST_PASSWORD = [IO.File]::ReadAllText($PasswordFile).Trim()
+
+function Write-BackupLog([string]$Message) {
+    "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $Message" | Out-File -FilePath $LogFile -Append
+}
+
+Write-BackupLog "Starting backup..."
+& $ResticBin --retry-lock 30m backup `
+    --host $ResticHostname `
+    --tag documents `
+    --exclude-file $ExcludeFile `
+    --exclude-caches `
+    --verbose `
+    $BackupPath *>> $LogFile
+if ($LASTEXITCODE -ne 0) {
+    Write-BackupLog "Backup failed with exit code $LASTEXITCODE"
+    exit $LASTEXITCODE
+}
+Write-BackupLog "Backup complete."

@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PASSWORD_FILE={{PASSWORD_FILE}}
+RUNTIME_CONFIG={{RUNTIME_CONFIG}}
+RESTIC_BIN={{RESTIC_BIN}}
+RESTIC_HOSTNAME={{HOSTNAME}}
+RESTIC_CACHE_DIR={{CACHE_DIR}}
+EXCLUDE_FILE={{EXCLUDE_FILE}}
+LOG_FILE={{LOG_FILE}}
+BACKUP_PATH={{BACKUP_PATH}}
+
+# shellcheck source=/dev/null
+source "$RUNTIME_CONFIG"
+export HOME=/var/root RESTIC_CACHE_DIR RESTIC_PASSWORD_FILE RESTIC_REPOSITORY RESTIC_REST_USERNAME
+IFS= read -r -d '' RESTIC_REST_PASSWORD < "$PASSWORD_FILE" || true
+export RESTIC_REST_PASSWORD
+
+log() {
+    printf '%s - %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$1" >> "$LOG_FILE"
+}
+
+log "Starting backup..."
+if "$RESTIC_BIN" --retry-lock 30m backup \
+    --host "$RESTIC_HOSTNAME" \
+    --tag documents \
+    --exclude-file "$EXCLUDE_FILE" \
+    --exclude-caches \
+    --verbose \
+    "$BACKUP_PATH" >> "$LOG_FILE" 2>&1; then
+    log "Backup complete."
+else
+    result=$?
+    log "Backup failed with exit code ${result}"
+    exit "$result"
+fi

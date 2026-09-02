@@ -1,0 +1,43 @@
+version: "3"
+
+silent: true
+
+tasks:
+  lint:
+    desc: Validate shell, Python, YAML, and workflow syntax
+    cmds:
+      - shellcheck .chezmoiscripts/run_once_before_01-install-deps.sh.tmpl extras/setup-restic.sh tests/render_profiles.sh
+      - bash -n .chezmoiscripts/run_once_before_01-install-deps.sh.tmpl extras/setup-restic.sh extras/restic/macos/restic-backup.sh.tmpl tests/render_profiles.sh dot_local/bin/executable_github-standardize-repo
+      - zsh -n dot_zshenv dot_zshrc dot_zsh/*.zsh
+      - python3 -m py_compile extras/update_manager.py dot_local/bin/executable_update tests/*.py
+      - MISE_GLOBAL_CONFIG_FILE="$PWD/extras/mise.home.toml" mise --locked ls --current >/dev/null
+      - MISE_GLOBAL_CONFIG_FILE="$PWD/extras/mise.work.toml" mise --locked ls --current >/dev/null
+      - yamllint -c .yamllint.yml Taskfile.yml .pre-commit-config.yaml .github/workflows/quality-gate.yml
+      - actionlint .github/workflows/quality-gate.yml
+
+  test:
+    desc: Run the standard-library test suite
+    cmds:
+      - python3 -m unittest discover -s tests -v
+
+  render:
+    desc: Render home and work profiles in isolated destinations
+    cmds:
+      - bash tests/render_profiles.sh
+
+  brew:validate:
+    desc: Parse both merged Brewfiles with Homebrew Bundle
+    cmds:
+      - |
+        set -euo pipefail
+        for profile in home work; do
+          merged="$(python3 -c 'from pathlib import Path; from extras.update_manager import build_merged_brewfile; print(build_merged_brewfile(Path("extras"), "'"$profile"'"))')"
+          trap 'rm -f "$merged"' EXIT
+          brew bundle list --file "$merged" >/dev/null
+          rm -f "$merged"
+          trap - EXIT
+        done
+
+  check:
+    desc: Run every local and CI validation
+    deps: [lint, test, render, brew:validate]
