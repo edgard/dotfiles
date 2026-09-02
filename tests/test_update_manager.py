@@ -77,6 +77,20 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(runner.results, [result])
 
 
+class DoctorTests(unittest.TestCase):
+    def test_root_owned_restic_config_is_reported_instead_of_crashing(self):
+        inaccessible = mock.Mock()
+        inaccessible.is_file.side_effect = PermissionError("permission denied")
+
+        failure, insecure_http, root_protected = update_manager.inspect_restic_config(
+            inaccessible
+        )
+
+        self.assertIsNone(failure)
+        self.assertFalse(insecure_http)
+        self.assertTrue(root_protected)
+
+
 class SkillTests(unittest.TestCase):
     def test_pinned_source_is_verified_locally_before_skills_cli(self):
         source = (

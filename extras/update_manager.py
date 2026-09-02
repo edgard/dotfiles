@@ -100,6 +100,27 @@ def validate_profile(profile: str) -> str:
     return profile
 
 
+def inspect_restic_config(path: Path) -> tuple[Optional[str], bool, bool]:
+    """Return a doctor failure, HTTP state, and root-protection state."""
+
+    try:
+        if not path.is_file():
+            return "Restic repository configuration", False, False
+        contents = path.read_text(encoding="utf-8")
+    except PermissionError:
+        return None, False, True
+    except OSError:
+        return "readable Restic repository configuration", False, False
+
+    repository_line = next(
+        (line for line in contents.splitlines() if line.startswith("RESTIC_REPOSITORY=")),
+        "",
+    )
+    if not repository_line:
+        return "Restic repository URL", False, False
+    return None, "http://" in repository_line, False
+
+
 def _strip_comment(line: str) -> str:
     """Remove Brewfile comments while preserving # inside quoted values."""
 
@@ -570,23 +591,28 @@ class UpdateManager:
 
             restic_config = Path("/Library/Application Support/restic-backup/repository.conf")
             if self.profile == "home":
-                if not restic_config.is_file():
-                    failures.append("Restic repository configuration")
-                elif os.access(restic_config, os.R_OK):
-                    repository_line = next(
-                        (
-                            line
-                            for line in restic_config.read_text(encoding="utf-8").splitlines()
-                            if line.startswith("RESTIC_REPOSITORY=")
-                        ),
-                        "",
+                restic_failure, insecure_http, root_protected = inspect_restic_config(
+                    restic_config
+                )
+                if restic_failure:
+                    failures.append(restic_failure)
+                if root_protected:
+                    print(
+                        "Warning: Restic repository configuration is root-protected; "
+                        "run doctor as an administrator for a direct content check.",
+                        file=sys.stderr,
                     )
-                    if not repository_line:
-                        failures.append("Restic repository URL")
-                    elif "http://" in repository_line:
-                        print("Warning: Restic uses unencrypted HTTP transport.", file=sys.stderr)
-                else:
-                    failures.append("readable Restic repository configuration")
+                    try:
+                        private_restic = (self.secrets_dir / "secrets.zsh").read_text(
+                            encoding="utf-8"
+                        )
+                    except OSError:
+                        private_restic = ""
+                    insecure_http = bool(
+                        re.search(r"^\s*export\s+RESTIC_REPOSITORY=.*http://", private_restic, re.MULTILINE)
+                    )
+                if insecure_http:
+                    print("Warning: Restic uses unencrypted HTTP transport.", file=sys.stderr)
 
             manifest = (self.extras_dir / "skills.common").read_text(encoding="utf-8")
             external_sources = [
