@@ -80,11 +80,3 @@ cask "ghostty"
 cask "google-chrome"
 cask "krita"
 cask "linearmouse"
-
-##############################################################################
-# Mac App Store Applications
-##############################################################################
-
-mas "Amphetamine", id: 937984704
-mas "Bitwarden", id: 1352778147
-mas "iMovie", id: 408981434
