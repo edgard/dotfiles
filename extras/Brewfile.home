@@ -29,7 +29,6 @@ cask "bambu-studio"
 cask "chatgpt"
 cask "discord"
 cask "telegram-desktop"
-cask "visual-studio-code"
 
 ##############################################################################
 # Mac App Store Applications

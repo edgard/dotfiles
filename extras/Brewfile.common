@@ -74,8 +74,9 @@ krew "resource-capacity"
 # macOS Applications (Casks)
 ##############################################################################
 
-#cask "appcleaner"
-#cask "ghostty"
-#cask "google-chrome"
-#cask "krita"
-#cask "linearmouse"
+cask "appcleaner"
+cask "ghostty"
+cask "google-chrome"
+cask "krita"
+cask "linearmouse"
+cask "visual-studio-code"
