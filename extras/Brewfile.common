@@ -75,8 +75,10 @@ krew "resource-capacity"
 ##############################################################################
 
 cask "appcleaner"
+cask "craft"
 cask "ghostty"
 cask "google-chrome"
 cask "krita"
 cask "linearmouse"
 cask "visual-studio-code"
+cask "vorssaint"
