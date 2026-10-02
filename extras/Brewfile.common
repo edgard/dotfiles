@@ -27,7 +27,6 @@ brew "atuin"
 brew "bitwarden-cli"
 brew "chezmoi"
 brew "fzf"
-brew "mas"
 brew "starship"
 brew "zoxide"
 
@@ -75,8 +74,8 @@ krew "resource-capacity"
 # macOS Applications (Casks)
 ##############################################################################
 
-cask "appcleaner"
-cask "ghostty"
-cask "google-chrome"
-cask "krita"
-cask "linearmouse"
+#cask "appcleaner"
+#cask "ghostty"
+#cask "google-chrome"
+#cask "krita"
+#cask "linearmouse"
