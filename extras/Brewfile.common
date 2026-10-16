@@ -76,7 +76,6 @@ krew "resource-capacity"
 
 cask "appcleaner"
 cask "craft"
-cask "finetune"
 cask "ghostty"
 cask "google-chrome"
 cask "keepresso"
