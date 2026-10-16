@@ -5,8 +5,16 @@ Dotfiles managed with [chezmoi](https://www.chezmoi.io/). Supports multiple prof
 ## Installation
 
 ```bash
-curl -fsLS chezmoi.io/get | sh -s -- -b ~/.local/bin init --apply edgard/dotfiles
+(
+  set -euo pipefail
+  chezmoi_bootstrap_dir="$(mktemp -d)"
+  trap 'rm -rf "$chezmoi_bootstrap_dir"' EXIT
+  curl -fsLS chezmoi.io/get | sh -s -- -b "$chezmoi_bootstrap_dir" init --apply edgard/dotfiles
+)
 ```
+
+The bootstrap copy is removed on exit, including after a failure. Setup installs
+the maintained Chezmoi package through Homebrew.
 
 ## Usage
 
@@ -19,20 +27,10 @@ update secrets          # Fetch profile files from Bitwarden
 
 ## Configuration
 
-### AI Skills
+### Home operator tools
 
-`chezmoi apply` installs skills via `npx skills` using manifest files:
-- `extras/skills.common`
-- `extras/skills.<profile>`
-
-Manifest format:
-
-```txt
-source|agents(comma-separated)|skill
-```
-
-Use `./...` sources for local paths relative to the chezmoi source directory.
-Skills are copied (`--copy`), not symlinked.
+Homebrew manages SecretSpec. The home profile installs the Bitwarden Secrets
+Manager CLI (`bws`) through Chezmoi's checksum-verified external archive support.
 
 ### Profile Files (Bitwarden)
 

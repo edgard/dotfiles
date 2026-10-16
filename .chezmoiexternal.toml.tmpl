@@ -1,0 +1,15 @@
+{{- if and (eq .profile "home") (eq .chezmoi.os "darwin") -}}
+{{- $version := "2.1.0" -}}
+{{- $platform := index (dict "arm64" "aarch64" "amd64" "x86_64") .chezmoi.arch -}}
+{{- $checksum := index (dict
+  "arm64" "9cb1c1c6e6164d83b2e339883ba02b4cbb37188ce9a484b1ce8249443163e066"
+  "amd64" "6f626b3971368902af1b9847c02791a1b4666969d7561e2047681cded7997537"
+) .chezmoi.arch -}}
+{{- if not $platform }}{{ fail "Unsupported macOS architecture for bws" }}{{ end -}}
+[".local/bin/bws"]
+    type = "archive-file"
+    url = "https://github.com/bitwarden/sdk-sm/releases/download/bws-v{{ $version }}/bws-{{ $platform }}-apple-darwin-{{ $version }}.zip"
+    checksum.sha256 = "{{ $checksum }}"
+    path = "bws"
+    executable = true
+{{ end -}}
