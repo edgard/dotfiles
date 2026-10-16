@@ -46,7 +46,6 @@ brew "yamllint"
 ##############################################################################
 
 brew "colima"
-brew "conftest"
 brew "crane"
 brew "docker"
 brew "helm"
