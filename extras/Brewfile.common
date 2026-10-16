@@ -5,6 +5,8 @@
 # Taps
 ##############################################################################
 
+tap "gyorgysh/keepresso"
+
 ##############################################################################
 # Essential Tools
 ##############################################################################
@@ -74,9 +76,10 @@ krew "resource-capacity"
 
 cask "appcleaner"
 cask "craft"
+cask "finetune"
 cask "ghostty"
 cask "google-chrome"
+cask "keepresso"
 cask "krita"
 cask "linearmouse"
 cask "visual-studio-code"
-cask "vorssaint"
