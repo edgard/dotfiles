@@ -78,7 +78,7 @@ cask "appcleaner"
 cask "craft"
 cask "ghostty"
 cask "google-chrome"
-cask "keepresso"
+cask "gyorgysh/keepresso/keepresso", trusted: true
 cask "krita"
 cask "linearmouse"
 cask "visual-studio-code"
