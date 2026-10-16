@@ -5,8 +5,6 @@
 # Taps
 ##############################################################################
 
-tap "buo/cask-upgrade"
-
 ##############################################################################
 # Essential Tools
 ##############################################################################
@@ -27,6 +25,7 @@ brew "atuin"
 brew "bitwarden-cli"
 brew "chezmoi"
 brew "fzf"
+brew "secretspec"
 brew "starship"
 brew "zoxide"
 
@@ -52,7 +51,6 @@ brew "yamllint"
 ##############################################################################
 
 brew "colima"
-brew "conftest"
 brew "crane"
 brew "docker"
 brew "helm"

@@ -300,15 +300,6 @@ def update_system(profile: str = 'home', auto_confirm: bool = False) -> None:
             elif cmd == "brew":
                 subprocess.run(["brew", "update"], check=True)
                 subprocess.run(["brew", "upgrade"], check=True)
-                has_brew_cu = subprocess.run(
-                    ["brew", "cu", "--help"],
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                ).returncode == 0
-                if has_brew_cu:
-                    subprocess.run([
-                        "brew", "cu", "-y", "-q", "--cleanup", "--no-brew-update"
-                    ], check=True)
                 brew_install(profile=profile, skip_update=True)
                 brew_cleanup(profile=profile, auto_confirm=auto_confirm)
                 subprocess.run(["brew", "cleanup", "-s"], check=True)
