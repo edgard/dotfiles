@@ -37,8 +37,6 @@ brew "zoxide"
 
 brew "actionlint"
 brew "direnv"
-brew "elixir"
-brew "gh"
 brew "go-task"
 brew "go"
 brew "node"
